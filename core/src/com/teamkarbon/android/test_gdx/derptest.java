@@ -37,7 +37,7 @@ public class derptest extends ApplicationAdapter{
 
     Fixture ballFixture;
 
-    public final float PixelsPerMeter = 8f;
+    public final float PixelsPerMeter = 50f;
 	
 	@Override
 	public void create () {
@@ -59,12 +59,12 @@ public class derptest extends ApplicationAdapter{
         font.setScale(4);
 
         //Init ball class
-        ball = new Ball(scale(130), scale(170));
+        ball = new Ball(scale(130), scale(370));
 
         //Define the type of body for the ball
         BodyDef tempBD = new BodyDef();
         tempBD.type = BodyDef.BodyType.DynamicBody;
-        tempBD.position.set(scale(130), scale(170));
+        tempBD.position.set(scale(130), scale(370));
 
         //Create the actually body from body type
         body = world.createBody(tempBD);
@@ -84,12 +84,12 @@ public class derptest extends ApplicationAdapter{
         //Make the floor exist
         tempBD = new BodyDef();
         tempBD.type = BodyDef.BodyType.StaticBody;
-        tempBD.position.set(scale(0), scale(10));
+        tempBD.position.set(scale(0), scale(-300));
         theFloor = world.createBody(tempBD);
 
         //Floor bounds
         PolygonShape floor = new PolygonShape();
-        floor.setAsBox(camera.viewportWidth * 2, scale(10f));
+        floor.setAsBox(camera.viewportWidth * 2, scale(10));
         theFloor.createFixture(floor, 0f);
 
         debugRenderer = new Box2DDebugRenderer();
@@ -107,7 +107,7 @@ public class derptest extends ApplicationAdapter{
             public boolean touchDown (int x, int y, int pointer, int button) {
                 // your touch down code here
 
-
+                Force = true;
 
                 return true; // return true to indicate the event was handled
             }
@@ -115,7 +115,7 @@ public class derptest extends ApplicationAdapter{
             public boolean touchUp (int x, int y, int pointer, int button) {
                 // your touch up code here
 
-
+                Force = false;
 
                 return true; // return true to indicate the event was handled
             }
@@ -128,7 +128,7 @@ public class derptest extends ApplicationAdapter{
         ball.setPos(body.getPosition().x, body.getPosition().y);
 
         if(Force)
-            body.applyForceToCenter(0, 150, true);
+            body.applyForceToCenter(0, 250, true);
 
 		Gdx.gl.glClearColor(0, 0.06f, 0.13f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -139,11 +139,11 @@ public class derptest extends ApplicationAdapter{
 
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(1, 1, 1, 1);
-        shapeRenderer.circle(ball.x, ball.y, scale(90));
+        shapeRenderer.circle(ball.x, ball.y, scale(90), 45);
         shapeRenderer.end();
 
         batch.begin();
-        font.draw(batch, "coord: " + descale(ball.x) + ", " + descale(ball.y) + " down: " + Force, 300, 200);
+        font.draw(batch, "coord: " + descale(ball.x) + ", " + descale(ball.y) + ", Force: " + Force, 300, 200);
         batch.end();
 
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
