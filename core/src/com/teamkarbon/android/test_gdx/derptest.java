@@ -2,7 +2,7 @@ package com.teamkarbon.android.test_gdx;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -21,7 +21,8 @@ import com.badlogic.gdx.physics.box2d.World;
 /*
     IMPORTANT: USE scale(float f) FUNCTION FOR ALL POSITIONS OF BODIES, AND SIZES
  */
-public class derptest extends ApplicationAdapter implements InputProcessor {
+public class derptest extends ApplicationAdapter{
+    CustomInputProcessor inputProcessor;
     ShapeRenderer shapeRenderer;
     SpriteBatch batch;
     Box2DDebugRenderer debugRenderer;
@@ -95,6 +96,30 @@ public class derptest extends ApplicationAdapter implements InputProcessor {
 
         //Save some memory
         pshape.dispose();
+
+        //Set input processor
+        /*
+        inputProcessor = new CustomInputProcessor();
+        Gdx.input.setInputProcessor(inputProcessor);
+        */
+        //OR
+        Gdx.input.setInputProcessor(new InputAdapter(){
+            public boolean touchDown (int x, int y, int pointer, int button) {
+                // your touch down code here
+
+
+
+                return true; // return true to indicate the event was handled
+            }
+
+            public boolean touchUp (int x, int y, int pointer, int button) {
+                // your touch up code here
+
+
+
+                return true; // return true to indicate the event was handled
+            }
+        });
 	}
 
 	@Override
@@ -118,61 +143,11 @@ public class derptest extends ApplicationAdapter implements InputProcessor {
         shapeRenderer.end();
 
         batch.begin();
-        font.draw(batch, "coord: " + ball.x + ", " + ball.y + " down: " + Force, 300, 200);
+        font.draw(batch, "coord: " + descale(ball.x) + ", " + descale(ball.y) + " down: " + Force, 300, 200);
         batch.end();
 
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
 	}
-
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button)
-    {
-        Force = true;
-        return true;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        Force = false;
-        return true;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
-    }
-
-    @Override
-    public void dispose()
-    {
-        world.dispose();
-        font.dispose();
-    }
 
     public float scale(float pixels)
     {
