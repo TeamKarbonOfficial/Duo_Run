@@ -12,9 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -31,6 +29,7 @@ public class derptest extends ApplicationAdapter{
     Body body;
     Body theFloor;
     Ball ball;
+    Ball ball2;
     BitmapFont font;
 
     Boolean Force = false;
@@ -59,27 +58,28 @@ public class derptest extends ApplicationAdapter{
         font.setScale(4);
 
         //Init ball class
-        ball = new Ball(scale(130), scale(370));
+        ball = new Ball(scale(130), scale(370), world, scale(90));
+        ball.setFixture(1f, 0.55f, 0.3f);
 
         //Define the type of body for the ball
-        BodyDef tempBD = new BodyDef();
-        tempBD.type = BodyDef.BodyType.DynamicBody;
-        tempBD.position.set(scale(130), scale(370));
+        BodyDef tempBD;
+        //tempBD.type = BodyDef.BodyType.DynamicBody;
+        //tempBD.position.set(scale(130), scale(370));
 
         //Create the actually body from body type
-        body = world.createBody(tempBD);
+        //body = world.createBody(tempBD);
 
         //Create a new rigidbody collider equivalent of Unity3D
-        CircleShape pshape = new CircleShape();
-        pshape.setRadius(scale(90));
+        //CircleShape pshape = new CircleShape();
+        //pshape.setRadius(scale(90));
 
         //Define the physical properties of the body
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = pshape;
-        fixtureDef.density = 1f;
-        fixtureDef.restitution = 0.85f;
-        fixtureDef.friction = 0.3f;
-        ballFixture = body.createFixture(fixtureDef);
+        //FixtureDef fixtureDef = new FixtureDef();
+        //fixtureDef.shape = pshape;
+        //fixtureDef.density = 1f;
+        //fixtureDef.restitution = 0.85f;
+        //fixtureDef.friction = 0.3f;
+        //ballFixture = body.createFixture(fixtureDef);
 
         //Make the floor exist
         tempBD = new BodyDef();
@@ -95,7 +95,7 @@ public class derptest extends ApplicationAdapter{
         debugRenderer = new Box2DDebugRenderer();
 
         //Save some memory
-        pshape.dispose();
+        //pshape.dispose();
 
         //Set input processor
         /*
@@ -125,10 +125,8 @@ public class derptest extends ApplicationAdapter{
 	@Override
 	public void render () {
 
-        ball.setPos(body.getPosition().x, body.getPosition().y);
-
         if(Force)
-            body.applyForceToCenter(0, 250, true);
+            ball.body.applyForceToCenter(0, 50, true);
 
 		Gdx.gl.glClearColor(0, 0.06f, 0.13f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -139,11 +137,11 @@ public class derptest extends ApplicationAdapter{
 
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(1, 1, 1, 1);
-        shapeRenderer.circle(ball.x, ball.y, scale(90), 45);
+        shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, scale(90), 45);
         shapeRenderer.end();
 
         batch.begin();
-        font.draw(batch, "coord: " + descale(ball.x) + ", " + descale(ball.y) + ", Force: " + Force, 300, 200);
+        font.draw(batch, "coord: " + descale(ball.body.getPosition().x) + ", " + descale(ball.body.getPosition().y) + ", Force: " + Force, 300, 200);
         batch.end();
 
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
