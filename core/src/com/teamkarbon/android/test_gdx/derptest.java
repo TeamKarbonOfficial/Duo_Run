@@ -33,6 +33,7 @@ public class derptest extends ApplicationAdapter{
     BitmapFont font;
 
     Boolean Force = false;
+    Boolean Force2 = false;
 
     Fixture ballFixture;
 
@@ -57,31 +58,15 @@ public class derptest extends ApplicationAdapter{
         font.setColor(com.badlogic.gdx.graphics.Color.LIGHT_GRAY);
         font.setScale(4);
 
-        //Init ball class
+        //Init ball classes
         ball = new Ball(scale(130), scale(370), world, scale(90));
         ball.setFixture(1f, 0.55f, 0.3f);
+        ball2 = new Ball(scale(130), scale(370), world, scale(90));
+        ball.setFixture(1f, 0.55f, 0.3f);
 
-        //Define the type of body for the ball
-        BodyDef tempBD;
-        //tempBD.type = BodyDef.BodyType.DynamicBody;
-        //tempBD.position.set(scale(130), scale(370));
-
-        //Create the actually body from body type
-        //body = world.createBody(tempBD);
-
-        //Create a new rigidbody collider equivalent of Unity3D
-        //CircleShape pshape = new CircleShape();
-        //pshape.setRadius(scale(90));
-
-        //Define the physical properties of the body
-        //FixtureDef fixtureDef = new FixtureDef();
-        //fixtureDef.shape = pshape;
-        //fixtureDef.density = 1f;
-        //fixtureDef.restitution = 0.85f;
-        //fixtureDef.friction = 0.3f;
-        //ballFixture = body.createFixture(fixtureDef);
 
         //Make the floor exist
+        BodyDef tempBD;
         tempBD = new BodyDef();
         tempBD.type = BodyDef.BodyType.StaticBody;
         tempBD.position.set(scale(0), scale(-300));
@@ -94,9 +79,6 @@ public class derptest extends ApplicationAdapter{
 
         debugRenderer = new Box2DDebugRenderer();
 
-        //Save some memory
-        //pshape.dispose();
-
         //Set input processor
         /*
         inputProcessor = new CustomInputProcessor();
@@ -106,10 +88,12 @@ public class derptest extends ApplicationAdapter{
         Gdx.input.setInputProcessor(new InputAdapter(){
             public boolean touchDown (int x, int y, int pointer, int button) {
                 // your touch down code here
+                if(x < Gdx.graphics.getWidth() / 2f)
+                    Force = true;
+                if(x >= Gdx.graphics.getWidth() / 2f)
+                    Force2 = true;
 
-                Force = true;
-
-                return true; // return true to indicate the event was handled
+                return true;
             }
 
             public boolean touchUp (int x, int y, int pointer, int button) {
@@ -117,7 +101,9 @@ public class derptest extends ApplicationAdapter{
 
                 Force = false;
 
-                return true; // return true to indicate the event was handled
+                Force2 = false; //Does this work?? o.O
+
+                return true;
             }
         });
 	}
@@ -136,8 +122,10 @@ public class derptest extends ApplicationAdapter{
         debugRenderer.render(world, camera.combined);
 
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(1, 1, 1, 1);
+        shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
         shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, scale(90), 45);
+        shapeRenderer.setColor(0f, 0f, 1f, 0.4f);
+        shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, scale(90), 45);
         shapeRenderer.end();
 
         batch.begin();
