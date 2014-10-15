@@ -12,7 +12,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -20,13 +19,11 @@ import com.badlogic.gdx.physics.box2d.World;
     IMPORTANT: USE scale(float f) FUNCTION FOR ALL POSITIONS OF BODIES, AND SIZES
  */
 public class derptest extends ApplicationAdapter{
-    CustomInputProcessor inputProcessor;
     ShapeRenderer shapeRenderer;
     SpriteBatch batch;
     Box2DDebugRenderer debugRenderer;
     OrthographicCamera camera;
     World world;
-    Body body;
     Body theFloor;
     Ball ball;
     Ball ball2;
@@ -34,8 +31,6 @@ public class derptest extends ApplicationAdapter{
 
     Boolean Force = false;
     Boolean Force2 = false;
-
-    Fixture ballFixture;
 
     public final float PixelsPerMeter = 50f;
 	
@@ -113,6 +108,8 @@ public class derptest extends ApplicationAdapter{
 
         if(Force)
             ball.body.applyForceToCenter(0, 50, true);
+        if(Force2)
+            ball2.body.applyForceToCenter(0, 50, true);
 
 		Gdx.gl.glClearColor(0, 0.06f, 0.13f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
