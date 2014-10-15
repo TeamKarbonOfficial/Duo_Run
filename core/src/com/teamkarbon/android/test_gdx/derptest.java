@@ -39,6 +39,11 @@ public class derptest extends ApplicationAdapter{
 	@Override
 	public void create () {
 
+        //Random graphics init to allow alpha blending...
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+
+        //Setting up the camera
         camera = new OrthographicCamera(scale(Gdx.graphics.getWidth()), scale(Gdx.graphics.getHeight()));
         camera.position.set(scale(camera.viewportWidth / 2f), scale(camera.viewportHeight / 2f), 0f);
         camera.update();
@@ -139,15 +144,20 @@ public class derptest extends ApplicationAdapter{
 
         debugRenderer.render(world, camera.combined);
 
-        Gdx.gl.glEnable(Gdx.gl.GL_BLEND);
-        Gdx.gl.glBlendFunc(Gdx.gl.GL_SRC_ALPHA, Gdx.gl.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
         shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, scale(90), 45);
         shapeRenderer.setColor(0f, 0f, 1f, 0.4f);
         shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, scale(90), 45);
         shapeRenderer.end();
-        Gdx.gl.glDisable(Gdx.gl.GL_BLEND);
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(0.8f, 0.8f, 0.8f, 1f);
+        shapeRenderer.rect(-camera.viewportWidth, scale(-510), camera.viewportWidth * 2, scale(20));
+        shapeRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
 
 
         batch.begin();
