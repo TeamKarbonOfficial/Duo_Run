@@ -12,6 +12,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -54,23 +56,42 @@ public class derptest extends ApplicationAdapter{
         font.setScale(4);
 
         //Init ball classes
-        ball = new Ball(scale(130), scale(370), world, scale(90));
+        ball = new Ball(scale(0), scale(370), world, scale(90));
         ball.setFixture(1f, 0.55f, 0.3f);
-        ball2 = new Ball(scale(130), scale(370), world, scale(90));
-        ball.setFixture(1f, 0.55f, 0.3f);
+        ball2 = new Ball(scale(0), scale(370), world, scale(90));
+        ball2.setFixture(1f, 0.55f, 0.3f);
 
+        //Set collision filtering (so the two balls don't collide with each other
+        //It's a complex thing, read up here: http://www.box2d.org/manual.html under
+        //chapter 6.2 "Fixtures -> Filtering"
+        Filter tempFilter = new Filter();
+        tempFilter.categoryBits = 1;//Binary 0001
+        tempFilter.maskBits = 1;//Binary 0001
+        ball.fixture.setFilterData(tempFilter);
+
+        tempFilter.maskBits = 2;//Binary 0010
+        tempFilter.categoryBits = 1;//Binary 0001
+        ball2.fixture.setFilterData(tempFilter);
+
+        //catBits1 & maskBits2 = 0001 & 0010 = 0. Hence ball and ball2 won't collide
+        //if ( (catBits1 & maskBits2) && (catBits2 & maskBits1) ) collision = true;
 
         //Make the floor exist
         BodyDef tempBD;
         tempBD = new BodyDef();
         tempBD.type = BodyDef.BodyType.StaticBody;
-        tempBD.position.set(scale(0), scale(-300));
+        tempBD.position.set(scale(0), scale(-500));
         theFloor = world.createBody(tempBD);
 
         //Floor bounds
         PolygonShape floor = new PolygonShape();
         floor.setAsBox(camera.viewportWidth * 2, scale(10));
-        theFloor.createFixture(floor, 0f);
+        Fixture floorFixture = theFloor.createFixture(floor, 0f);
+
+        //Set Floor collision data
+        tempFilter.maskBits = 3;//Binary 0011
+        tempFilter.categoryBits = 3;//Binary 0011
+        floorFixture.setFilterData(tempFilter);
 
         debugRenderer = new Box2DDebugRenderer();
 
@@ -118,12 +139,16 @@ public class derptest extends ApplicationAdapter{
 
         debugRenderer.render(world, camera.combined);
 
+        Gdx.gl.glEnable(Gdx.gl.GL_BLEND);
+        Gdx.gl.glBlendFunc(Gdx.gl.GL_SRC_ALPHA, Gdx.gl.GL_ONE_MINUS_SRC_ALPHA);
 		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
         shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, scale(90), 45);
         shapeRenderer.setColor(0f, 0f, 1f, 0.4f);
         shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, scale(90), 45);
         shapeRenderer.end();
+        Gdx.gl.glDisable(Gdx.gl.GL_BLEND);
+
 
         batch.begin();
         font.draw(batch, "coord: " + descale(ball.body.getPosition().x) + ", " + descale(ball.body.getPosition().y) + ", Force: " + Force, 300, 200);
