@@ -19,6 +19,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 /*
     IMPORTANT: USE scale(float f) FUNCTION FOR ALL POSITIONS OF BODIES, AND SIZES
+    FIXME: IMPORTANT !!!~~~UTILIZE SCREEN PERCENTAGE FUNCTIONS IN ORDER TO FIT ALL SCREEN SIZES~~~!!!
  */
 public class derptest extends ApplicationAdapter{
     ShapeRenderer shapeRenderer;
@@ -175,5 +176,26 @@ public class derptest extends ApplicationAdapter{
     public float descale(float meters)
     {
         return meters * PixelsPerMeter;
+    }
+
+    //Exact value rep for percent of screen
+    public Vector2 percent(Vector2 percentofscreen)//This value is from 0 to 100
+    {
+        Vector2 temp = new Vector2();
+        float screenSizeX = Gdx.graphics.getWidth();
+        float screenSizeY = Gdx.graphics.getHeight();
+        temp.x = scale((percentofscreen.x / 100f) * Gdx.graphics.getWidth());
+        temp.y = scale((percentofscreen.y / 100f) * Gdx.graphics.getHeight());
+        return temp;
+    }
+
+    public float pwidth(float widthpercent)
+    {
+        return scale((widthpercent / 100f) * Gdx.graphics.getWidth());
+    }
+
+    public float pheight(float heightpercent)
+    {
+        return scale((heightpercent / 100f) * Gdx.graphics.getHeight());
     }
 }
