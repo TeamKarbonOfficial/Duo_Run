@@ -23,6 +23,7 @@ public class Ball {
         bodyDef = new BodyDef();
         shape = new CircleShape();
         fixtureDef = new FixtureDef();
+
         world = _world;
         radius = _radius;
 

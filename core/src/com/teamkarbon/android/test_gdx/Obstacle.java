@@ -18,7 +18,9 @@ public class Obstacle {
     Body body;
     Fixture fixture;
 
-    public Obstacle(PolygonShape _shape, World _world, float x, float y)
+    boolean type;
+
+    public Obstacle(PolygonShape _shape, World _world, float x, float y, boolean _type)
     {
         //How to set shape: shape.set(new Vector2[]{new Vector2(3,4), new Vector2(0, 1)});
         //It is assumed that along the axis, 0 is the centre and the lateral
@@ -28,6 +30,7 @@ public class Obstacle {
 
         world = _world;
         shape = _shape;
+        type = _type;
 
         bodyDef.type = BodyDef.BodyType.StaticBody;
         bodyDef.position.set(x, y);

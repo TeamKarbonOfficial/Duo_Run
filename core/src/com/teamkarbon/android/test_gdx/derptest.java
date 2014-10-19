@@ -17,11 +17,31 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
+import java.util.ArrayList;
+
 /*
     IMPORTANT: USE scale(float f) FUNCTION FOR ALL POSITIONS OF BODIES, AND SIZES
     FIXME: IMPORTANT !!!~~~UTILIZE SCREEN PERCENTAGE FUNCTIONS IN ORDER TO FIT ALL SCREEN SIZES~~~!!!
  */
+
+/*
+    Game Flow: Main Menu -> Options -> difficulty: <rate of difficulty increase> easy, medium, hard
+                                    -> sound: on, off
+                                    -> vibrate: on, off
+                                    -> colours: blue, yellow, green, red, grey
+                         -> About: <Show the about screen>
+                         -> Game <Endless mode> -> {level} will increase as the game proceeds
+                                                -> spawning rate of obstacles will increase
+                                                -> more challenging obstacles
+                                                -> Game over immediately once a ball gets out of the screen...
+                         -> Game <Story mode> -> Perhaps in a new update
+
+    Check out newsapps/beeswithmachineguns on GitHub! A cool DDoS python app!
+
+ */
 public class derptest extends ApplicationAdapter{
+    gameMode mode;
+
     ShapeRenderer shapeRenderer;
     SpriteBatch batch;
     Box2DDebugRenderer debugRenderer;
@@ -35,6 +55,11 @@ public class derptest extends ApplicationAdapter{
     Boolean Force = false;
     Boolean Force2 = false;
 
+    ArrayList obstacles;
+    float obstaclesTimer;//in Seconds...
+
+    int level;
+
     public final float PixelsPerMeter = 50f;
 	
 	@Override
@@ -45,7 +70,7 @@ public class derptest extends ApplicationAdapter{
 
 
         //Setting up the camera
-        camera = new OrthographicCamera(scale(Gdx.graphics.getWidth()), scale(Gdx.graphics.getHeight()));
+        camera = new OrthographicCamera(pwidth(100), pheight(100));
         camera.position.set(scale(camera.viewportWidth / 2f), scale(camera.viewportHeight / 2f), 0f);
         camera.update();
 
@@ -128,44 +153,67 @@ public class derptest extends ApplicationAdapter{
                 return true;
             }
         });
+
+        //Init the obstacles arraylist
+        obstacles = new ArrayList();
+        obstaclesTimer = 0;
+
+        //TODO: INFO: Debug!!!
+        mode = gameMode.GAME;
+        level = 1;
 	}
 
 	@Override
 	public void render () {
+        if(mode == gameMode.GAME) {
+            if (Force)
+                ball.body.applyForceToCenter(0, 50, true);
+            if (Force2)
+                ball2.body.applyForceToCenter(0, 50, true);
 
-        if(Force)
-            ball.body.applyForceToCenter(0, 50, true);
-        if(Force2)
-            ball2.body.applyForceToCenter(0, 50, true);
+            //Constantly increase the balls' speed until a certain velocity
+            if(ball.body.getLinearVelocity().x < 2)
+                ball.body.applyForceToCenter(10, 0, true);
+            if(ball2.body.getLinearVelocity().x < 2)
+                ball2.body.applyForceToCenter(10, 0, true);
 
-		Gdx.gl.glClearColor(0, 0.06f, 0.13f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            //Update the camera position to move at the avg speed of the two balls.
+            camera.translate(scale(ball.body.getLinearVelocity().x + ball2.body.getLinearVelocity().x)
+                    / 2 * Gdx.graphics.getDeltaTime(), 0);
 
-        camera.update();
+            Gdx.gl.glClearColor(0, 0.06f, 0.13f, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        debugRenderer.render(world, camera.combined);
+            camera.update();
 
-        Gdx.gl.glEnable(GL20.GL_BLEND);
+            debugRenderer.render(world, camera.combined);
 
-		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
-        shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, scale(90), 45);
-        shapeRenderer.setColor(0f, 0f, 1f, 0.4f);
-        shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, scale(90), 45);
-        shapeRenderer.end();
+            Gdx.gl.glEnable(GL20.GL_BLEND);
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(0.8f, 0.8f, 0.8f, 1f);
-        shapeRenderer.rect(-camera.viewportWidth, scale(-510), camera.viewportWidth * 2, scale(20));
-        shapeRenderer.end();
-        Gdx.gl.glDisable(GL20.GL_BLEND);
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
+            shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, scale(90), 45);
+            shapeRenderer.setColor(0f, 0f, 1f, 0.4f);
+            shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, scale(90), 45);
+            shapeRenderer.end();
+
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.setColor(0.8f, 0.8f, 0.8f, 1f);
+            shapeRenderer.rect(-camera.viewportWidth, scale(-510), camera.viewportWidth * 2, scale(20));
+            shapeRenderer.end();
+            Gdx.gl.glDisable(GL20.GL_BLEND);
 
 
-        batch.begin();
-        font.draw(batch, "coord: " + descale(ball.body.getPosition().x) + ", " + descale(ball.body.getPosition().y) + ", Force: " + Force, 300, 200);
-        batch.end();
+            batch.begin();
+            font.draw(batch, "coord: " + descale(ball.body.getPosition().x) + ", " + descale(ball.body.getPosition().y) + ", Force: " + Force, 300, 200);
+            batch.end();
 
-        world.step(Gdx.graphics.getDeltaTime(), 6, 2);
+            //Make dem obstacles
+
+
+            obstaclesTimer += Gdx.graphics.getDeltaTime();
+            world.step(Gdx.graphics.getDeltaTime(), 6, 2);
+        }
 	}
 
     public float scale(float pixels)
@@ -197,5 +245,10 @@ public class derptest extends ApplicationAdapter{
     public float pheight(float heightpercent)
     {
         return scale((heightpercent / 100f) * Gdx.graphics.getHeight());
+    }
+
+    public enum gameMode
+    {
+        MAIN_MENU, OPTIONS, ABOUT, GAME
     }
 }
