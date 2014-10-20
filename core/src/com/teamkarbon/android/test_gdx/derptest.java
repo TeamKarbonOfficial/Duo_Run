@@ -148,7 +148,7 @@ public class derptest extends ApplicationAdapter{
 
                 Force = false;
 
-                Force2 = false; //Does this work?? o.O
+                Force2 = false;
 
                 return true;
             }
@@ -180,6 +180,8 @@ public class derptest extends ApplicationAdapter{
             //Update the camera position to move at the avg speed of the two balls.
             camera.translate(scale(ball.body.getLinearVelocity().x + ball2.body.getLinearVelocity().x)
                     / 2 * Gdx.graphics.getDeltaTime(), 0);
+
+            theFloor.setTransform((ball.body.getPosition().x + ball2.body.getPosition().y) / 2, scale(-500), 0);
 
             Gdx.gl.glClearColor(0, 0.06f, 0.13f, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
