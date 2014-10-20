@@ -87,7 +87,7 @@ public class derptest extends ApplicationAdapter{
         font.setScale(4);
 
         //Init ball classes
-        ball = new Ball(scale(0), scale(370), world, scale(90));
+        ball = new Ball(pwidth(0), pheight(50), world, scale(90));
         ball.setFixture(1f, 0.55f, 0.3f);
         ball2 = new Ball(scale(0), scale(370), world, scale(90));
         ball2.setFixture(1f, 0.55f, 0.3f);
@@ -111,12 +111,12 @@ public class derptest extends ApplicationAdapter{
         BodyDef tempBD;
         tempBD = new BodyDef();
         tempBD.type = BodyDef.BodyType.StaticBody;
-        tempBD.position.set(scale(0), scale(-500));
+        tempBD.position.set(scale(0), pheight(-40));
         theFloor = world.createBody(tempBD);
 
         //Floor bounds
         PolygonShape floor = new PolygonShape();
-        floor.setAsBox(camera.viewportWidth * 2, scale(10));
+        floor.setAsBox(camera.viewportWidth, pheight(1f));
         Fixture floorFixture = theFloor.createFixture(floor, 0f);
 
         //Set Floor collision data
@@ -172,16 +172,17 @@ public class derptest extends ApplicationAdapter{
                 ball2.body.applyForceToCenter(0, 50, true);
 
             //Constantly increase the balls' speed until a certain velocity
-            if(ball.body.getLinearVelocity().x < 2)
+            if(ball.body.getPosition().x < 0)
                 ball.body.applyForceToCenter(10, 0, true);
-            if(ball2.body.getLinearVelocity().x < 2)
+            if(ball2.body.getPosition().x < 0)
                 ball2.body.applyForceToCenter(10, 0, true);
+            if(ball.body.getPosition().x > 0)
+                ball.body.applyForceToCenter(-10, 0, true);
+            if(ball2.body.getPosition().x > 0)
+                ball2.body.applyForceToCenter(-10, 0, true);
 
-            //Update the camera position to move at the avg speed of the two balls.
-            camera.translate(scale(ball.body.getLinearVelocity().x + ball2.body.getLinearVelocity().x)
-                    / 2 * Gdx.graphics.getDeltaTime(), 0);
 
-            theFloor.setTransform((ball.body.getPosition().x + ball2.body.getPosition().y) / 2, scale(-500), 0);
+            theFloor.setTransform((ball.body.getPosition().x + ball2.body.getPosition().x) / 2, pheight(-40), 0);
 
             Gdx.gl.glClearColor(0, 0.06f, 0.13f, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -201,7 +202,7 @@ public class derptest extends ApplicationAdapter{
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             shapeRenderer.setColor(0.8f, 0.8f, 0.8f, 1f);
-            shapeRenderer.rect(-camera.viewportWidth, scale(-510), camera.viewportWidth * 2, scale(20));
+            shapeRenderer.rect(theFloor.getPosition().x - camera.viewportWidth / 2f, pheight(-41), camera.viewportWidth, pheight(2));
             shapeRenderer.end();
             Gdx.gl.glDisable(GL20.GL_BLEND);
 
@@ -211,7 +212,10 @@ public class derptest extends ApplicationAdapter{
             batch.end();
 
             //Make dem obstacles
-
+            if(obstaclesTimer > 3.5f / level && Math.random() >= 0.5)
+            {
+                
+            }
 
             obstaclesTimer += Gdx.graphics.getDeltaTime();
             world.step(Gdx.graphics.getDeltaTime(), 6, 2);
