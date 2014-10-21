@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 /**
- * Created by Matthew on 18/10/2014.
+ * Polygon shape, world, x, y positions, type true/type false
  */
 public class Obstacle {
     World world;

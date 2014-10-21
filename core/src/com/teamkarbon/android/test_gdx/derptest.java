@@ -214,7 +214,26 @@ public class derptest extends ApplicationAdapter{
             //Make dem obstacles
             if(obstaclesTimer > 3.5f / level && Math.random() >= 0.5)
             {
-                
+                //TODO: FIXME: FIX THIS THING!
+                PolygonShape temp = new PolygonShape();
+                float tempfloat = (float) Math.random();
+
+                if(tempfloat < (1f / 3f)) {
+                    //Vectors are in CCW direction
+                    temp.set(new Vector2[]{new Vector2(0, 0),
+                            new Vector2(scale(80), 0),
+                            new Vector2(scale(80), pheight(30))});//This makes a triangle like thingy
+                                                             //origins of objects for box2d are at the centre.
+                    obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(-39f + (30f / 2f)), false));
+                }
+                if(tempfloat < (2f/3f))
+                {
+                    //Do some other shape
+                }
+                else
+                {
+                    //Do some other shape
+                }
             }
 
             obstaclesTimer += Gdx.graphics.getDeltaTime();
