@@ -226,7 +226,7 @@ public class derptest extends ApplicationAdapter{
                                                              //origins of objects for box2d are at the centre.
                     obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(-39f + (30f / 2f)), false));
                 }
-                if(tempfloat < (2f/3f))
+                if(tempfloat < (2f / 3f))
                 {
                     //Do some other shape
                 }
