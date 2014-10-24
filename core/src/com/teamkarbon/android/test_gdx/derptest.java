@@ -224,11 +224,18 @@ public class derptest extends ApplicationAdapter{
                             new Vector2(scale(80), 0),
                             new Vector2(scale(80), pheight(30))});//This makes a triangle like thingy
                                                              //origins of objects for box2d are at the centre.
-                    obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(-39f + (30f / 2f)), false));
+                    if(Math.random() < 0.5)
+                        obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(-39f + (30f / 2f)), false));
+                    else
+                        obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(-39f + (30f / 2f)), false));
                 }
                 if(tempfloat < (2f / 3f))
                 {
-                    //Do some other shape
+                    float rndval = scale(60 + (float) Math.random() * 40);
+                    temp.set(new Vector2[]{new Vector2(0, 0),
+                            new Vector2(rndval, 0),
+                            new Vector2(rndval, pheight(28)),
+                            new Vector2(0, pheight(28))});
                 }
                 else
                 {
