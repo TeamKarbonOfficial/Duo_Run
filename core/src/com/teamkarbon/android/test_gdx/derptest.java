@@ -234,32 +234,57 @@ public class derptest extends ApplicationAdapter{
             //Make dem obstacles
             if(obstaclesTimer > 3.5f / level && Math.random() >= 0.5)
             {
-                //TODO: FIXME: FIX THIS THING!
                 PolygonShape temp = new PolygonShape();
+                //the .set function assumes the vectors are in CCW direction
+                //and also assumes that the origin of the object (it's relative [0, 0]) is actually (0, 0)
+
                 float tempfloat = (float) Math.random();
 
-                if(tempfloat < (1f / 3f)) {
-                    //Vectors are in CCW direction
+                if(tempfloat < (1f / 4f)) {
+                    //Vectors are in CCW direction!!!
+                    //This makes either a sharp right angled triangle like a ramp on the floor,
+                    //or a hook from the ceiling
                     temp.set(new Vector2[]{new Vector2(0, 0),
                             new Vector2(scale(80), 0),
                             new Vector2(scale(80), pheight(30))});//This makes a triangle like thingy
                                                              //origins of objects for box2d are at the centre.
+
+                    boolean derp = (Math.random() < 0.5);//To spawn a blue collider or a yellow collider.
+
                     if(Math.random() < 0.5)
-                        obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(-39f + (30f / 2f)), false));
+                        obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(-39f), derp));
                     else
-                        obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(+39f - (30f / 2f)), false));
+                        obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(+39f - 30f), derp));
                 }
-                if(tempfloat < (2f / 3f))
+                else if(tempfloat < (2f / 4f))
                 {
+                    //This makes a simple rectangle..(on the ceiling or the ground)
                     float rndval = scale(60 + (float) Math.random() * 40);
                     temp.set(new Vector2[]{new Vector2(0, 0),
                             new Vector2(rndval, 0),
                             new Vector2(rndval, pheight(28)),
                             new Vector2(0, pheight(28))});
+                    if(Math.random() < 0.5)
+                        obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(- 39f), false));
+                    else
+                        obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(+ 39f - 28), false));
+                }
+                else if(tempfloat < (3f / 4f))
+                {
+                    //This makes a trapezium. The base is always bigger than the cap
+                    float val1 = scale(70 + (float) Math.random() * 40);//From 70 - 110 px
+                    float val2 = val1 + scale(120 + (float) Math.random() * 50);//From 190 - 280 px
+                    float tempheight = scale(30 + (float) Math.random() * 60);
+                    temp.set(new Vector2[]{
+                            new Vector2(0, 0),//Origin (Bottom left)
+                            new Vector2(val2, 0),//Bottom right
+                            new Vector2(val1 + (val2 - val1) / 2f, tempheight),//Top right
+                            new Vector2((val2 - val1) / 2f, tempheight)//Top left
+                    });
                 }
                 else
                 {
-                    //Do some other shape
+                    ;
                 }
             }
 
