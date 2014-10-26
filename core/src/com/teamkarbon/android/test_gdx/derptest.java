@@ -48,6 +48,7 @@ public class derptest extends ApplicationAdapter{
     OrthographicCamera camera;
     World world;
     Body theFloor;
+    Body theCeiling;
     Ball ball;
     Ball ball2;
     BitmapFont font;
@@ -123,6 +124,22 @@ public class derptest extends ApplicationAdapter{
         tempFilter.maskBits = 3;//Binary 0011
         tempFilter.categoryBits = 3;//Binary 0011
         floorFixture.setFilterData(tempFilter);
+
+        //The ceiling
+        tempBD = new BodyDef();
+        tempBD.type = BodyDef.BodyType.StaticBody;
+        tempBD.position.set(scale(0), pheight(40));
+        theCeiling = world.createBody(tempBD);
+
+        //Ceiling bounds
+        PolygonShape ceiling = new PolygonShape();
+        ceiling.setAsBox(camera.viewportWidth, pheight(1f));
+        Fixture ceilingFixture = theCeiling.createFixture(ceiling, 0f);
+
+        //Ceil collision data
+        tempFilter.maskBits = 3;
+        tempFilter.maskBits = 3;
+        ceilingFixture.setFilterData(tempFilter);
 
         debugRenderer = new Box2DDebugRenderer();
 
@@ -200,10 +217,13 @@ public class derptest extends ApplicationAdapter{
             shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, scale(90), 45);
             shapeRenderer.end();
 
+            //Draw the floors and the ceiling
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             shapeRenderer.setColor(0.8f, 0.8f, 0.8f, 1f);
             shapeRenderer.rect(theFloor.getPosition().x - camera.viewportWidth / 2f, pheight(-41), camera.viewportWidth, pheight(2));
+            shapeRenderer.rect(theCeiling.getPosition().x - camera.viewportWidth / 2f, pheight(39), camera.viewportWidth, pheight(2));
             shapeRenderer.end();
+
             Gdx.gl.glDisable(GL20.GL_BLEND);
 
 
@@ -227,7 +247,7 @@ public class derptest extends ApplicationAdapter{
                     if(Math.random() < 0.5)
                         obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(-39f + (30f / 2f)), false));
                     else
-                        obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(-39f + (30f / 2f)), false));
+                        obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(+39f - (30f / 2f)), false));
                 }
                 if(tempfloat < (2f / 3f))
                 {
