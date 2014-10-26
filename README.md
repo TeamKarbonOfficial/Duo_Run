@@ -3,6 +3,7 @@ GDXTest
 
 ~ A Lib GDX Experiment ~
 
+**NOTE: TO CHECK FOR COLLISION, USE Intersect.overlapConvexPolygons!!!**
 That's all folks...
 
 *TODO:*
