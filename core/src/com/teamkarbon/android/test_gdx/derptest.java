@@ -25,7 +25,7 @@ import java.util.ArrayList;
     NOTE: All shapes and virtual object fixtures have its x and y coordinates based on its origin.
         For example, if the shape's coordinates are (15, 30), its relative origin (0, 0), is at (15, 30),
         not necessarily (15, 30) being the corner of the shape.
-        Origin for circles are at the centre, and origin for polygonshapes are always (0, 0) in the
+        Origin for circles and boxes are at the centre, and origin for polygonshapes are always (0, 0) in the
         PolygonShape.set() function.
  */
 
@@ -76,13 +76,14 @@ public class derptest extends ApplicationAdapter{
 
 
         //Setting up the camera
-        camera = new OrthographicCamera(pwidth(100), pheight(100));
+        camera = new OrthographicCamera(pwidth(100), pheight(100));//Sets its rendering area to fill the whole screen.
+        //Set camera position such that (0, 0) is the centre of the screen.
         camera.position.set(scale(camera.viewportWidth / 2f), scale(camera.viewportHeight / 2f), 0f);
-        camera.update();
+        camera.update();//Make sure everything's ok :P
 
         //Create world
 
-        world = new World(new Vector2(0, -9.8f), true);
+        world = new World(new Vector2(0, -9.8f), true);//Set gravity to 9.8 m/s^2 downwards
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
 
@@ -114,10 +115,11 @@ public class derptest extends ApplicationAdapter{
         //if ( (catBits1 & maskBits2) && (catBits2 & maskBits1) ) collision = true;
 
         //Make the floor exist
-        BodyDef tempBD;
+        BodyDef tempBD;//Temporary body definition. This is similar to a Body, just without all the functions.
+                       //Usually used to define an actual body, although defining the actual body itself also works.
         tempBD = new BodyDef();
-        tempBD.type = BodyDef.BodyType.StaticBody;
-        tempBD.position.set(scale(0), pheight(-40));
+        tempBD.type = BodyDef.BodyType.StaticBody;//It doesn't move
+        tempBD.position.set(scale(0), pheight(-40));//NOTE: The floor's origin is the centre of the box.
         theFloor = world.createBody(tempBD);
 
         //Floor bounds
@@ -148,15 +150,9 @@ public class derptest extends ApplicationAdapter{
 
         debugRenderer = new Box2DDebugRenderer();
 
-        //Set input processor
-        /*
-        inputProcessor = new CustomInputProcessor();
-        Gdx.input.setInputProcessor(inputProcessor);
-        */
-        //OR
+
         Gdx.input.setInputProcessor(new InputAdapter(){
             public boolean touchDown (int x, int y, int pointer, int button) {
-                // your touch down code here
                 if(x < Gdx.graphics.getWidth() / 2f)
                     Force = true;
                 if(x >= Gdx.graphics.getWidth() / 2f)
@@ -166,27 +162,24 @@ public class derptest extends ApplicationAdapter{
             }
 
             public boolean touchUp (int x, int y, int pointer, int button) {
-                // your touch up code here
-
                 Force = false;
-
                 Force2 = false;
-
                 return true;
             }
         });
 
         //Init the obstacles arraylist
         obstacles = new ArrayList();
-        obstaclesTimer = 0;
+        obstaclesTimer = 0;//This makes sure that the obstacles are not too close to other obstacles
 
-        //TODO: INFO: Debug!!!
+        //TODO: INFO: Debug!!! Remove when game functionality complete!
         mode = gameMode.GAME;
         level = 1;
 	}
 
 	@Override
 	public void render () {
+        //In game screen
         if(mode == gameMode.GAME) {
             if (Force)
                 ball.body.applyForceToCenter(0, 50, true);
@@ -203,17 +196,19 @@ public class derptest extends ApplicationAdapter{
             if(ball2.body.getPosition().x > 0)
                 ball2.body.applyForceToCenter(-10, 0, true);
 
-
+            //This sets the floor's position such that it follows the ball. At least it should :P
             theFloor.setTransform((ball.body.getPosition().x + ball2.body.getPosition().x) / 2, pheight(-40), 0);
+            //Same for the ceiling
+            theCeiling.setTransform(theFloor.getPosition().x, pheight(40), 0);
 
             Gdx.gl.glClearColor(0, 0.06f, 0.13f, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-            camera.update();
+            camera.update();//Duh
 
-            debugRenderer.render(world, camera.combined);
+            debugRenderer.render(world, camera.combined);//View all colliders and stuff
 
-            Gdx.gl.glEnable(GL20.GL_BLEND);
+            Gdx.gl.glEnable(GL20.GL_BLEND);//Allow for translucency (alpha blending) when shapes overlap
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
@@ -225,6 +220,8 @@ public class derptest extends ApplicationAdapter{
             //Draw the floors and the ceiling
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
             shapeRenderer.setColor(0.8f, 0.8f, 0.8f, 1f);
+            //NOTE: The origin of physical boxes are at the centre, but the origins of graphical boxes are at the bottom left corner.
+            //Which is why the differing values are needed for pheight and pwidth.
             shapeRenderer.rect(theFloor.getPosition().x - camera.viewportWidth / 2f, pheight(-41), camera.viewportWidth, pheight(2));
             shapeRenderer.rect(theCeiling.getPosition().x - camera.viewportWidth / 2f, pheight(39), camera.viewportWidth, pheight(2));
             shapeRenderer.end();
