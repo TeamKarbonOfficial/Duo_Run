@@ -321,7 +321,7 @@ public class derptest extends ApplicationAdapter{
                 Obstacle temp = (Obstacle) o;
 
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-
+                
                 shapeRenderer.end();
             }
 
