@@ -291,6 +291,7 @@ public class derptest extends ApplicationAdapter{
 
             obstaclesTimer += Gdx.graphics.getDeltaTime();
             world.step(Gdx.graphics.getDeltaTime(), 6, 2);
+
         }
 	}
 
