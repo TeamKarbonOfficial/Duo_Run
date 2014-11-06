@@ -230,6 +230,7 @@ public class derptest extends ApplicationAdapter{
 
 
             batch.begin();
+            //This is just for debug purposes. Actually its not even useful.. yet.
             font.draw(batch, "coord: " + descale(ball.body.getPosition().x) + ", " + descale(ball.body.getPosition().y) + ", Force: " + Force, 300, 200);
             batch.end();
 
@@ -314,6 +315,7 @@ public class derptest extends ApplicationAdapter{
                 }
             }
 
+            //TODO: Render them.
             for(Object o : obstacles)
             {
                 Obstacle temp = (Obstacle) o;
@@ -329,17 +331,17 @@ public class derptest extends ApplicationAdapter{
         }
 	}
 
-    public float scale(float pixels)
-    {
-        return pixels / PixelsPerMeter;
-    }
+    //So that "1" =  1 px
+    //So scale(300) is 300px. Not very good tho...
+    public float scale(float pixels) { return pixels / PixelsPerMeter; }
 
+    //And the opposite. To convert pixels into meters.
     public float descale(float meters)
     {
         return meters * PixelsPerMeter;
     }
 
-    //Exact value rep for percent of screen
+    //To use percentages of the screen instead of metric or pixel by pixel counting.
     public Vector2 percent(Vector2 percentofscreen)//This value is from 0 to 100
     {
         Vector2 temp = new Vector2();
@@ -350,16 +352,19 @@ public class derptest extends ApplicationAdapter{
         return temp;
     }
 
+    //The percentage of screen width represented in meters.
     public float pwidth(float widthpercent)
     {
         return scale((widthpercent / 100f) * Gdx.graphics.getWidth());
     }
 
+    //The percentage of screen height represented in meters.
     public float pheight(float heightpercent)
     {
         return scale((heightpercent / 100f) * Gdx.graphics.getHeight());
     }
 
+    //A selection of current active states.
     public enum gameMode
     {
         MAIN_MENU, OPTIONS, ABOUT, GAME
