@@ -311,6 +311,9 @@ public class derptest extends ApplicationAdapter{
                     float ypos = pheight(((float) Math.random() * 78f) - 39f);
                     float rad = scale((float) Math.random() * 70);
 
+                    temp.setRadius(rad);
+
+                    obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(100), ypos, false));
                 }
             }
 
