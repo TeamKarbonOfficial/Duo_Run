@@ -119,7 +119,7 @@ public class derptest extends ApplicationAdapter{
                        //Usually used to define an actual body, although defining the actual body itself also works.
         tempBD = new BodyDef();
         tempBD.type = BodyDef.BodyType.StaticBody;//It doesn't move
-        tempBD.position.set(scale(0), pheight(-50) + scale(1));//NOTE: The floor's origin is the centre of the box.
+        tempBD.position.set(scale(0), pheight(-50 + 1));//NOTE: The floor's origin is the centre of the box.
         theFloor = world.createBody(tempBD);
 
         //Floor bounds
@@ -135,7 +135,7 @@ public class derptest extends ApplicationAdapter{
         //The ceiling
         tempBD = new BodyDef();
         tempBD.type = BodyDef.BodyType.StaticBody;
-        tempBD.position.set(scale(0), pheight(50) - scale(1));
+        tempBD.position.set(scale(0), pheight(50 - 1));
         theCeiling = world.createBody(tempBD);
 
         //Ceiling bounds
@@ -222,8 +222,8 @@ public class derptest extends ApplicationAdapter{
             shapeRenderer.setColor(0.8f, 0.8f, 0.8f, 1f);
             //NOTE: The origin of physical boxes are at the centre, but the origins of graphical boxes are at the bottom left corner.
             //Which is why the differing values are needed for pheight and pwidth.
-            shapeRenderer.rect(theFloor.getPosition().x - camera.viewportWidth / 2f, pheight(-41), camera.viewportWidth, pheight(2));
-            shapeRenderer.rect(theCeiling.getPosition().x - camera.viewportWidth / 2f, pheight(39), camera.viewportWidth, pheight(2));
+            shapeRenderer.rect(theFloor.getPosition().x - camera.viewportWidth / 2f, theFloor.getPosition().y - pheight(1), camera.viewportWidth, pheight(2));
+            shapeRenderer.rect(theCeiling.getPosition().x - camera.viewportWidth / 2f, theCeiling.getPosition().y + pheight(1), camera.viewportWidth, pheight(2));
             shapeRenderer.end();
 
             Gdx.gl.glDisable(GL20.GL_BLEND);
