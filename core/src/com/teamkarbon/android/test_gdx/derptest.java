@@ -94,9 +94,18 @@ public class derptest extends ApplicationAdapter{
         font.setScale(4);
 
         //Init ball classes
-        ball = new Ball(pwidth(0), pheight(30), world, pheight(20));
+        //The meaning of each param
+        //Ball: x = Centre
+        //      y = + 30% above centre
+        //      Exists in world
+        //      radius: 10% height
+        ball = new Ball(pwidth(0), pheight(30), world, pheight(10));
+        //Custom function "setFixture":
+        //Density: 1kg/m^3
+        //Restitution: 55% of Joules retained per collision
+        //Friction: 30%
         ball.setFixture(1f, 0.55f, 0.3f);
-        ball2 = new Ball(scale(0), pheight(20), world, pheight(20));
+        ball2 = new Ball(pwidth(0), pheight(20), world, pheight(10));
         ball2.setFixture(1f, 0.55f, 0.3f);
 
         //Set collision filtering (so the two balls don't collide with each other
@@ -186,7 +195,8 @@ public class derptest extends ApplicationAdapter{
             if (Force2)
                 ball2.body.applyForceToCenter(0, 50, true);
 
-            //Constantly increase the balls' speed until a certain velocity
+            //Try to make the balls in the centre. If the ball is out, then the player loses.
+            //TODO: Adjust to fine tune difficulty during alpha testing
             if(ball.body.getPosition().x < 0)
                 ball.body.applyForceToCenter(10, 0, true);
             if(ball2.body.getPosition().x < 0)
@@ -196,11 +206,15 @@ public class derptest extends ApplicationAdapter{
             if(ball2.body.getPosition().x > 0)
                 ball2.body.applyForceToCenter(-10, 0, true);
 
+            /*
+            Deprecated for now
             //This sets the floor's position such that it follows the ball. At least it should :P
             theFloor.setTransform((ball.body.getPosition().x + ball2.body.getPosition().x) / 2, pheight(-50) + scale(1), 0);
             //Same for the ceiling
             theCeiling.setTransform(theFloor.getPosition().x, pheight(50) - scale(1), 0);
+            */
 
+            //R: 0, G: 6%, B: 13%
             Gdx.gl.glClearColor(0, 0.06f, 0.13f, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
