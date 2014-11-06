@@ -22,6 +22,11 @@ import java.util.ArrayList;
 /*
     IMPORTANT: USE scale(float f) FUNCTION FOR ALL POSITIONS OF BODIES, AND SIZES
     FIXME: IMPORTANT !!!~~~UTILIZE SCREEN PERCENTAGE FUNCTIONS IN ORDER TO FIT ALL SCREEN SIZES~~~!!!
+    NOTE: All shapes and virtual object fixtures have its x and y coordinates based on its origin.
+        For example, if the shape's coordinates are (15, 30), its relative origin (0, 0), is at (15, 30),
+        not necessarily (15, 30) being the corner of the shape.
+        Origin for circles are at the centre, and origin for polygonshapes are always (0, 0) in the
+        PolygonShape.set() function.
  */
 
 /*
@@ -269,23 +274,43 @@ public class derptest extends ApplicationAdapter{
                     else
                         obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(+ 39f - 28), false));
                 }
-                else if(tempfloat < (3f / 4f))
-                {
+                else if(tempfloat < (3f / 4f)) {
                     //This makes a trapezium. The base is always bigger than the cap
                     float val1 = scale(70 + (float) Math.random() * 40);//From 70 - 110 px
                     float val2 = val1 + scale(120 + (float) Math.random() * 50);//From 190 - 280 px
                     float tempheight = scale(30 + (float) Math.random() * 60);
-                    temp.set(new Vector2[]{
-                            new Vector2(0, 0),//Origin (Bottom left)
-                            new Vector2(val2, 0),//Bottom right
-                            new Vector2(val1 + (val2 - val1) / 2f, tempheight),//Top right
-                            new Vector2((val2 - val1) / 2f, tempheight)//Top left
-                    });
+
+                    if (Math.random() < 0.5) {
+                        //Origin at bottom left, trapezium spawned at the bottom
+                        temp.set(new Vector2[]{
+                                new Vector2(0, 0),//Origin (Bottom left)
+                                new Vector2(val2, 0),//Bottom right
+                                new Vector2(val1 + (val2 - val1) / 2f, tempheight),//Top right
+                                new Vector2((val2 - val1) / 2f, tempheight)//Top left
+                        });
+
+                        obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(-39f), false));
+                    }
+                    else
+                    {
+                        //Origin at top left, trapezium spawned at the top.
+                        temp.set(new Vector2[]{
+                                new Vector2(0, 0),//Origin (Top left)
+                                new Vector2(val2, 0),//Top right
+                                new Vector2(val1 + (val2 - val1) / 2f, -tempheight),//Bottom right
+                                new Vector2((val2 - val1) / 2f, -tempheight)//Bottom left
+                        });
+
+                        obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(39f), false));
+
+                    }
                 }
                 else
                 {
-                    //Make sth else... I guess?
-                    ;
+                    //Make a random circle. Randomly
+                    float ypos = pheight(((float) Math.random() * 78f) - 39f);
+                    float rad = scale((float) Math.random() * 70);
+
                 }
             }
 
