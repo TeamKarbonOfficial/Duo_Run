@@ -237,7 +237,7 @@ public class derptest extends ApplicationAdapter{
             batch.end();
 
             //Make dem obstacles
-            if(obstaclesTimer > 3.5f / level && Math.random() >= 0.5)
+            if(obstaclesTimer > 3.5f - (level / 2f) && Math.random() >= 0.5)
             {
                 PolygonShape temp = new PolygonShape();
                 //the .set function assumes the vectors are in CCW direction
@@ -315,6 +315,15 @@ public class derptest extends ApplicationAdapter{
 
                     obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(100), ypos, false));
                 }
+            }
+
+            for(Object o : obstacles)
+            {
+                Obstacle temp = (Obstacle) o;
+
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+
+                shapeRenderer.end();
             }
 
             obstaclesTimer += Gdx.graphics.getDeltaTime();
