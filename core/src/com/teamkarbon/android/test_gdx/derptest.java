@@ -272,21 +272,26 @@ public class derptest extends ApplicationAdapter{
                 else if(tempfloat < (2f / 4f))
                 {
                     //This makes a simple rectangle..(on the ceiling or the ground)
-                    float rndval = scale(60 + (float) Math.random() * 40);
+                    float x = pwidth(8 + (float) Math.random() * 16);//8% - 24% width
+                    float y = pheight(5 + (float) Math.random() * 20);//5% - 25% height
                     temp.set(new Vector2[]{new Vector2(0, 0),
-                            new Vector2(rndval, 0),
-                            new Vector2(rndval, pheight(28)),
-                            new Vector2(0, pheight(28))});
+                            new Vector2(x, 0),
+                            new Vector2(x, y),
+                            new Vector2(0, y)});
+
+                    boolean derp = (Math.random() < 0.5f);
                     if(Math.random() < 0.5)
-                        obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(- 39f), false));
+                        obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(- 39f), derp));
                     else
-                        obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(+ 39f - 28), false));
+                        obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(+39f) - y, derp));
                 }
                 else if(tempfloat < (3f / 4f)) {
                     //This makes a trapezium. The base is always bigger than the cap
-                    float val1 = scale(70 + (float) Math.random() * 40);//From 70 - 110 px
-                    float val2 = val1 + scale(120 + (float) Math.random() * 50);//From 190 - 280 px
-                    float tempheight = scale(30 + (float) Math.random() * 60);
+                    float val1 = pwidth(15 + (float) Math.random() * 10);//From 15% - 25% width
+                    float val2 = val1 + pwidth(5 + (float) Math.random() * 16);//From 20% - 41% width
+                    float tempheight = pheight(10 + (float) Math.random() * 13);//From 10% - 23% height
+
+                    boolean derp = (Math.random() < 0.5);
 
                     if (Math.random() < 0.5) {
                         //Origin at bottom left, trapezium spawned at the bottom
@@ -297,19 +302,19 @@ public class derptest extends ApplicationAdapter{
                                 new Vector2((val2 - val1) / 2f, tempheight)//Top left
                         });
 
-                        obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(-39f), false));
+                        obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(-39f), derp));
                     }
                     else
                     {
                         //Origin at top left, trapezium spawned at the top.
                         temp.set(new Vector2[]{
                                 new Vector2(0, 0),//Origin (Top left)
-                                new Vector2(val2, 0),//Top right
+                                new Vector2((val2 - val1) / 2f, -tempheight),//Bottom left
                                 new Vector2(val1 + (val2 - val1) / 2f, -tempheight),//Bottom right
-                                new Vector2((val2 - val1) / 2f, -tempheight)//Bottom left
+                                new Vector2(val2, 0)//Top right
                         });
 
-                        obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(39f), false));
+                        obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(39f), derp));
 
                     }
                 }
@@ -321,7 +326,7 @@ public class derptest extends ApplicationAdapter{
 
                     temp.setRadius(rad);
 
-                    obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(100), ypos, false));
+                    obstacles.add(new Obstacle(temp, world, pwidth(70), ypos, false));
                 }
             }
 
