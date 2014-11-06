@@ -119,7 +119,7 @@ public class derptest extends ApplicationAdapter{
                        //Usually used to define an actual body, although defining the actual body itself also works.
         tempBD = new BodyDef();
         tempBD.type = BodyDef.BodyType.StaticBody;//It doesn't move
-        tempBD.position.set(scale(0), pheight(-40));//NOTE: The floor's origin is the centre of the box.
+        tempBD.position.set(scale(0), pheight(-50) + scale(1));//NOTE: The floor's origin is the centre of the box.
         theFloor = world.createBody(tempBD);
 
         //Floor bounds
@@ -135,7 +135,7 @@ public class derptest extends ApplicationAdapter{
         //The ceiling
         tempBD = new BodyDef();
         tempBD.type = BodyDef.BodyType.StaticBody;
-        tempBD.position.set(scale(0), pheight(40));
+        tempBD.position.set(scale(0), pheight(50) - scale(1));
         theCeiling = world.createBody(tempBD);
 
         //Ceiling bounds
@@ -197,9 +197,9 @@ public class derptest extends ApplicationAdapter{
                 ball2.body.applyForceToCenter(-10, 0, true);
 
             //This sets the floor's position such that it follows the ball. At least it should :P
-            theFloor.setTransform((ball.body.getPosition().x + ball2.body.getPosition().x) / 2, pheight(-40), 0);
+            theFloor.setTransform((ball.body.getPosition().x + ball2.body.getPosition().x) / 2, pheight(-50) + scale(1), 0);
             //Same for the ceiling
-            theCeiling.setTransform(theFloor.getPosition().x, pheight(40), 0);
+            theCeiling.setTransform(theFloor.getPosition().x, pheight(50) - scale(1), 0);
 
             Gdx.gl.glClearColor(0, 0.06f, 0.13f, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
