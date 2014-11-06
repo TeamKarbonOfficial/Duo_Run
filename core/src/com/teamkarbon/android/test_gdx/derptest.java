@@ -248,16 +248,26 @@ public class derptest extends ApplicationAdapter{
                     //This makes either a sharp right angled triangle like a ramp on the floor,
                     //or a hook from the ceiling
                     temp.set(new Vector2[]{new Vector2(0, 0),
-                            new Vector2(scale(80), 0),
-                            new Vector2(scale(80), pheight(30))});//This makes a triangle like thingy
+                            new Vector2(pwidth(10), 0),
+                            new Vector2(pwidth(10), pheight(25))});//This makes a triangle like thingy
                                                              //origins of objects for box2d are at the centre.
 
                     boolean derp = (Math.random() < 0.5);//To spawn a blue collider or a yellow collider.
 
-                    if(Math.random() < 0.5)
-                        obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(-39f), derp));
+                    if(Math.random() < (1f / 3f))
+                        obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(-39f), derp));
+                    else if(Math.random() < 0.5)
+                        obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(+39f - 25f), derp));
                     else
-                        obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(+39f - 30f), derp));
+                    {
+                        temp.set(new Vector2[]{
+                                new Vector2(0, 0),
+                                new Vector2(pwidth(10), 0),
+                                new Vector2(pwidth(10), pheight(-25))
+                        });
+
+                        obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(+39f), derp));
+                    }
                 }
                 else if(tempfloat < (2f / 4f))
                 {
