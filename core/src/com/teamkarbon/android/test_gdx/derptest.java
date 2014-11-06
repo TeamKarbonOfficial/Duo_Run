@@ -94,9 +94,9 @@ public class derptest extends ApplicationAdapter{
         font.setScale(4);
 
         //Init ball classes
-        ball = new Ball(pwidth(0), pheight(30), world, pheight(20));
+        ball = new Ball(pwidth(0), pheight(30), world, pheight(15));
         ball.setFixture(1f, 0.55f, 0.3f);
-        ball2 = new Ball(scale(0), pheight(20), world, pheight(20));
+        ball2 = new Ball(pwidth(0), pheight(20), world, pheight(15));
         ball2.setFixture(1f, 0.55f, 0.3f);
 
         //Set collision filtering (so the two balls don't collide with each other
@@ -212,9 +212,9 @@ public class derptest extends ApplicationAdapter{
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
-            shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, pheight(20), 45);
+            shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, pheight(15), 45);
             shapeRenderer.setColor(0f, 0f, 1f, 0.4f);
-            shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, pheight(20), 45);
+            shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, pheight(15), 45);
             shapeRenderer.end();
 
             //Draw the floors and the ceiling
