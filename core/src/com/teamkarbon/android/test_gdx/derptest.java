@@ -279,7 +279,7 @@ public class derptest extends ApplicationAdapter{
                     }
                 }
                 else if(tempfloat < (2f / 4f))
-                {
+                    {
                     //This makes a simple rectangle..(on the ceiling or the ground)
                     float x = pwidth(8 + (float) Math.random() * 16);//8% - 24% width
                     float y = pheight(5 + (float) Math.random() * 20);//5% - 25% height
@@ -351,7 +351,6 @@ public class derptest extends ApplicationAdapter{
 
             obstaclesTimer += Gdx.graphics.getDeltaTime();
             world.step(Gdx.graphics.getDeltaTime(), 6, 2);
-
         }
 	}
 
