@@ -44,7 +44,7 @@ import java.util.ArrayList;
     Check out newsapps/beeswithmachineguns on GitHub! A cool DDoS python app!
 
  */
-public class derptest extends ApplicationAdapter{
+public class derptest extends ApplicationAdapter {
     gameMode mode; //A custom enum to manage multiple screens. (Game, main menu etc)
 
     ShapeRenderer shapeRenderer;//Draws basic shapes on screen based on the camera's position (Simulating a 2d infinite world)
@@ -67,9 +67,9 @@ public class derptest extends ApplicationAdapter{
     int level;
 
     public final float PixelsPerMeter = 50f;
-	
-	@Override
-	public void create () {
+
+    @Override
+    public void create() {
 
         //Random graphics init to allow alpha blending...
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -125,7 +125,7 @@ public class derptest extends ApplicationAdapter{
 
         //Make the floor exist
         BodyDef tempBD;//Temporary body definition. This is similar to a Body, just without all the functions.
-                       //Usually used to define an actual body, although defining the actual body itself also works.
+        //Usually used to define an actual body, although defining the actual body itself also works.
         tempBD = new BodyDef();
         tempBD.type = BodyDef.BodyType.StaticBody;//It doesn't move
         tempBD.position.set(scale(0), pheight(-50 + 1));//NOTE: The floor's origin is the centre of the box.
@@ -160,17 +160,17 @@ public class derptest extends ApplicationAdapter{
         debugRenderer = new Box2DDebugRenderer();
 
 
-        Gdx.input.setInputProcessor(new InputAdapter(){
-            public boolean touchDown (int x, int y, int pointer, int button) {
-                if(x < Gdx.graphics.getWidth() / 2f)
+        Gdx.input.setInputProcessor(new InputAdapter() {
+            public boolean touchDown(int x, int y, int pointer, int button) {
+                if (x < Gdx.graphics.getWidth() / 2f)
                     Force = true;
-                if(x >= Gdx.graphics.getWidth() / 2f)
+                if (x >= Gdx.graphics.getWidth() / 2f)
                     Force2 = true;
 
                 return true;
             }
 
-            public boolean touchUp (int x, int y, int pointer, int button) {
+            public boolean touchUp(int x, int y, int pointer, int button) {
                 Force = false;
                 Force2 = false;
                 return true;
@@ -184,25 +184,25 @@ public class derptest extends ApplicationAdapter{
         //TODO: INFO: Debug!!! Remove when game functionality complete!
         mode = gameMode.GAME;
         level = 1;
-	}
+    }
 
-	@Override
-	public void render () {
+    @Override
+    public void render() {
         //In game screen
-        if(mode == gameMode.GAME) {
+        if (mode == gameMode.GAME) {
             if (Force)
                 ball.body.applyForceToCenter(0, 50, true);
             if (Force2)
                 ball2.body.applyForceToCenter(0, 50, true);
 
             //Constantly increase the balls' speed until a certain velocity
-            if(ball.body.getPosition().x < 0)
+            if (ball.body.getPosition().x < 0)
                 ball.body.applyForceToCenter(10, 0, true);
-            if(ball2.body.getPosition().x < 0)
+            if (ball2.body.getPosition().x < 0)
                 ball2.body.applyForceToCenter(10, 0, true);
-            if(ball.body.getPosition().x > 0)
+            if (ball.body.getPosition().x > 0)
                 ball.body.applyForceToCenter(-10, 0, true);
-            if(ball2.body.getPosition().x > 0)
+            if (ball2.body.getPosition().x > 0)
                 ball2.body.applyForceToCenter(-10, 0, true);
 
             //This sets the floor's position such that it follows the ball. At least it should :P
@@ -244,31 +244,29 @@ public class derptest extends ApplicationAdapter{
             batch.end();
 
             //Make dem obstacles
-            if(obstaclesTimer > 3.5f - (level / 2f) && Math.random() >= 0.5)
-            {
+            if (obstaclesTimer > 3.5f - (level / 2f) && Math.random() >= 0.5) {
                 PolygonShape temp = new PolygonShape();
                 //the .set function assumes the vectors are in CCW direction
                 //and also assumes that the origin of the object (it's relative [0, 0]) is actually (0, 0)
 
                 float tempfloat = (float) Math.random();
 
-                if(tempfloat < (1f / 4f)) {
+                if (tempfloat < (1f / 4f)) {
                     //Vectors are in CCW direction!!!
                     //This makes either a sharp right angled triangle like a ramp on the floor,
                     //or a hook from the ceiling
                     temp.set(new Vector2[]{new Vector2(0, 0),
                             new Vector2(pwidth(10), 0),
                             new Vector2(pwidth(10), pheight(25))});//This makes a triangle like thingy
-                                                             //origins of objects for box2d are at the centre.
+                    //origins of objects for box2d are at the centre.
 
                     boolean derp = (Math.random() < 0.5);//To spawn a blue collider or a yellow collider.
 
-                    if(Math.random() < (1f / 3f))
+                    if (Math.random() < (1f / 3f))
                         obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(-39f), derp));
-                    else if(Math.random() < 0.5)
+                    else if (Math.random() < 0.5)
                         obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(+39f - 25f), derp));
-                    else
-                    {
+                    else {
                         temp.set(new Vector2[]{
                                 new Vector2(0, 0),
                                 new Vector2(pwidth(10), 0),
@@ -277,9 +275,7 @@ public class derptest extends ApplicationAdapter{
 
                         obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(+39f), derp));
                     }
-                }
-                else if(tempfloat < (2f / 4f))
-                    {
+                } else if (tempfloat < (2f / 4f)) {
                     //This makes a simple rectangle..(on the ceiling or the ground)
                     float x = pwidth(8 + (float) Math.random() * 16);//8% - 24% width
                     float y = pheight(5 + (float) Math.random() * 20);//5% - 25% height
@@ -289,12 +285,11 @@ public class derptest extends ApplicationAdapter{
                             new Vector2(0, y)});
 
                     boolean derp = (Math.random() < 0.5f);
-                    if(Math.random() < 0.5)
-                        obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(- 39f), derp));
+                    if (Math.random() < 0.5)
+                        obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(-39f), derp));
                     else
                         obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(+39f) - y, derp));
-                }
-                else if(tempfloat < (3f / 4f)) {
+                } else if (tempfloat < (3f / 4f)) {
                     //This makes a trapezium. The base is always bigger than the cap
                     float val1 = pwidth(15 + (float) Math.random() * 10);//From 15% - 25% width
                     float val2 = val1 + pwidth(5 + (float) Math.random() * 16);//From 20% - 41% width
@@ -312,9 +307,7 @@ public class derptest extends ApplicationAdapter{
                         });
 
                         obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(-39f), derp));
-                    }
-                    else
-                    {
+                    } else {
                         //Origin at top left, trapezium spawned at the top.
                         temp.set(new Vector2[]{
                                 new Vector2(0, 0),//Origin (Top left)
@@ -326,9 +319,7 @@ public class derptest extends ApplicationAdapter{
                         obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(39f), derp));
 
                     }
-                }
-                else
-                {
+                } else {
                     //Make a random circle. Randomly
                     float ypos = pheight(((float) Math.random() * 78f) - 39f);
                     float rad = scale((float) Math.random() * 70);
@@ -340,27 +331,27 @@ public class derptest extends ApplicationAdapter{
             }
 
             //TODO: Render them.
-            for(Object o : obstacles)
-            {
+            for (Object o : obstacles) {
                 Obstacle temp = (Obstacle) o;
 
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-                
+
                 shapeRenderer.end();
             }
 
             obstaclesTimer += Gdx.graphics.getDeltaTime();
             world.step(Gdx.graphics.getDeltaTime(), 6, 2);
         }
-	}
+    }
 
     //So that "1" =  1 px
     //So scale(300) is 300px. Not very good tho...
-    public float scale(float pixels) { return pixels / PixelsPerMeter; }
+    public float scale(float pixels) {
+        return pixels / PixelsPerMeter;
+    }
 
     //And the opposite. To convert pixels into meters.
-    public float descale(float meters)
-    {
+    public float descale(float meters) {
         return meters * PixelsPerMeter;
     }
 
@@ -376,20 +367,17 @@ public class derptest extends ApplicationAdapter{
     }
 
     //The percentage of screen width represented in meters.
-    public float pwidth(float widthpercent)
-    {
+    public float pwidth(float widthpercent) {
         return scale((widthpercent / 100f) * Gdx.graphics.getWidth());
     }
 
     //The percentage of screen height represented in meters.
-    public float pheight(float heightpercent)
-    {
+    public float pheight(float heightpercent) {
         return scale((heightpercent / 100f) * Gdx.graphics.getHeight());
     }
 
     //A selection of current active states.
-    public enum gameMode
-    {
+    public enum gameMode {
         MAIN_MENU, OPTIONS, ABOUT, GAME
     }
 }
