@@ -1,5 +1,6 @@
 package com.teamkarbon.android.test_gdx;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -45,6 +46,8 @@ public class Obstacle {
     {
         body.setTransform(x, y, 0);
     }
+
+    public Vector2 getPos() { return body.getTransform().getPosition(); }//Make typing easier :P
 
     public void setFixture(float _f, float _d, float _r)
     {

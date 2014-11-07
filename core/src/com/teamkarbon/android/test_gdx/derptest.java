@@ -43,7 +43,26 @@ import java.util.ArrayList;
 
     Check out newsapps/beeswithmachineguns on GitHub! A cool DDoS python app!
 
- */
+    TODO: READ THIS!!!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    GAME DEVELOPMENT TERMS:
+        Graphics:
+            Translation:
+                Global Translation (most common): The change of position of any in-game object based on the [x, y] axes of
+                                                  the game world
+                Local Translation               : The change of position of any in-game object based on the [x, y] axes of
+                                                  the object itself. If the object is rotated 90 degrees right, moving "up"
+                                                  is equivalent to moving "right" in the game world.
+                Rotational Translation          : The change of quaternion of the object about its origin.
+                                                  AKA: Rotation with the origin being the pivot :P
+            Lateral Positioning:
+                Vertex (plural Vertices)        : A Vector2 used to define a point in the game world along multiple axes
+                Polygon                         : A set of Vertices in counter clockwise (CCW) order defining the corners
+                                                : of a polygon.
+            Game Clock:
+                Delta Time                      : The amount of time taken between the current frame and the previous frame.
+
+     */
 public class derptest extends ApplicationAdapter {
     gameMode mode; //A custom enum to manage multiple screens. (Game, main menu etc)
 
@@ -333,7 +352,19 @@ public class derptest extends ApplicationAdapter {
             //TODO: Render them.
             for (Object o : obstacles) {
                 Obstacle temp = (Obstacle) o;
-
+                float[] tempVertices;
+                tempVertices = new float[temp.shape.getVertexCount() * 2];
+                Vector2 tempvect = new Vector2();
+                for(int i = 0; i < temp.shape.getVertexCount(); i++)
+                {
+                    //I hope this works...
+                    temp.shape.getVertex(i, tempvect);//tempvect = shape.vertex[i]... apparently they don't have this function
+                    //translate the vertices drawn based on global position of the polygon's origin (0, 0)
+                    //The polygon's origin (0, 0) should be positioned at(temp.getPos().x, temp.getPos().y).
+                    //Hence the " + temp.getPos().x/y;" part.
+                    tempVertices[(i * 2)] = tempvect.x + temp.getPos().x;
+                    tempVertices[(i * 2) + 1] = tempvect.y + temp.getPos().y;
+                }
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
                 shapeRenderer.end();
