@@ -7,8 +7,10 @@ GDXTest
 That's all folks...
 
 *TODO:*
-- Make the obstacles.
-- Find out a way to check for collisions
+- Make the obstacles.  *done*
+- Make them work.
+- Find out a way to check for collisions *done*
+- Actually check for collisions
 - Make an endgame situation function
 - Create levels
 - Create a level select screen
