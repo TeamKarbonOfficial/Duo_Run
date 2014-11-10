@@ -49,6 +49,12 @@ public class Obstacle {
 
     public Vector2 getPos() { return body.getTransform().getPosition(); }//Make typing easier :P
 
+    public Vector2 translate(float x, float y)
+    {
+        this.setPos(this.getPos().x + x, this.getPos().y + y);
+        return(this.getPos());
+    }
+
     public void setFixture(float _f, float _d, float _r)
     {
         fixture.setFriction(_f);

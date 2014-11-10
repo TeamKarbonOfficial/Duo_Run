@@ -352,6 +352,9 @@ public class derptest extends ApplicationAdapter {
             //TODO: Render them.
             for (Object o : obstacles) {
                 Obstacle temp = (Obstacle) o;
+
+                temp.translate(pwidth(-(6 + level) * Gdx.graphics.getDeltaTime()), 0);//Move left (6 + level) % of screen per second..
+
                 float[] tempVertices;
                 tempVertices = new float[temp.shape.getVertexCount() * 2];
                 Vector2 tempvect = new Vector2();
@@ -364,10 +367,16 @@ public class derptest extends ApplicationAdapter {
                     //Hence the " + temp.getPos().x/y;" part.
                     tempVertices[(i * 2)] = tempvect.x + temp.getPos().x;
                     tempVertices[(i * 2) + 1] = tempvect.y + temp.getPos().y;
-                }
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
+                }
+                Gdx.gl.glEnable(GL20.GL_BLEND);
+
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                shapeRenderer.setColor(1f, 1f, 0, 0.6f);
+                shapeRenderer.polygon(tempVertices);
                 shapeRenderer.end();
+
+                Gdx.gl.glDisable(GL20.GL_BLEND);
             }
 
             obstaclesTimer += Gdx.graphics.getDeltaTime();
