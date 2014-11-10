@@ -3,7 +3,10 @@ GDXTest
 
 ~ A Lib GDX Experiment ~
 
-**NOTE: TO CHECK FOR COLLISION, USE Intersect.overlapConvexPolygons!!!**
+**NOTE: TO CHECK FOR COLLISION, USE**
+```java
+Intersect.overlapConvexPolygons();//!!!!
+```
 That's all folks...
 
 *TODO:*
