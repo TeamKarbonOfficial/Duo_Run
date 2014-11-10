@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 /*
     IMPORTANT: USE scale(float f) FUNCTION FOR ALL POSITIONS OF BODIES, AND SIZES
-    FIXME: IMPORTANT !!!~~~UTILIZE SCREEN PERCENTAGE FUNCTIONS IN ORDER TO FIT ALL SCREEN SIZES~~~!!!
     NOTE: All shapes and virtual object fixtures have its x and y coordinates based on its origin.
         For example, if the shape's coordinates are (15, 30), its relative origin (0, 0), is at (15, 30),
         not necessarily (15, 30) being the corner of the shape.
@@ -80,7 +79,7 @@ public class derptest extends ApplicationAdapter {
     Boolean Force = false;
     Boolean Force2 = false;
 
-    ArrayList obstacles;
+    ArrayList<Obstacle> obstacles;
     float obstaclesTimer;//in Seconds...
 
     int level;
@@ -196,8 +195,8 @@ public class derptest extends ApplicationAdapter {
             }
         });
 
-        //Init the obstacles arraylist
-        obstacles = new ArrayList();
+        //Init the obstacles ArrayList
+        obstacles = new ArrayList<Obstacle>();
         obstaclesTimer = 0;//This makes sure that the obstacles are not too close to other obstacles
 
         //TODO: INFO: Debug!!! Remove when game functionality complete!
@@ -274,40 +273,51 @@ public class derptest extends ApplicationAdapter {
                     //Vectors are in CCW direction!!!
                     //This makes either a sharp right angled triangle like a ramp on the floor,
                     //or a hook from the ceiling
-                    temp.set(new Vector2[]{new Vector2(0, 0),
-                            new Vector2(pwidth(10), 0),
-                            new Vector2(pwidth(10), pheight(25))});//This makes a triangle like thingy
-                    //origins of objects for box2d are at the centre.
+                    //or an inverted ramp on the ceiling.
+                    //or a hook on the floor
 
-                    boolean derp = (Math.random() < 0.5);//To spawn a blue collider or a yellow collider.
+                    //Whether to spawn a blue collider or a yellow collider.
+                    boolean derp = (Math.random() < 0.5);
 
-                    if (Math.random() < (1f / 3f))
-                        obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(-39f), derp));
-                    else if (Math.random() < 0.5)
-                        obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(+39f - 25f), derp));
-                    else {
+                    if (Math.random() < 0.5) {
                         temp.set(new Vector2[]{
-                                new Vector2(0, 0),
-                                new Vector2(pwidth(10), 0),
-                                new Vector2(pwidth(10), pheight(-25))
+                                percent(0, 0),
+                                percent(10f, 0f),
+                                percent(10f, 25f)
                         });
 
-                        obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(+39f), derp));
+                        //Don't worry, this is an if/else statement :P
+                        obstacles.add(Math.random() < 0.5 ? new Obstacle(temp, world, pwidth(70), pheight(-39f), derp)
+                                :
+                                new Obstacle(temp, world, pwidth(70), pheight(+39f - 25f), derp));
+                    }
+                    else
+                    {
+                        temp.set(new Vector2[]{
+                            percent(0, 0),
+                            percent(10f, -25f),
+                            percent(10f, 0f)
+                        });
+
+                        obstacles.add(Math.random() < 0.5 ? new Obstacle(temp, world, pwidth(70), pheight(+39f), derp)
+                                :
+                                new Obstacle(temp, world, pwidth(70), pheight(-39 + 25f), derp));
                     }
                 } else if (tempfloat < (2f / 4f)) {
                     //This makes a simple rectangle..(on the ceiling or the ground)
                     float x = pwidth(8 + (float) Math.random() * 16);//8% - 24% width
                     float y = pheight(5 + (float) Math.random() * 20);//5% - 25% height
-                    temp.set(new Vector2[]{new Vector2(0, 0),
-                            new Vector2(x, 0),
-                            new Vector2(x, y),
-                            new Vector2(0, y)});
+
+                    temp.set(new Vector2[]{
+                            percent(0, 0),
+                            percent(x, 0),
+                            percent(x, y),
+                            percent(0, y)});
 
                     boolean derp = (Math.random() < 0.5f);
-                    if (Math.random() < 0.5)
-                        obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(-39f), derp));
-                    else
-                        obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(+39f) - y, derp));
+                    obstacles.add(Math.random() < 0.5 ? new Obstacle(temp, world, pwidth(70), pheight(-39f), derp)
+                            :
+                            new Obstacle(temp, world, pwidth(70), pheight(+39f) - y, derp));
                 } else if (tempfloat < (3f / 4f)) {
                     //This makes a trapezium. The base is always bigger than the cap
                     float val1 = pwidth(15 + (float) Math.random() * 10);//From 15% - 25% width
@@ -319,20 +329,20 @@ public class derptest extends ApplicationAdapter {
                     if (Math.random() < 0.5) {
                         //Origin at bottom left, trapezium spawned at the bottom
                         temp.set(new Vector2[]{
-                                new Vector2(0, 0),//Origin (Bottom left)
-                                new Vector2(val2, 0),//Bottom right
-                                new Vector2(val1 + (val2 - val1) / 2f, tempheight),//Top right
-                                new Vector2((val2 - val1) / 2f, tempheight)//Top left
+                                percent(0, 0),//Origin (Bottom left)
+                                percent(val2, 0),//Bottom right
+                                percent(val1 + (val2 - val1) / 2f, tempheight),//Top right
+                                percent((val2 - val1) / 2f, tempheight)//Top left
                         });
 
                         obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(-39f), derp));
                     } else {
                         //Origin at top left, trapezium spawned at the top.
                         temp.set(new Vector2[]{
-                                new Vector2(0, 0),//Origin (Top left)
-                                new Vector2((val2 - val1) / 2f, -tempheight),//Bottom left
-                                new Vector2(val1 + (val2 - val1) / 2f, -tempheight),//Bottom right
-                                new Vector2(val2, 0)//Top right
+                                percent(0, 0),//Origin (Top left)
+                                percent((val2 - val1) / 2f, -tempheight),//Bottom left
+                                percent(val1 + (val2 - val1) / 2f, -tempheight),//Bottom right
+                                percent(val2, 0)//Top right
                         });
 
                         obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(39f), derp));
@@ -350,23 +360,21 @@ public class derptest extends ApplicationAdapter {
             }
 
             //TODO: Render them.
-            for (Object o : obstacles) {
-                Obstacle temp = (Obstacle) o;
-
-                temp.translate(pwidth(-(6 + level) * Gdx.graphics.getDeltaTime()), 0);//Move left (6 + level) % of screen per second..
+            for (Obstacle o : obstacles) {
+                o.translate(percent(-(6 + level) * Gdx.graphics.getDeltaTime(), 0f));//Move left (6 + level) % of screen per second..
 
                 float[] tempVertices;
-                tempVertices = new float[temp.shape.getVertexCount() * 2];
+                tempVertices = new float[o.shape.getVertexCount() * 2];
                 Vector2 tempvect = new Vector2();
-                for(int i = 0; i < temp.shape.getVertexCount(); i++)
+                for(int i = 0; i < o.shape.getVertexCount(); i++)
                 {
                     //I hope this works...
-                    temp.shape.getVertex(i, tempvect);//tempvect = shape.vertex[i]... apparently they don't have this function
+                    o.shape.getVertex(i, tempvect);//tempvect = shape.vertex[i]... apparently they don't have this function
                     //translate the vertices drawn based on global position of the polygon's origin (0, 0)
-                    //The polygon's origin (0, 0) should be positioned at(temp.getPos().x, temp.getPos().y).
-                    //Hence the " + temp.getPos().x/y;" part.
-                    tempVertices[(i * 2)] = tempvect.x + temp.getPos().x;
-                    tempVertices[(i * 2) + 1] = tempvect.y + temp.getPos().y;
+                    //The polygon's origin (0, 0) should be positioned at(o.getPos().x, o.getPos().y).
+                    //Hence the " + o.getPos().x/y;" part.
+                    tempVertices[(i * 2)] = tempvect.x + o.getPos().x;
+                    tempVertices[(i * 2) + 1] = tempvect.y + o.getPos().y;
 
                 }
                 Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -399,10 +407,16 @@ public class derptest extends ApplicationAdapter {
     public Vector2 percent(Vector2 percentofscreen)//This value is from 0 to 100
     {
         Vector2 temp = new Vector2();
-        float screenSizeX = Gdx.graphics.getWidth();
-        float screenSizeY = Gdx.graphics.getHeight();
         temp.x = scale((percentofscreen.x / 100f) * Gdx.graphics.getWidth());
         temp.y = scale((percentofscreen.y / 100f) * Gdx.graphics.getHeight());
+        return temp;
+    }
+
+    public Vector2 percent(float x, float y)
+    {
+        Vector2 temp = new Vector2();
+        temp.x = scale((x / 100f) * Gdx.graphics.getWidth());
+        temp.y = scale((y / 100f) * Gdx.graphics.getHeight());
         return temp;
     }
 

@@ -55,6 +55,12 @@ public class Obstacle {
         return(this.getPos());
     }
 
+    public Vector2 translate(Vector2 val)
+    {
+        this.setPos(this.getPos().x + val.x, this.getPos().y + val.y);
+        return(this.getPos());
+    }
+
     public void setFixture(float _f, float _d, float _r)
     {
         fixture.setFriction(_f);
