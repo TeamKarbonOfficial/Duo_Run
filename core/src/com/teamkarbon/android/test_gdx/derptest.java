@@ -1,11 +1,11 @@
 package com.teamkarbon.android.test_gdx;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-//import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -19,6 +19,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 import java.util.ArrayList;
+
+//import com.badlogic.gdx.graphics.Texture;
 
 /*
     IMPORTANT: USE scale(float f) FUNCTION FOR ALL POSITIONS OF BODIES, AND SIZES
@@ -208,6 +210,7 @@ public class derptest extends ApplicationAdapter {
         //TODO: INFO: Debug!!! Remove when game functionality complete!
         mode = gameMode.GAME;
         level = 1;
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
     }
 
     @Override
@@ -382,6 +385,8 @@ public class derptest extends ApplicationAdapter {
                     tempVertices[(i * 2)] = tempvect.x + o.getPos().x;
                     tempVertices[(i * 2) + 1] = tempvect.y + o.getPos().y;
 
+                    //DEBUG!
+                    Gdx.app.log("tempVertices", tempVertices.toString());
                 }
                 Gdx.gl.glEnable(GL20.GL_BLEND);
 
