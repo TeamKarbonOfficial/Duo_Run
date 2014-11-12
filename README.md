@@ -7,9 +7,13 @@ GDXTest
 ```java
 Intersect.overlapConvexPolygons();//!!!!
 ```
+**Images for Balls:**
+http://teamkarbon.com/cloud/public.php?service=files&t=69d7aca788e27f04971fad1bd79a314c
+
 That's all folks...
 
 *TODO:*
+- Replace Ball with sprites
 - Make the obstacles.  *done*
 - Make them work.
 - Find out a way to check for collisions *done*
