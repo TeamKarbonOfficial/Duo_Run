@@ -7,7 +7,7 @@ GDXTest
 ```java
 Intersect.overlapConvexPolygons();//!!!!
 ```
-**Images for Balls:**
+**Images for Balls: (Place images in \android\assets)**
 http://teamkarbon.com/cloud/public.php?service=files&t=69d7aca788e27f04971fad1bd79a314c
 
 That's all folks...
