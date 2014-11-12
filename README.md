@@ -18,6 +18,8 @@ That's all folks...
 - Replace Ball with sprites
 - Make the obstacles.  *done*
 - Make them work.
+    - Get polygons done *done*
+    - Get them to render via filled triangles **VERY DIFFICULT**
 - Find out a way to check for collisions *done*
 - Actually check for collisions
 - Make an endgame situation function

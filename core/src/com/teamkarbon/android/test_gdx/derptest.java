@@ -129,9 +129,9 @@ public class derptest extends ApplicationAdapter {
         //Density: 1kg/m^3
         //Restitution: 55% of Joules retained per collision
         //Friction: 30%
-        ball = new Ball(pwidth(0), pheight(30), world, pheight(20));
+        ball = new Ball(pwidth(0), pheight(30), world, pheight(10));
         ball.setFixture(1f, 0.55f, 0.3f);
-        ball2 = new Ball(scale(0), pheight(20), world, pheight(20));
+        ball2 = new Ball(scale(0), pheight(20), world, pheight(10));
         ball2.setFixture(1f, 0.55f, 0.3f);
 
         //Set collision filtering (so the two balls don't collide with each other
@@ -248,9 +248,9 @@ public class derptest extends ApplicationAdapter {
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
-            shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, pheight(20), 45);
+            shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, pheight(10), 45);
             shapeRenderer.setColor(0f, 0f, 1f, 0.4f);
-            shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, pheight(20), 45);
+            shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, pheight(10), 45);
             shapeRenderer.end();
 
             //Draw the floors and the ceiling
@@ -370,26 +370,21 @@ public class derptest extends ApplicationAdapter {
 
             //TODO: Render them.
 
-            Vector2 tempvect = new Vector2();
+            /*
+                So apparently, LibGDX doens't support filled polygons...
+                So now, we have to render the polygons as triangles.
+                Yay!
+
+
+             */
 
             for (Obstacle o : obstacles) {
                 o.translate(percent(-(6 + level) * Gdx.graphics.getDeltaTime(), 0f));//Move left (6 + level) % of screen per second..
 
                 Gdx.gl.glEnable(GL20.GL_BLEND);
 
-                float[] tempverts = new float[o.shape.getVertexCount()];
-
-                for(int i = 0; i < o.shape.getVertexCount() * 2; i++)
-                {
-                    o.shape.getVertex(i, tempvect);
-                    tempverts[i] = tempvect.x;
-                    tempverts[i + 1] = tempvect.y;
-                }
-
                 shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
                 shapeRenderer.setColor(1f, 1f, 0, 0.6f);
-                shapeRenderer.translate(o.getPos().x, o.getPos().y, 0);
-                shapeRenderer.polygon(tempverts);
                 shapeRenderer.end();
 
                 Gdx.gl.glDisable(GL20.GL_BLEND);
