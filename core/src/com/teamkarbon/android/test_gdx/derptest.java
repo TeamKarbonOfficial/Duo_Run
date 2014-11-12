@@ -369,30 +369,27 @@ public class derptest extends ApplicationAdapter {
             }
 
             //TODO: Render them.
+
+            Vector2 tempvect = new Vector2();
+
             for (Obstacle o : obstacles) {
                 o.translate(percent(-(6 + level) * Gdx.graphics.getDeltaTime(), 0f));//Move left (6 + level) % of screen per second..
 
-                float[] tempVertices;
-                tempVertices = new float[o.shape.getVertexCount() * 2];
-                Vector2 tempvect = new Vector2();
-                for(int i = 0; i < o.shape.getVertexCount(); i++)
-                {
-                    //I hope this works...
-                    o.shape.getVertex(i, tempvect);//tempvect = shape.vertex[i]... apparently they don't have this function
-                    //translate the vertices drawn based on global position of the polygon's origin (0, 0)
-                    //The polygon's origin (0, 0) should be positioned at(o.getPos().x, o.getPos().y).
-                    //Hence the " + o.getPos().x/y;" part.
-                    tempVertices[(i * 2)] = tempvect.x + o.getPos().x;
-                    tempVertices[(i * 2) + 1] = tempvect.y + o.getPos().y;
-
-                    //DEBUG!
-                    Gdx.app.log("tempVertices", tempVertices.toString());
-                }
                 Gdx.gl.glEnable(GL20.GL_BLEND);
 
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+                float[] tempverts = new float[o.shape.getVertexCount()];
+
+                for(int i = 0; i < o.shape.getVertexCount() * 2; i++)
+                {
+                    o.shape.getVertex(i, tempvect);
+                    tempverts[i] = tempvect.x;
+                    tempverts[i + 1] = tempvect.y;
+                }
+
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
                 shapeRenderer.setColor(1f, 1f, 0, 0.6f);
-                shapeRenderer.polygon(tempVertices);
+                shapeRenderer.translate(o.getPos().x, o.getPos().y, 0);
+                shapeRenderer.polygon(tempverts);
                 shapeRenderer.end();
 
                 Gdx.gl.glDisable(GL20.GL_BLEND);
