@@ -375,16 +375,51 @@ public class derptest extends ApplicationAdapter {
                 So now, we have to render the polygons as triangles.
                 Yay!
 
-
+                :/
              */
+
+            ArrayList<RenderTriangle> triangles = new ArrayList<RenderTriangle>();
 
             for (Obstacle o : obstacles) {
                 o.translate(percent(-(6 + level) * Gdx.graphics.getDeltaTime(), 0f));//Move left (6 + level) % of screen per second..
 
+                if(o.shape.getVertexCount() == 3)//Triangle
+                {
+                    Vector2[] vects = new Vector2[3];
+                    o.shape.getVertex(0, vects[0]);
+                    o.shape.getVertex(1, vects[1]);
+                    o.shape.getVertex(2, vects[2]);
+
+                    triangles.add(new RenderTriangle(vects));
+                }
+                else if(o.shape.getVertexCount() == 4)//Trapezium/Box
+                {
+                    Vector2[] vects = new Vector2[3];
+                    Vector2[] vects2 = new Vector2[3];
+
+                    o.shape.getVertex(0, vects[0]);
+                    o.shape.getVertex(1, vects[1]);
+                    o.shape.getVertex(2, vects[2]);
+
+                    o.shape.getVertex(0, vects2[0]);
+                    o.shape.getVertex(2, vects2[1]);
+                    o.shape.getVertex(3, vects2[2]);
+
+                    triangles.add(new RenderTriangle(vects));
+                    triangles.add(new RenderTriangle(vects2));
+                }
+
                 Gdx.gl.glEnable(GL20.GL_BLEND);
 
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
                 shapeRenderer.setColor(1f, 1f, 0, 0.6f);
+                shapeRenderer.translate(o.getPos().x, o.getPos().y, 0);
+
+                for(RenderTriangle r : triangles)
+                {
+                    shapeRenderer.triangle(r.x1, r.y1, r.x2, r.y2, r.x3, r.y3);
+                }
+
                 shapeRenderer.end();
 
                 Gdx.gl.glDisable(GL20.GL_BLEND);
@@ -436,5 +471,42 @@ public class derptest extends ApplicationAdapter {
     //A selection of current active states.
     public enum gameMode {
         MAIN_MENU, OPTIONS, ABOUT, GAME
+    }
+
+    public class RenderTriangle
+    {
+        float x1, y1, x2, y2, x3, y3;
+        public RenderTriangle(float x1, float y1, float x2, float y2, float x3, float y3)
+        {
+            this.x1 = x1;
+            this.x2 = x2;
+            this.x3 = x3;
+            this.y1 = y1;
+            this.y2 = y2;
+            this.y3 = y3;
+        }
+
+        public RenderTriangle(Vector2 _1, Vector2 _2, Vector2 _3)
+        {
+            this.x1 = _1.x;
+            this.x2 = _2.x;
+            this.x3 = _3.x;
+            this.y1 = _1.y;
+            this.y2 = _2.y;
+            this.y3 = _3.y;
+        }
+
+        public RenderTriangle(Vector2[] x)
+        {
+            if(x.length == 3)
+            {
+                x1 = x[0].x;
+                x2 = x[1].x;
+                x3 = x[2].x;
+                y1 = x[0].y;
+                y2 = x[1].y;
+                y3 = x[2].y;
+            }
+        }
     }
 }
