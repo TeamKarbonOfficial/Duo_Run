@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+//import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -74,6 +75,8 @@ public class derptest extends ApplicationAdapter {
     Body theCeiling;
     Ball ball;
     Ball ball2;
+    //Texture balltexture;
+    //Texture ball2texture;
     BitmapFont font;
 
     Boolean Force = false;
@@ -92,6 +95,9 @@ public class derptest extends ApplicationAdapter {
         //Random graphics init to allow alpha blending...
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
+        //Load in ball's texture
+        //balltexture = new Texture(Gdx.files.internal("dark_blue.png"));
+        //ball2texture = new Texture(Gdx.files.internal("yellow.png"));
 
         //Setting up the camera
         camera = new OrthographicCamera(pwidth(100), pheight(100));//Sets its rendering area to fill the whole screen.
