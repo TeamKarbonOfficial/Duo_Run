@@ -12,6 +12,8 @@ http://teamkarbon.com/cloud/public.php?service=files&t=69d7aca788e27f04971fad1bd
 
 That's all folks...
 
+[![Build Status](https://travis-ci.org/TeamKarbonOfficial/GDXTest.svg?branch=master)](https://travis-ci.org/TeamKarbonOfficial/GDXTest)
+
 *TODO:*
 - Replace Ball with sprites
 - Make the obstacles.  *done*
