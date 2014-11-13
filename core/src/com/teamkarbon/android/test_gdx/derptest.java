@@ -385,7 +385,7 @@ public class derptest extends ApplicationAdapter {
 
                 if(o.shape.getVertexCount() == 3)//Triangle
                 {
-                    Vector2[] vects = new Vector2[3];
+                    Vector2[] vects = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
                     o.shape.getVertex(0, vects[0]);
                     o.shape.getVertex(1, vects[1]);
                     o.shape.getVertex(2, vects[2]);
@@ -394,8 +394,8 @@ public class derptest extends ApplicationAdapter {
                 }
                 else if(o.shape.getVertexCount() == 4)//Trapezium/Box
                 {
-                    Vector2[] vects = new Vector2[3];
-                    Vector2[] vects2 = new Vector2[3];
+                    Vector2[] vects = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
+                    Vector2[] vects2 = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
 
                     o.shape.getVertex(0, vects[0]);
                     o.shape.getVertex(1, vects[1]);
