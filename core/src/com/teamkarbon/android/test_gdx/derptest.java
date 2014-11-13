@@ -231,6 +231,8 @@ public class derptest extends ApplicationAdapter {
                 ball.body.applyForceToCenter(-10, 0, true);
             if (ball2.body.getPosition().x > 0)
                 ball2.body.applyForceToCenter(-10, 0, true);
+            /*
+            This isn't necessary for now...
 
             //This sets the floor's position such that it follows the ball. At least it should :P
             theFloor.setTransform((ball.body.getPosition().x + ball2.body.getPosition().x) / 2, pheight(-50) + scale(1), 0);
@@ -240,6 +242,7 @@ public class derptest extends ApplicationAdapter {
             Gdx.gl.glClearColor(0, 0.06f, 0.13f, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+            */
             camera.update();//Duh
 
             debugRenderer.render(world, camera.combined);//View all colliders and stuff
@@ -366,6 +369,9 @@ public class derptest extends ApplicationAdapter {
 
                     obstacles.add(new Obstacle(temp, world, pwidth(70), ypos, false));
                 }
+
+                //Reset the obstacleTimer.
+                obstaclesTimer = 0;
             }
 
             //TODO: Render them.
