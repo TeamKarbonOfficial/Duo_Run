@@ -61,5 +61,6 @@ build/
 ## OS Specific
 .DS_Store
 
-android/assets/yellow.png
-android/assets/dark_blue.png
+## Prevent tracking images (I think)
+*.jpeg
+*.png
