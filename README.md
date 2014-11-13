@@ -19,7 +19,7 @@ That's all folks...
 - Make the obstacles.  *done*
 - Make them work.
     - Get polygons done *done*
-    - Get them to render via filled triangles **VERY DIFFICULT**
+    - Get them to render via filled triangles **VERY DIFFICULT, but DONE**
 - Find out a way to check for collisions *done*
 - Actually check for collisions
 - Make an endgame situation function
