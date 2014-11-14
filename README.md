@@ -26,7 +26,7 @@ TODO
     - Make them spawn properly
     - Make them less laggy...
 - Find out a way to check for collisions **done**
-- Actually check for collisions
+- Actually check for collisions **done** (I guess LOL)
 - Make an endgame situation function
 - Create levels *suggestions?*
 - Create a level select screen
