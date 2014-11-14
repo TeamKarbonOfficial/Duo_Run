@@ -231,6 +231,7 @@ public class derptest extends ApplicationAdapter {
                 ball.body.applyForceToCenter(-10, 0, true);
             if (ball2.body.getPosition().x > 0)
                 ball2.body.applyForceToCenter(-10, 0, true);
+
             /*
             This isn't necessary for now...
 
@@ -239,17 +240,19 @@ public class derptest extends ApplicationAdapter {
             //Same for the ceiling
             theCeiling.setTransform(theFloor.getPosition().x, pheight(50) - scale(1), 0);
 
+            */
+
             Gdx.gl.glClearColor(0, 0.06f, 0.13f, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-            */
             camera.update();//Duh
 
             debugRenderer.render(world, camera.combined);//View all colliders and stuff
 
             Gdx.gl.glEnable(GL20.GL_BLEND);//Allow for translucency (alpha blending) when shapes overlap
 
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);;
+
             shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
             shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, pheight(10), 45);
             shapeRenderer.setColor(0f, 0f, 1f, 0.4f);
