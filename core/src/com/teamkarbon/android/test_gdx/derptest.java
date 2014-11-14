@@ -79,15 +79,15 @@ public class derptest extends ApplicationAdapter {
     Body theCeiling;
     Ball ball;
     Ball ball2;
-    Texture balltexture;
-    Texture ball2texture;
+    //Texture balltexture;
+    //Texture ball2texture;
     BitmapFont font;
 
     Boolean Force = false;
     Boolean Force2 = false;
     int level;
-    String ballfile;
-    String ball2file;
+    //String ballfile;
+    //String ball2file;
 
     ArrayList<Obstacle> obstacles;
     float obstaclesTimer;//in Seconds...
@@ -102,10 +102,10 @@ public class derptest extends ApplicationAdapter {
 
         //Load in ball's texture
         //Download textures from "http://teamkarbon.com/cloud/public.php?service=files&t=69d7aca788e27f04971fad1bd79a314c"
-        ballfile = "ball.png";
-        ball2file = "ball.png";
-        balltexture = new Texture(Gdx.files.internal(ballfile));
-        ball2texture = new Texture(Gdx.files.internal(ball2file));
+        //ballfile = "ball.png";
+        //ball2file = "ball.png";
+        //balltexture = new Texture(Gdx.files.internal(ballfile));
+        //ball2texture = new Texture(Gdx.files.internal(ball2file));
 
         //Setting up the camera
         camera = new OrthographicCamera(pwidth(100), pheight(100));//Sets its rendering area to fill the whole screen.
@@ -260,7 +260,7 @@ public class derptest extends ApplicationAdapter {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);;
 
             shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
-            shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, pheight(10), 45);
+            shapeRenderer.circle(ball.body.getPosition().x , ball.body.getPosition().y, pheight(10), 45);
             shapeRenderer.setColor(0f, 0f, 1f, 0.4f);
             shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, pheight(10), 45);
             shapeRenderer.end();
@@ -482,6 +482,16 @@ public class derptest extends ApplicationAdapter {
                 Gdx.gl.glDisable(GL20.GL_BLEND);
             }
 
+            //Collision detection (Cheap way around it :P)
+            //Checks if ball and ball2 x-axis is 0, if not, game over
+            //When an object hit the ball, the x value will change
+            if(ball.body.getPosition().x != 0 || ball2.body.getPosition().x != 0) {
+                //Closes the app
+                Gdx.app.exit();
+                //Do something else
+                //...
+            }
+
             obstaclesTimer += Gdx.graphics.getDeltaTime();
             world.step(Gdx.graphics.getDeltaTime(), 6, 2);
         }
@@ -575,5 +585,21 @@ public class derptest extends ApplicationAdapter {
             if(!type) c = new Color(0.5f, 0.5f, 0, 0.7f);
             else c = new Color(0, 0, 1f, 0.7f);
         }
+    }
+
+    @Override
+    public void dispose() {
+        // dispose of all the native resources
+        //balltexture.dispose();
+        //ball2texture.dispose();
+        batch.dispose();
+    }
+
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
     }
 }
