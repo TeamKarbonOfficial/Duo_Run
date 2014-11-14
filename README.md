@@ -14,16 +14,21 @@ That's all folks...
 
 [![Build Status](https://travis-ci.org/TeamKarbonOfficial/GDXTest.svg?branch=master)](https://travis-ci.org/TeamKarbonOfficial/GDXTest)
 
-*TODO:*
+TODO
+=======
 - Replace Ball with sprites
-- Make the obstacles.  *done*
+- Make the obstacles.  **done**
 - Make them work.
-    - Get polygons done *done*
-    - Get them to render via filled triangles **VERY DIFFICULT**
-- Find out a way to check for collisions *done*
+    - Get polygons done **done**
+    - Get them to render via filled triangles **done**
+    - Get them to have the proper colours and collision checks **done**
+    - Make them bigger
+    - Make them spawn properly
+    - Make them less laggy...
+- Find out a way to check for collisions **done**
 - Actually check for collisions
 - Make an endgame situation function
-- Create levels
+- Create levels *suggestions?*
 - Create a level select screen
 - Create a main menu screen
 - Have some options/whatever

@@ -3,6 +3,7 @@ package com.teamkarbon.android.test_gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -40,6 +41,22 @@ public class Obstacle {
 
         fixtureDef.shape = shape;
         fixture = body.createFixture(fixtureDef);
+
+        //To make sure the obstacles collide with the right objects
+        Filter tempFilter = new Filter();
+
+        if(type == false)//collides with ball
+        {
+            tempFilter.maskBits = 1;
+            tempFilter.categoryBits = 1;
+            this.fixture.setFilterData(tempFilter);
+        }
+        else//collides with ball2
+        {
+            tempFilter.maskBits = 1;
+            tempFilter.categoryBits = 2;
+            this.fixture.setFilterData(tempFilter);
+        }
     }
 
     public void setPos(float x, float y)
