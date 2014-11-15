@@ -122,9 +122,10 @@ public class Obstacle {
         fixture.setRestitution(_r);
     }
 
-    public void dispose()
+    public void dispose(World world)
     {
         if(shape != null) shape.dispose();
         if(cshape != null) cshape.dispose();
+        world.destroyBody(body);
     }
 }

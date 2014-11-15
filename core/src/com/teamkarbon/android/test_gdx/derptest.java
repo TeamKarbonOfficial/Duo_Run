@@ -292,7 +292,7 @@ public class derptest extends ApplicationAdapter {
                 if(o.getPos().x < pwidth(-65)){
                     obstacles.remove(o);
                     x--;
-                    o.dispose();
+                    o.dispose(world);
                     continue;
                 }
 
