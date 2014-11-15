@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -176,10 +177,9 @@ public class derptest extends ApplicationAdapter {
         //The ceiling
         tempBD = new BodyDef();
         tempBD.type = BodyDef.BodyType.StaticBody;
-        tempBD.position.set(scale(0), pheight(50 - 1));
+        tempBD.position.set(0, pheight(50));
         theCeiling = world.createBody(tempBD);
 
-        //Ceiling bounds
         PolygonShape ceiling = new PolygonShape();
         ceiling.setAsBox(camera.viewportWidth, pheight(1f));
         Fixture ceilingFixture = theCeiling.createFixture(ceiling, 0f);
@@ -222,6 +222,7 @@ public class derptest extends ApplicationAdapter {
 
     @Override
     public void render() {
+
         //In game screen
         if (mode == gameMode.GAME) {
             if (Force)
@@ -256,148 +257,27 @@ public class derptest extends ApplicationAdapter {
 
             debugRenderer.render(world, camera.combined);//View all colliders and stuff
 
+            //Epic rendering
+
+
             Gdx.gl.glEnable(GL20.GL_BLEND);//Allow for translucency (alpha blending) when shapes overlap
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);;
 
             shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
-            shapeRenderer.circle(ball.body.getPosition().x , ball.body.getPosition().y, pheight(10), 45);
+            shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, pheight(10), 45);
             shapeRenderer.setColor(0f, 0f, 1f, 0.4f);
             shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, pheight(10), 45);
-            shapeRenderer.end();
 
             //Draw the floors and the ceiling
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            shapeRenderer.setColor(0.8f, 0.8f, 0.8f, 1f);
+            shapeRenderer.setColor(0.15f, 0.4f, 0.15f, 0.7f);
+
             //NOTE: The origin of physical boxes are at the centre, but the origins of graphical boxes are at the bottom left corner.
             //Which is why the differing values are needed for pheight and pwidth.
-            shapeRenderer.rect(theFloor.getPosition().x - camera.viewportWidth / 2f, theFloor.getPosition().y - pheight(1), camera.viewportWidth, pheight(2));
-            shapeRenderer.rect(theCeiling.getPosition().x - camera.viewportWidth / 2f, theCeiling.getPosition().y + pheight(1), camera.viewportWidth, pheight(2));
-            shapeRenderer.end();
-
-            Gdx.gl.glDisable(GL20.GL_BLEND);
-
-
-            batch.begin();
-            //This is just for debug purposes. Actually its not even useful.. yet.
-            font.draw(batch, "coord: " + descale(ball.body.getPosition().x) + ", " + descale(ball.body.getPosition().y) + ", Force: " + Force, 300, 200);
-            batch.end();
-
-            //Make dem obstacles
-            if (obstaclesTimer > 3.5f - (level / 2f) && Math.random() >= 0.5) {
-                PolygonShape temp = new PolygonShape();
-                //the .set function assumes the vectors are in CCW direction
-                //and also assumes that the origin of the object (it's relative [0, 0]) is actually (0, 0)
-
-                float tempfloat = (float) Math.random();
-
-                if (tempfloat < (1f / 4f)) {
-                    //Vectors are in CCW direction!!!
-                    //This makes either a sharp right angled triangle like a ramp on the floor,
-                    //or a hook from the ceiling
-                    //or an inverted ramp on the ceiling.
-                    //or a hook on the floor
-
-                    //Whether to spawn a blue collider or a yellow collider.
-                    boolean derp = (Math.random() < 0.5);
-
-                    if (Math.random() < 0.5) {
-                        temp.set(new Vector2[]{
-                                percent(0, 0),
-                                percent(10f, 0f),
-                                percent(10f, 25f)
-                        });
-
-                        //Don't worry, this is an if/else statement :P
-                        obstacles.add(Math.random() < 0.5 ? new Obstacle(temp, world, pwidth(70), pheight(-39f), derp)
-                                :
-                                new Obstacle(temp, world, pwidth(70), pheight(+39f - 25f), derp));
-                    }
-                    else
-                    {
-                        temp.set(new Vector2[]{
-                            percent(0, 0),
-                            percent(10f, -25f),
-                            percent(10f, 0f)
-                        });
-
-                        obstacles.add(Math.random() < 0.5 ? new Obstacle(temp, world, pwidth(70), pheight(+39f), derp)
-                                :
-                                new Obstacle(temp, world, pwidth(70), pheight(-39 + 25f), derp));
-                    }
-                } else if (tempfloat < (2f / 4f)) {
-                    //This makes a simple rectangle..(on the ceiling or the ground)
-                    float x = pwidth(8 + (float) Math.random() * 16);//8% - 24% width
-                    float y = pheight(5 + (float) Math.random() * 20);//5% - 25% height
-
-                    temp.set(new Vector2[]{
-                            percent(0, 0),
-                            percent(x, 0),
-                            percent(x, y),
-                            percent(0, y)});
-
-                    boolean derp = (Math.random() < 0.5f);
-                    obstacles.add(Math.random() < 0.5 ? new Obstacle(temp, world, pwidth(70), pheight(-39f), derp)
-                            :
-                            new Obstacle(temp, world, pwidth(70), pheight(+39f) - y, derp));
-                } else if (tempfloat < (3f / 4f)) {
-                    //This makes a trapezium. The base is always bigger than the cap
-                    float val1 = pwidth(15 + (float) Math.random() * 10);//From 15% - 25% width
-                    float val2 = val1 + pwidth(5 + (float) Math.random() * 16);//From 20% - 41% width
-                    float tempheight = pheight(10 + (float) Math.random() * 13);//From 10% - 23% height
-
-                    boolean derp = (Math.random() < 0.5);
-
-                    if (Math.random() < 0.5) {
-                        //Origin at bottom left, trapezium spawned at the bottom
-                        temp.set(new Vector2[]{
-                                percent(0, 0),//Origin (Bottom left)
-                                percent(val2, 0),//Bottom right
-                                percent(val1 + (val2 - val1) / 2f, tempheight),//Top right
-                                percent((val2 - val1) / 2f, tempheight)//Top left
-                        });
-
-                        obstacles.add(new Obstacle(temp, world, pwidth(50) + scale(40), pheight(-39f), derp));
-                    } else {
-                        //Origin at top left, trapezium spawned at the top.
-                        temp.set(new Vector2[]{
-                                percent(0, 0),//Origin (Top left)
-                                percent((val2 - val1) / 2f, -tempheight),//Bottom left
-                                percent(val1 + (val2 - val1) / 2f, -tempheight),//Bottom right
-                                percent(val2, 0)//Top right
-                        });
-
-                        obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(39f), derp));
-
-                    }
-                } else {
-                    //Make a random circle. Randomly
-                    float ypos = pheight(((float) Math.random() * 78f) - 39f);
-                    float rad = scale((float) Math.random() * 70);
-
-                    temp.setRadius(rad);
-
-                    obstacles.add(new Obstacle(temp, world, pwidth(70), ypos, false));
-                }
-
-                //Reset the obstacleTimer.
-                obstaclesTimer = 0;
-            }
-
-            //TODO: Render them.
-
-            /*
-                So apparently, LibGDX doens't support filled polygons...
-                So now, we have to render the polygons as triangles.
-                Yay!
-
-                :/
-             */
+            shapeRenderer.rect(theFloor.getPosition().x - camera.viewportWidth / 2f, theFloor.getPosition().y - pheight(1), camera.viewportWidth + scale(50), pheight(2));
+            shapeRenderer.rect(theCeiling.getPosition().x - camera.viewportWidth / 2f, theCeiling.getPosition().y - pheight(1), camera.viewportWidth + scale(50), pheight(2));
 
             ArrayList<RenderTriangle> triangles = new ArrayList<RenderTriangle>();
-
-            Gdx.gl.glEnable(GL20.GL_BLEND);
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
             //NOTE: Don't use for(object : array) type for loop as concurrent manipulations (deletions, in this case) to
             //      the array is taking place while iterating.
@@ -413,7 +293,7 @@ public class derptest extends ApplicationAdapter {
                     continue;
                 }
 
-                if(o.shape.getVertexCount() == 3)//Triangle
+                if(o.cshape == null && o.shape.getVertexCount() == 3)//Triangle
                 {
                     Vector2[] vects = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
                     o.shape.getVertex(0, vects[0]);
@@ -431,7 +311,7 @@ public class derptest extends ApplicationAdapter {
                             vects[0].toString() + ", " + vects[1].toString() + ", " +
                                     vects[2].toString()); */
                 }
-                else if(o.shape.getVertexCount() == 4)//Trapezium/Box
+                else if(o.cshape == null && o.shape.getVertexCount() == 4)//Trapezium/Box
                 {
                     Vector2[] vects = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
                     Vector2[] vects2 = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
@@ -463,6 +343,12 @@ public class derptest extends ApplicationAdapter {
                             vects[2].toString() + ", " + vects2[0].toString() + ", " +
                             vects2[1].toString() + ", " + vects2[2].toString()); */
                 }
+                else //circles
+                {
+                    if(!o.type) shapeRenderer.setColor(0.5f, 0.5f, 0, 0.7f);
+                    else shapeRenderer.setColor(0, 0, 1f, 0.7f);
+                    shapeRenderer.circle(o.getPos().x, o.getPos().y, o.radius, 25);
+                }
 
                 //NOTE: Don't use for(object : array) type for loop as concurrent manipulations to
                 //      the array is taking place while iterating.
@@ -482,12 +368,122 @@ public class derptest extends ApplicationAdapter {
             shapeRenderer.end();
             Gdx.gl.glDisable(GL20.GL_BLEND);
 
+            batch.begin();
+            //This is just for debug purposes. Actually its not even useful.. yet.
+            font.draw(batch, "obs count: " + obstacles.size(), 300, 200);
+            batch.end();
+
+
+
+            //Make dem obstacles
+
+            if (obstaclesTimer > 3.5f - (level / 2f) && Math.random() >= 0.5) {
+                PolygonShape temp = new PolygonShape();
+                //the .set function assumes the vectors are in CCW direction
+                //and also assumes that the origin of the object (it's relative [0, 0]) is actually (0, 0)
+
+                float tempfloat = (float) Math.random();
+                boolean derp = (Math.random() < 0.5f);
+                if (tempfloat < (1f / 4f)) {
+                    //Vectors are in CCW direction!!!
+                    //This makes either a sharp right angled triangle like a ramp on the floor,
+                    //or a hook from the ceiling
+                    //or an inverted ramp on the ceiling.
+                    //or a hook on the floor
+
+                    //Whether to spawn a blue collider or a yellow collider.
+
+                    if (Math.random() < 0.5) {
+                        temp.set(new Vector2[]{
+                                percent(0, 0),
+                                percent(13f, 0f),
+                                percent(13f, 34f)
+                        });
+
+                        //Don't worry, this is an if/else statement :P
+                        //The hook should be less common, hence the greater '0.7' chance of getting a ramp.
+                        obstacles.add(Math.random() < 0.7 ? new Obstacle(temp, world, pwidth(70), pheight(-48f), derp)
+                                :
+                                new Obstacle(temp, world, pwidth(70), pheight(+49f - 34f), derp));
+                    }
+                    else
+                    {
+                        temp.set(new Vector2[]{
+                            percent(0, 0),
+                            percent(13f, -34f),
+                            percent(13f, 0f)
+                        });
+
+                        obstacles.add(Math.random() < 0.7 ? new Obstacle(temp, world, pwidth(70), pheight(+49f), derp)
+                                :
+                                new Obstacle(temp, world, pwidth(70), pheight(-48f + 34f), derp));
+                    }
+                } else if (tempfloat < (2f / 4f)) {
+                    //This makes a simple rectangle..(on the ceiling or the ground)
+                    float x = pwidth(10 + (float) Math.random() * 18);//10% - 28% width
+                    float y = pheight(8 + (float) Math.random() * 24);//8% - 32% height
+
+                    temp.set(new Vector2[]{
+                            percent(0, 0),
+                            percent(x, 0),
+                            percent(x, y),
+                            percent(0, y)});
+
+                    obstacles.add(Math.random() < 0.5 ? new Obstacle(temp, world, pwidth(70), pheight(-48f), derp)
+                            :
+                            new Obstacle(temp, world, pwidth(70), pheight(+49f) - y, derp));
+                } else if (tempfloat < (3f / 4f)) {
+                    //This makes a trapezium. The base is always bigger than the cap
+                    float val1 = pwidth(18 + (float) Math.random() * 10);//From 18% - 28% width
+                    float val2 = val1 + pwidth(5 + (float) Math.random() * 16);//From 23% - 49% width
+                    float tempheight = pheight(15 + (float) Math.random() * 20);//From 15% - 35% height
+
+                    if (Math.random() < 0.5) {
+                        //Origin at bottom left, trapezium spawned at the bottom
+                        temp.set(new Vector2[]{
+                                percent(0, 0),//Origin (Bottom left)
+                                percent(val2, 0),//Bottom right
+                                percent(val1 + (val2 - val1) / 2f, tempheight),//Top right
+                                percent((val2 - val1) / 2f, tempheight)//Top left
+                        });
+
+                        obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(-48f), derp));
+                    } else {
+                        //Origin at top left, trapezium spawned at the top.
+                        temp.set(new Vector2[]{
+                                percent(0, 0),//Origin (Top left)
+                                percent((val2 - val1) / 2f, -tempheight),//Bottom left
+                                percent(val1 + (val2 - val1) / 2f, -tempheight),//Bottom right
+                                percent(val2, 0)//Top right
+                        });
+
+                        obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(49f), derp));
+
+                    }
+                } else {
+                    //Make a random circle. Randomly
+                    //Uses CircleShape cuz PolygonShape's circle function looks horrible and is super glitchy.
+                    float ypos = pheight(((float) Math.random() * 99f) - 49f);
+                    float rad = pheight((float) Math.random() * 10);
+
+                    CircleShape cs = new CircleShape();
+                    cs.setPosition(percent(0, 0));//The position is already stored in obstacle class
+                    cs.setRadius(rad);
+
+                    obstacles.add(new Obstacle(cs, world, pwidth(70), ypos, derp, rad));
+                }
+
+                //Reset the obstacleTimer.
+                obstaclesTimer = 0;
+            }
+
+
+            //Game over :P
             if(instaDeathMode) {
                 //Collision detection (Cheap way around it :P)
                 //Checks if ball and ball2 x-axis is 0, if not, game over
                 //When an object hit the ball, the x value will change
                 if (ball.body.getPosition().x != 0 || ball2.body.getPosition().x != 0) {
-                    //Closes the app
                     Gdx.app.debug("instaDeathMode", "Activate!");
                     //Do something else
                     //...
