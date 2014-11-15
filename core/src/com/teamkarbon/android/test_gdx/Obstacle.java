@@ -11,10 +11,9 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 /**
- * Polygon shape, world, x, y positions, type true/type false
+ * Polygon shape, x, y positions, type true/type false
  */
 public class Obstacle {
-    World world;
     PolygonShape shape;
     CircleShape cshape;
     BodyDef bodyDef;
@@ -25,15 +24,13 @@ public class Obstacle {
     boolean type;
     float radius;
 
-    public Obstacle(PolygonShape _shape, World _world, float x, float y, boolean _type)
+    public Obstacle(PolygonShape _shape, World world, float x, float y, boolean _type)
     {
         //How to set shape: shape.set(new Vector2[]{new Vector2(3,4), new Vector2(0, 1)});
         //It is assumed that along the axis, 0 is the centre and the lateral
         //angle of the polygon is of the initialised shape along the same axes.
         bodyDef = new BodyDef();
         fixtureDef = new FixtureDef();
-
-        world = _world;
         shape = _shape;
         type = _type;
 
@@ -62,7 +59,7 @@ public class Obstacle {
         }
     }
 
-    public Obstacle(CircleShape _shape, World _world, float x, float y, boolean _type, float _radius)
+    public Obstacle(CircleShape _shape, World world, float x, float y, boolean _type, float _radius)
     {
         //How to set shape: shape.set(new Vector2[]{new Vector2(3,4), new Vector2(0, 1)});
         //It is assumed that along the axis, 0 is the centre and the lateral
@@ -70,7 +67,6 @@ public class Obstacle {
         bodyDef = new BodyDef();
         fixtureDef = new FixtureDef();
 
-        world = _world;
         cshape = _shape;
         type = _type;
         radius = _radius;
@@ -130,6 +126,5 @@ public class Obstacle {
     {
         if(shape != null) shape.dispose();
         if(cshape != null) cshape.dispose();
-        if(world != null) world.dispose();
     }
 }
