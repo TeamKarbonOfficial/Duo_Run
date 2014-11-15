@@ -125,4 +125,11 @@ public class Obstacle {
         fixture.setDensity(_d);
         fixture.setRestitution(_r);
     }
+
+    public void dispose()
+    {
+        shape.dispose();
+        cshape.dispose();
+        world.dispose();
+    }
 }

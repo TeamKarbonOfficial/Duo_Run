@@ -277,6 +277,8 @@ public class derptest extends ApplicationAdapter {
             shapeRenderer.rect(theFloor.getPosition().x - camera.viewportWidth / 2f, theFloor.getPosition().y - pheight(1), camera.viewportWidth + scale(50), pheight(2));
             shapeRenderer.rect(theCeiling.getPosition().x - camera.viewportWidth / 2f, theCeiling.getPosition().y - pheight(1), camera.viewportWidth + scale(50), pheight(2));
 
+
+
             ArrayList<RenderTriangle> triangles = new ArrayList<RenderTriangle>();
 
             //NOTE: Don't use for(object : array) type for loop as concurrent manipulations (deletions, in this case) to
@@ -290,7 +292,7 @@ public class derptest extends ApplicationAdapter {
                 if(o.getPos().x < pwidth(-65)){
                     obstacles.remove(o);
                     x--;
-                    o.shape.dispose();
+                    o.dispose();
                     continue;
                 }
 
@@ -350,20 +352,22 @@ public class derptest extends ApplicationAdapter {
                     else shapeRenderer.setColor(0, 0.3f, 1f, 0.45f);
                     shapeRenderer.circle(o.getPos().x, o.getPos().y, o.radius, 25);
                 }
+            }
 
-                //NOTE: Don't use for(object : array) type for loop as concurrent manipulations to
-                //      the array is taking place while iterating.
-                for(int i = 0; i < triangles.size(); i++)
-                {
-                    RenderTriangle r = triangles.get(i);
-                    shapeRenderer.setColor(r.c);
-                    shapeRenderer.triangle(r.x1, r.y1, r.x2, r.y2, r.x3, r.y3);
+            //NOTE: Don't use for(object : array) type for loop as concurrent manipulations to
+            //      the array is taking place while iterating.
+            //IMPORTANT: This shouldn't be in the for loop, as the triangles should be rendered once per
+            //           triangle, and not once per triangle per obstacle >.<
+            for(int i = 0; i < triangles.size(); i++)
+            {
+                RenderTriangle r = triangles.get(i);
+                shapeRenderer.setColor(r.c);
+                shapeRenderer.triangle(r.x1, r.y1, r.x2, r.y2, r.x3, r.y3);
 
-                    //remove out of screen render triangles
-                    if(r.x1 < pwidth(-64f)) {
-                        triangles.remove(r);
-                        i--;
-                    }
+                //remove out of screen render triangles
+                if(r.x1 < pwidth(-64f)) {
+                    triangles.remove(r);
+                    i--;
                 }
             }
 
