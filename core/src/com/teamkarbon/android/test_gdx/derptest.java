@@ -7,7 +7,6 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -86,8 +85,9 @@ public class derptest extends ApplicationAdapter {
     Boolean Force = false;
     Boolean Force2 = false;
     int level;
-    //String ballfile;
-    //String ball2file;
+    boolean instaDeathMode;
+    //final String ballfile;
+    //final String ball2file;
 
     ArrayList<Obstacle> obstacles;
     float obstaclesTimer;//in Seconds...
@@ -216,6 +216,7 @@ public class derptest extends ApplicationAdapter {
         //TODO: INFO: Debug!!! Remove when game functionality complete!
         mode = gameMode.GAME;
         level = 1;
+        instaDeathMode = false;
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
     }
 
@@ -394,6 +395,10 @@ public class derptest extends ApplicationAdapter {
              */
 
             ArrayList<RenderTriangle> triangles = new ArrayList<RenderTriangle>();
+
+            Gdx.gl.glEnable(GL20.GL_BLEND);
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
             //NOTE: Don't use for(object : array) type for loop as concurrent manipulations (deletions, in this case) to
             //      the array is taking place while iterating.
             for (int x = 0; x < obstacles.size(); x++) {
@@ -459,10 +464,6 @@ public class derptest extends ApplicationAdapter {
                             vects2[1].toString() + ", " + vects2[2].toString()); */
                 }
 
-                Gdx.gl.glEnable(GL20.GL_BLEND);
-
-                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-
                 //NOTE: Don't use for(object : array) type for loop as concurrent manipulations to
                 //      the array is taking place while iterating.
                 for(int i = 0; i < triangles.size(); i++)
@@ -476,20 +477,21 @@ public class derptest extends ApplicationAdapter {
                         i--;
                     }
                 }
-
-                shapeRenderer.end();
-
-                Gdx.gl.glDisable(GL20.GL_BLEND);
             }
 
-            //Collision detection (Cheap way around it :P)
-            //Checks if ball and ball2 x-axis is 0, if not, game over
-            //When an object hit the ball, the x value will change
-            if(ball.body.getPosition().x != 0 || ball2.body.getPosition().x != 0) {
-                //Closes the app
-                Gdx.app.exit();
-                //Do something else
-                //...
+            shapeRenderer.end();
+            Gdx.gl.glDisable(GL20.GL_BLEND);
+
+            if(instaDeathMode) {
+                //Collision detection (Cheap way around it :P)
+                //Checks if ball and ball2 x-axis is 0, if not, game over
+                //When an object hit the ball, the x value will change
+                if (ball.body.getPosition().x != 0 || ball2.body.getPosition().x != 0) {
+                    //Closes the app
+                    Gdx.app.debug("instaDeathMode", "Activate!");
+                    //Do something else
+                    //...
+                }
             }
 
             obstaclesTimer += Gdx.graphics.getDeltaTime();
