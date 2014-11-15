@@ -290,6 +290,7 @@ public class derptest extends ApplicationAdapter {
                 if(o.getPos().x < pwidth(-65)){
                     obstacles.remove(o);
                     x--;
+                    o.shape.dispose();
                     continue;
                 }
 
@@ -345,8 +346,8 @@ public class derptest extends ApplicationAdapter {
                 }
                 else //circles
                 {
-                    if(!o.type) shapeRenderer.setColor(0.5f, 0.5f, 0, 0.7f);
-                    else shapeRenderer.setColor(0, 0, 1f, 0.7f);
+                    if(!o.type) shapeRenderer.setColor(0.4f, 0.4f, 0.2f, 0.45f);
+                    else shapeRenderer.setColor(0, 0.3f, 1f, 0.45f);
                     shapeRenderer.circle(o.getPos().x, o.getPos().y, o.radius, 25);
                 }
 
@@ -355,7 +356,8 @@ public class derptest extends ApplicationAdapter {
                 for(int i = 0; i < triangles.size(); i++)
                 {
                     RenderTriangle r = triangles.get(i);
-                    shapeRenderer.triangle(r.x1, r.y1, r.x2, r.y2, r.x3, r.y3, r.c, r.c, r.c);
+                    shapeRenderer.setColor(r.c);
+                    shapeRenderer.triangle(r.x1, r.y1, r.x2, r.y2, r.x3, r.y3);
 
                     //remove out of screen render triangles
                     if(r.x1 < pwidth(-64f)) {
@@ -424,10 +426,10 @@ public class derptest extends ApplicationAdapter {
                     float y = pheight(8 + (float) Math.random() * 24);//8% - 32% height
 
                     temp.set(new Vector2[]{
-                            percent(0, 0),
-                            percent(x, 0),
-                            percent(x, y),
-                            percent(0, y)});
+                            new Vector2(0, 0),
+                            new Vector2(x, 0),
+                            new Vector2(x, y),
+                            new Vector2(0, y)});
 
                     obstacles.add(Math.random() < 0.5 ? new Obstacle(temp, world, pwidth(70), pheight(-48f), derp)
                             :
@@ -441,20 +443,20 @@ public class derptest extends ApplicationAdapter {
                     if (Math.random() < 0.5) {
                         //Origin at bottom left, trapezium spawned at the bottom
                         temp.set(new Vector2[]{
-                                percent(0, 0),//Origin (Bottom left)
-                                percent(val2, 0),//Bottom right
-                                percent(val1 + (val2 - val1) / 2f, tempheight),//Top right
-                                percent((val2 - val1) / 2f, tempheight)//Top left
+                                new Vector2(0, 0),//Origin (Bottom left)
+                                new Vector2(val2, 0),//Bottom right
+                                new Vector2(val1 + (val2 - val1) / 2f, tempheight),//Top right
+                                new Vector2((val2 - val1) / 2f, tempheight)//Top left
                         });
 
                         obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(-48f), derp));
                     } else {
                         //Origin at top left, trapezium spawned at the top.
                         temp.set(new Vector2[]{
-                                percent(0, 0),//Origin (Top left)
-                                percent((val2 - val1) / 2f, -tempheight),//Bottom left
-                                percent(val1 + (val2 - val1) / 2f, -tempheight),//Bottom right
-                                percent(val2, 0)//Top right
+                                new Vector2(0, 0),//Origin (Top left)
+                                new Vector2((val2 - val1) / 2f, -tempheight),//Bottom left
+                                new Vector2(val1 + (val2 - val1) / 2f, -tempheight),//Bottom right
+                                new Vector2(val2, 0)//Top right
                         });
 
                         obstacles.add(new Obstacle(temp, world, pwidth(70), pheight(49f), derp));
@@ -464,7 +466,7 @@ public class derptest extends ApplicationAdapter {
                     //Make a random circle. Randomly
                     //Uses CircleShape cuz PolygonShape's circle function looks horrible and is super glitchy.
                     float ypos = pheight(((float) Math.random() * 99f) - 49f);
-                    float rad = pheight((float) Math.random() * 10);
+                    float rad = pheight(5 + (float) Math.random() * 12);//5% - 17% height
 
                     CircleShape cs = new CircleShape();
                     cs.setPosition(percent(0, 0));//The position is already stored in obstacle class
@@ -551,8 +553,8 @@ public class derptest extends ApplicationAdapter {
             this.y2 = y2;
             this.y3 = y3;
 
-            if(!type) c = new Color(0.5f, 0.5f, 0, 0.7f);
-                 else c = new Color(0, 0, 1f, 0.7f);
+            if(!type) c = new Color(0.4f, 0.4f, 0.2f, 0.45f);
+                 else c = new Color(0, 0.3f, 1f, 0.45f);
         }
 
         public RenderTriangle(Vector2 _1, Vector2 _2, Vector2 _3, boolean type)
@@ -564,8 +566,8 @@ public class derptest extends ApplicationAdapter {
             this.y2 = _2.y;
             this.y3 = _3.y;
 
-            if(!type) c = new Color(0.5f, 0.5f, 0, 0.7f);
-            else c = new Color(0, 0, 1f, 0.7f);
+            if(!type) c = new Color(0.4f, 0.4f, 0.2f, 0.45f);
+                else  c = new Color(0, 0.3f, 1f, 0.45f);
         }
 
         public RenderTriangle(Vector2[] x, boolean type)
@@ -580,8 +582,8 @@ public class derptest extends ApplicationAdapter {
                 y3 = x[2].y;
             }
 
-            if(!type) c = new Color(0.5f, 0.5f, 0, 0.7f);
-            else c = new Color(0, 0, 1f, 0.7f);
+            if(!type) c = new Color(0.4f, 0.4f, 0.2f, 0.45f);
+                else  c = new Color(0, 0.3f, 1f, 0.45f);
         }
     }
 
