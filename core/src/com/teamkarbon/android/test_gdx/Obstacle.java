@@ -128,8 +128,8 @@ public class Obstacle {
 
     public void dispose()
     {
-        shape.dispose();
-        cshape.dispose();
-        world.dispose();
+        if(shape != null) shape.dispose();
+        if(cshape != null) cshape.dispose();
+        if(world != null) world.dispose();
     }
 }
