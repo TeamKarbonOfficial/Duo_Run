@@ -97,6 +97,8 @@ public class derptest extends ApplicationAdapter {
     Boolean Force2 = false;
     int level;
     int score;
+    static double xformula;
+    static double yformula;
     float rawscore = 0;
     boolean instaDeathMode = true;
     boolean gameOver = false;
@@ -523,7 +525,7 @@ public class derptest extends ApplicationAdapter {
             //#Score
             rawscore = rawscore + Gdx.graphics.getDeltaTime();
             score = (int)rawscore;
-
+            instaDeathMode = true;
             //Game over :P
             if(instaDeathMode) {
                 //Collision detection (Cheap way around it :P)
@@ -582,7 +584,7 @@ public class derptest extends ApplicationAdapter {
             //#render menu
             Gdx.gl.glEnable(GL20.GL_BLEND);//Allow for translucency (alpha blending) when shapes overlap
 
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);;
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
             shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
             shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, pheight(10), 45);
@@ -824,6 +826,17 @@ public class derptest extends ApplicationAdapter {
             if(!type) c = new Color(0.4f, 0.4f, 0.2f, 0.45f);
                 else  c = new Color(0, 0.3f, 1f, 0.45f);
         }
+    }
+
+    //The thingy you asked for xD
+    public static double xFunction(int theta, int radius) {
+        xformula = radius - Math.sqrt(radius * (2 * radius - 4 * Math.cos(theta) - radius * Math.pow(Math.sin(theta),2)));
+        return xformula;
+    }
+
+    public static double yFunction(int theta, int radius) {
+        yformula = radius * Math.sin(theta);
+        return yformula;
     }
 
     @Override
