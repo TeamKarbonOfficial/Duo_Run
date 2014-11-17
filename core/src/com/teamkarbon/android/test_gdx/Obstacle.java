@@ -23,6 +23,7 @@ public class Obstacle {
 
     boolean type;
     float radius;
+    String id;
 
     public Obstacle(PolygonShape _shape, World world, float x, float y, boolean _type)
     {
@@ -58,7 +59,41 @@ public class Obstacle {
             this.fixture.setFilterData(tempFilter);
         }
     }
+    public Obstacle(PolygonShape _shape, World world, float x, float y, boolean _type, String _id)
+    {
+        //How to set shape: shape.set(new Vector2[]{new Vector2(3,4), new Vector2(0, 1)});
+        //It is assumed that along the axis, 0 is the centre and the lateral
+        //angle of the polygon is of the initialised shape along the same axes.
+        bodyDef = new BodyDef();
+        fixtureDef = new FixtureDef();
+        shape = _shape;
+        type = _type;
+        id = _id;
 
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.set(x, y);
+
+        body = world.createBody(bodyDef);
+
+        fixtureDef.shape = shape;
+        fixture = body.createFixture(fixtureDef);
+
+        //To make sure the obstacles collide with the right objects
+        Filter tempFilter = new Filter();
+
+        if(type == false)//collides with ball
+        {
+            tempFilter.maskBits = 1;
+            tempFilter.categoryBits = 1;
+            this.fixture.setFilterData(tempFilter);
+        }
+        else//collides with ball2
+        {
+            tempFilter.maskBits = 1;
+            tempFilter.categoryBits = 2;
+            this.fixture.setFilterData(tempFilter);
+        }
+    }
     public Obstacle(CircleShape _shape, World world, float x, float y, boolean _type, float _radius)
     {
         //How to set shape: shape.set(new Vector2[]{new Vector2(3,4), new Vector2(0, 1)});
@@ -127,5 +162,40 @@ public class Obstacle {
         if(shape != null) shape.dispose();
         if(cshape != null) cshape.dispose();
         world.destroyBody(body);
+    }
+
+    //Note getVertices are only valid for polygons, not circles!
+    public float[] getVerticesAsFloatArray()
+    {
+        if(this.shape != null) {
+            float[] temp = new float[this.shape.getVertexCount() * 2];
+            Vector2 v = new Vector2();
+
+            for (int i = 0; i < this.shape.getVertexCount(); i++) {
+                this.shape.getVertex(i, v);
+                temp[i * 2] = v.x + this.getPos().x;
+                temp[i * 2 + 1] = v.y = this.getPos().y;
+            }
+
+            return temp;
+        }
+
+        return null;
+    }
+
+    public Vector2[] getVerticesAsVectors()
+    {
+        if(this.shape != null) {
+            Vector2[] v = new Vector2[this.shape.getVertexCount()];
+
+            for (int i = 0; i < this.shape.getVertexCount(); i++) {
+                this.shape.getVertex(i, v[i]);
+                v[i].x += this.getPos().x;
+                v[i].y += this.getPos().y;
+            }
+
+            return v;
+        }
+        return null;
     }
 }
