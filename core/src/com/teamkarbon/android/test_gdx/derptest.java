@@ -90,6 +90,7 @@ public class derptest extends ApplicationAdapter {
     int score;
     float rawscore = 0;
     boolean instaDeathMode = true;
+    boolean gameOver = false;
     //final String ballfile;
     //final String ball2file;
 
@@ -127,9 +128,6 @@ public class derptest extends ApplicationAdapter {
         font = new BitmapFont();
         font.setColor(Color.LIGHT_GRAY);
         font.setScale(4);
-        displayscore = new BitmapFont();
-        displayscore.setColor(Color.MAGENTA);
-        displayscore.setScale(5);
 
         //Init ball classes
         //The meaning of each param
@@ -380,8 +378,12 @@ public class derptest extends ApplicationAdapter {
             Gdx.gl.glDisable(GL20.GL_BLEND);
 
             batch.begin();
-            //This is just for debug purposes. Actually its not even useful.. yet.
-            font.draw(batch, "obs count: " + obstacles.size(), 300, 200);
+            font.setColor(Color.LIGHT_GRAY);
+            font.setScale(4);
+            font.draw(batch, "obs count: " + obstacles.size() + ", game over: " + gameOver, 300, 200);
+            font.setColor(Color.MAGENTA);
+            font.setScale(5);
+            font.draw(batch, "Score: " + score, 100, 100);
             batch.end();
 
 
@@ -491,9 +493,6 @@ public class derptest extends ApplicationAdapter {
             //Score
             rawscore = rawscore + Gdx.graphics.getDeltaTime();
             score = (int)rawscore;
-            batch.begin();
-            displayscore.draw(batch, "Score: " + score, 100, 100);
-            batch.end();
 
             //Game over :P
             if(instaDeathMode) {
@@ -503,6 +502,7 @@ public class derptest extends ApplicationAdapter {
                 if (!inRange(ball.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN) ||
                     !inRange(ball2.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN)) {
                     Gdx.app.debug("instaDeathMode", "Game Over!");
+                    gameOver = true;
                     //Do something else
                     //...
                 }
@@ -511,6 +511,7 @@ public class derptest extends ApplicationAdapter {
                     !inRange(ball2.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN))
             {
                 Gdx.app.debug("Normal mode", "Game over!");
+                gameOver = true;
             }
 
             obstaclesTimer += Gdx.graphics.getDeltaTime();
@@ -572,10 +573,10 @@ public class derptest extends ApplicationAdapter {
     {
         if(mode == rangeMode.WITHIN)
         {
-            return (val < lower || val > upper);
+            return (val > lower && val < upper);
         }
         //else if (mode == rangeMode.WITHIN_OR_EQUIVALENT)
-        return (val <= lower || val >= upper);
+        return (val >= lower && val <= upper);
     }
 
     public enum rangeMode{
