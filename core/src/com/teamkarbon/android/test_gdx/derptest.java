@@ -287,9 +287,9 @@ public class derptest extends ApplicationAdapter {
 
                 Obstacle o = obstacles.get(x);
 
-                o.translate(percent(-(6 + level) * Gdx.graphics.getDeltaTime(), 0f));//Move left (6 + level) % of screen per second..
+                o.translate(percent(-(7 + level) * Gdx.graphics.getDeltaTime(), 0f));//Move left (6 + level) % of screen per second..
 
-                if(o.getPos().x < pwidth(-65)){
+                if(o.getPos().x < pwidth(-85)){
                     obstacles.remove(o);
                     x--;
                     o.dispose(world);
@@ -490,10 +490,15 @@ public class derptest extends ApplicationAdapter {
                 //Checks if ball and ball2 x-axis is 0, if not, game over
                 //When an object hit the ball, the x value will change
                 if (ball.body.getPosition().x != 0 || ball2.body.getPosition().x != 0) {
-                    Gdx.app.debug("instaDeathMode", "Activate!");
+                    Gdx.app.debug("instaDeathMode", "Game Over!");
                     //Do something else
                     //...
                 }
+            }
+            else if(ball.body.getPosition().x < pwidth(-55) || ball.body.getPosition().x > pwidth(55) ||
+                    ball2.body.getPosition().x < pwidth(-55) || ball2.body.getPosition().x > pwidth(55))
+            {
+                Gdx.app.debug("Normal mode", "Game over!");
             }
 
             obstaclesTimer += Gdx.graphics.getDeltaTime();
