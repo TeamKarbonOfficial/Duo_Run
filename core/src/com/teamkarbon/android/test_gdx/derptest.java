@@ -505,6 +505,7 @@ public class derptest extends ApplicationAdapter {
                     gameOver = true;
                     //Do something else
                     //...
+                    Gdx.app.exit();
                 }
             }
             else if(!inRange(ball.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN) ||
