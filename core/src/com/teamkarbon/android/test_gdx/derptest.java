@@ -82,11 +82,14 @@ public class derptest extends ApplicationAdapter {
     //Texture balltexture;
     //Texture ball2texture;
     BitmapFont font;
+    BitmapFont displayscore;
 
     Boolean Force = false;
     Boolean Force2 = false;
     int level;
-    boolean instaDeathMode;
+    int score;
+    float rawscore = 0;
+    boolean instaDeathMode = true;
     //final String ballfile;
     //final String ball2file;
 
@@ -115,7 +118,6 @@ public class derptest extends ApplicationAdapter {
         camera.update();//Make sure everything's ok :P
 
         //Create world
-
         world = new World(new Vector2(0, -9.8f), true);//Set gravity to 9.8 m/s^2 downwards
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
@@ -123,8 +125,11 @@ public class derptest extends ApplicationAdapter {
         //Create text
         batch = new SpriteBatch();
         font = new BitmapFont();
-        font.setColor(com.badlogic.gdx.graphics.Color.LIGHT_GRAY);
+        font.setColor(Color.LIGHT_GRAY);
         font.setScale(4);
+        displayscore = new BitmapFont();
+        displayscore.setColor(Color.MAGENTA);
+        displayscore.setScale(5);
 
         //Init ball classes
         //The meaning of each param
@@ -483,6 +488,12 @@ public class derptest extends ApplicationAdapter {
                 obstaclesTimer = 0;
             }
 
+            //Score
+            rawscore = rawscore + Gdx.graphics.getDeltaTime();
+            score = (int)rawscore;
+            batch.begin();
+            displayscore.draw(batch, "Score: " + score, 100, 100);
+            batch.end();
 
             //Game over :P
             if(instaDeathMode) {
