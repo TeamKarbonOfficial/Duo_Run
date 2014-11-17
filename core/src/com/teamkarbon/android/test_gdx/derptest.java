@@ -489,20 +489,33 @@ public class derptest extends ApplicationAdapter {
                 //Collision detection (Cheap way around it :P)
                 //Checks if ball and ball2 x-axis is 0, if not, game over
                 //When an object hit the ball, the x value will change
-                if (ball.body.getPosition().x != 0 || ball2.body.getPosition().x != 0) {
+                if (inRange(ball.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN) ||
+                    inRange(ball2.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN)) {
                     Gdx.app.debug("instaDeathMode", "Game Over!");
                     //Do something else
                     //...
                 }
             }
-            else if(ball.body.getPosition().x < pwidth(-55) || ball.body.getPosition().x > pwidth(55) ||
-                    ball2.body.getPosition().x < pwidth(-55) || ball2.body.getPosition().x > pwidth(55))
+            else if(inRange(ball.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN) ||
+                    inRange(ball2.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN))
             {
                 Gdx.app.debug("Normal mode", "Game over!");
             }
 
             obstaclesTimer += Gdx.graphics.getDeltaTime();
             world.step(Gdx.graphics.getDeltaTime(), 6, 2);
+        }
+        else if (mode == gameMode.MAIN_MENU)
+        {
+
+        }
+        else if (mode == gameMode.OPTIONS)
+        {
+
+        }
+        else if (mode == gameMode.ABOUT)
+        {
+
         }
     }
 
@@ -542,6 +555,20 @@ public class derptest extends ApplicationAdapter {
     //The percentage of screen height represented in meters.
     public float pheight(float heightpercent) {
         return scale((heightpercent / 100f) * Gdx.graphics.getHeight());
+    }
+
+    public boolean inRange(float val, float lower, float upper, rangeMode mode)
+    {
+        if(mode == rangeMode.WITHIN)
+        {
+            return (val < lower || val > upper);
+        }
+        //else if (mode == rangeMode.WITHIN_OR_EQUIVALENT)
+        return (val <= lower || val >= upper);
+    }
+
+    public enum rangeMode{
+        WITHIN, WITHIN_OR_EQUIVALENT
     }
 
     //A selection of current active states.
