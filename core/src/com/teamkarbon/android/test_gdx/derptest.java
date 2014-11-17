@@ -500,15 +500,15 @@ public class derptest extends ApplicationAdapter {
                 //Collision detection (Cheap way around it :P)
                 //Checks if ball and ball2 x-axis is 0, if not, game over
                 //When an object hit the ball, the x value will change
-                if (inRange(ball.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN) ||
-                    inRange(ball2.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN)) {
+                if (!inRange(ball.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN) ||
+                    !inRange(ball2.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN)) {
                     Gdx.app.debug("instaDeathMode", "Game Over!");
                     //Do something else
                     //...
                 }
             }
-            else if(inRange(ball.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN) ||
-                    inRange(ball2.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN))
+            else if(!inRange(ball.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN) ||
+                    !inRange(ball2.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN))
             {
                 Gdx.app.debug("Normal mode", "Game over!");
             }
