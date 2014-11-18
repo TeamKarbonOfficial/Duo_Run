@@ -9,6 +9,8 @@ Intersect.overlapConvexPolygons();//!!!!
 ```
 **Images for Balls: (Place images in \android\assets)**
 http://teamkarbon.com/cloud/public.php?service=files&t=69d7aca788e27f04971fad1bd79a314c
+**Image for helpbutton:**
+http://teamkarbon.com/cloud/public.php?service=files&t=e529fe4665ded4c64cfb423db3f42948
 
 That's all folks...
 
