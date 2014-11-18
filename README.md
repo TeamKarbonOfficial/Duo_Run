@@ -28,10 +28,14 @@ TODO
     - Make them spawn properly
     - Make them less laggy...
 - Find out a way to check for collisions **done**
-- Actually check for collisions **done** (I guess LOL)
+- Actually check for collisions **done**
 - Make an endgame situation function
 - Create levels *suggestions?*
 - Create a level select screen
 - Create a main menu screen
 - Have some options/whatever
+- Add Game Service
+    - Add at least 5 achievements (Required by Playstore) **suggestions?**
+    - Add Events??
+    - Add leaderboards for all the gamemodes
 - Test it on other devices too (to make sure the resolutions work and that the graphics aren't off-screen)
