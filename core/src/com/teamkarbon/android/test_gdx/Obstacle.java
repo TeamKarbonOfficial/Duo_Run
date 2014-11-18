@@ -53,18 +53,26 @@ public class Obstacle {
         //To make sure the obstacles collide with the right objects
         Filter tempFilter = new Filter();
 
-        if(type == false)//collides with ball
+        if(!type)//collides with ball Yellow
         {
             tempFilter.maskBits = 1;
             tempFilter.categoryBits = 1;
             this.fixture.setFilterData(tempFilter);
         }
-        else//collides with ball2
+        else//collides with ball2 Blue
         {
             tempFilter.maskBits = 1;
             tempFilter.categoryBits = 2;
             this.fixture.setFilterData(tempFilter);
         }
+
+        //Set default fixture
+        this.setFixture(0.4f, 1f, 0.8f);
+
+        //Set color auto:
+        //The one in render triangle is deprecated
+        if (!type) this.color = new Color(0.4f, 0.4f, 0.2f, 0.45f);
+        else this.color = new Color(0, 0.3f, 1f, 0.45f);
     }
     public Obstacle(PolygonShape _shape, World world, float x, float y, boolean _type, String _id)
     {
@@ -100,6 +108,14 @@ public class Obstacle {
             tempFilter.categoryBits = 2;
             this.fixture.setFilterData(tempFilter);
         }
+
+        //Set default fixture
+        this.setFixture(0.4f, 1f, 0.8f);
+
+        //Set color auto:
+        //The one in render triangle is deprecated
+        if (!type) this.color = new Color(0.4f, 0.4f, 0.2f, 0.45f);
+        else this.color = new Color(0, 0.3f, 1f, 0.45f);
     }
     public Obstacle(CircleShape _shape, World world, float x, float y, boolean _type, float _radius, int _sides)
     {
@@ -140,6 +156,11 @@ public class Obstacle {
 
         //Set default fixture
         this.setFixture(0.4f, 1f, 0.8f);
+
+        //Set color auto:
+        //The one in render triangle is deprecated
+        if (!type) this.color = new Color(0.4f, 0.4f, 0.2f, 0.45f);
+        else this.color = new Color(0, 0.3f, 1f, 0.45f);
     }
 
     public void setPos(float x, float y) { body.setTransform(x, y, 0); }

@@ -257,31 +257,17 @@ public class derptest extends ApplicationAdapter {
         if (mode == gameMode.MAIN_MENU_INIT) {
             PolygonShape temp = new PolygonShape();
             temp.setAsBox(pwidth(20), pheight(20));
-            Gdx.app.debug("play button", "Vertices: " + temp.getVertexCount());
 
             //Create a new obstacle with id "play"
-            obstacles.add(new Obstacle(temp, world, pwidth(60), pheight(48), false, "play"));
-
+            Obstacle o = new Obstacle(temp, world, pwidth(60), pheight(48), false, "play");
+            obstacles.add(o);
 
             mode = gameMode.MAIN_MENU;
         }
 
         //#game
         else if (mode == gameMode.GAME) {
-            if (Force)
-                ball.body.applyForceToCenter(0, 50, true);
-            if (Force2)
-                ball2.body.applyForceToCenter(0, 50, true);
-
-            //Constantly increase the balls' speed until a certain velocity
-            if (ball.body.getPosition().x < 0)
-                ball.body.applyForceToCenter(10, 0, true);
-            if (ball2.body.getPosition().x < 0)
-                ball2.body.applyForceToCenter(10, 0, true);
-            if (ball.body.getPosition().x > 0)
-                ball.body.applyForceToCenter(-10, 0, true);
-            if (ball2.body.getPosition().x > 0)
-                ball2.body.applyForceToCenter(-10, 0, true);
+            ProcessInput();
 
             /*
             This isn't necessary for now...
@@ -305,19 +291,9 @@ public class derptest extends ApplicationAdapter {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
             //#render main
-            shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
-            shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, pheight(10), 45);
-            shapeRenderer.setColor(0f, 0f, 1f, 0.4f);
-            shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, pheight(10), 45);
+            DrawBall();
 
-            //Draw the floors and the ceiling
-            shapeRenderer.setColor(0.15f, 0.4f, 0.15f, 0.7f);
-
-            //NOTE: The origin of physical boxes are at the centre, but the origins of graphical boxes are at the bottom left corner.
-            //Which is why the differing values are needed for pheight and pwidth.
-            shapeRenderer.rect(theFloor.getPosition().x - camera.viewportWidth / 2f, theFloor.getPosition().y - pheight(1), camera.viewportWidth + scale(50), pheight(2));
-            shapeRenderer.rect(theCeiling.getPosition().x - camera.viewportWidth / 2f, theCeiling.getPosition().y - pheight(1), camera.viewportWidth + scale(50), pheight(2));
-
+            DrawFloorsAndCeiling();
 
             ArrayList<RenderTriangle> triangles = new ArrayList<RenderTriangle>();
 
@@ -336,64 +312,7 @@ public class derptest extends ApplicationAdapter {
                     continue;
                 }
 
-                if (o.cshape == null && o.shape.getVertexCount() == 3)//Triangle
-                {
-                    Vector2[] vects = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
-                    o.shape.getVertex(0, vects[0]);
-                    o.shape.getVertex(1, vects[1]);
-                    o.shape.getVertex(2, vects[2]);
-
-                    for (Vector2 v : vects) {
-                        v.x += o.getPos().x;
-                        v.y += o.getPos().y;
-                    }
-
-                    if(o.color == null) triangles.add(new RenderTriangle(vects, o.type));
-                    else triangles.add(new RenderTriangle(vects, o.type, o.color));
-                    /* Gdx.app.debug("RenderTriangle",
-                            vects[0].toString() + ", " + vects[1].toString() + ", " +
-                                    vects[2].toString()); */
-                } else if (o.cshape == null && o.shape.getVertexCount() == 4)//Trapezium/Box
-                {
-                    Vector2[] vects = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
-                    Vector2[] vects2 = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
-
-                    o.shape.getVertex(0, vects[0]);
-                    o.shape.getVertex(1, vects[1]);
-                    o.shape.getVertex(2, vects[2]);
-
-                    o.shape.getVertex(0, vects2[0]);
-                    o.shape.getVertex(2, vects2[1]);
-                    o.shape.getVertex(3, vects2[2]);
-
-                    for (Vector2 v : vects) {
-                        v.x += o.getPos().x;
-                        v.y += o.getPos().y;
-                    }
-                    for (Vector2 v : vects2) {
-                        v.x += o.getPos().x;
-                        v.y += o.getPos().y;
-                    }
-
-                    if(o.color == null) {
-                        triangles.add(new RenderTriangle(vects, o.type));
-                        triangles.add(new RenderTriangle(vects2, o.type));
-                    }
-                    else {
-                        triangles.add(new RenderTriangle(vects, o.type, o.color));
-                        triangles.add(new RenderTriangle(vects2, o.type, o.color));
-                    }
-
-                }
-                else //circles
-                {
-                    if(o.color == null) {
-                        if (!o.type) shapeRenderer.setColor(0.4f, 0.4f, 0.2f, 0.45f);
-                        else shapeRenderer.setColor(0, 0.3f, 1f, 0.45f);
-                    }
-                    else shapeRenderer.setColor(o.color);
-                    shapeRenderer.circle(o.getPos().x, o.getPos().y, o.radius, 25);
-                }
+                CreateRenderTriangles(o, triangles);
             }
 
             //NOTE: Don't use for(object : array) type for loop as concurrent manipulations to
@@ -560,21 +479,7 @@ public class derptest extends ApplicationAdapter {
 
         //#main menu
         else if (mode == gameMode.MAIN_MENU) {
-            if (Force)
-                ball.body.applyForceToCenter(0, 50, true);
-            if (Force2)
-                ball2.body.applyForceToCenter(0, 50, true);
-
-            //Constantly increase the balls' speed until a certain velocity
-            if (ball.body.getPosition().x < 0)
-                ball.body.applyForceToCenter(10, 0, true);
-            if (ball2.body.getPosition().x < 0)
-                ball2.body.applyForceToCenter(10, 0, true);
-            if (ball.body.getPosition().x > 0)
-                ball.body.applyForceToCenter(-10, 0, true);
-            if (ball2.body.getPosition().x > 0)
-                ball2.body.applyForceToCenter(-10, 0, true);
-
+            ProcessInput();
 
 
             //Epic rendering
@@ -584,18 +489,9 @@ public class derptest extends ApplicationAdapter {
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-            shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);//Yellow for left
-            shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, pheight(10), 45);
-            shapeRenderer.setColor(0f, 0f, 1f, 0.4f);//Blue for right (temporarily, customisable colors coming soon XD)
-            shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, pheight(10), 45);
+            DrawBall();
 
-            //Draw the floors and the ceiling
-            shapeRenderer.setColor(0.15f, 0.4f, 0.15f, 0.7f);
-
-            //NOTE: The origin of physical boxes are at the centre, but the origins of graphical boxes are at the bottom left corner.
-            //Which is why the differing values are needed for pheight and pwidth.
-            shapeRenderer.rect(theFloor.getPosition().x - camera.viewportWidth / 2f, theFloor.getPosition().y - pheight(1), camera.viewportWidth + scale(50), pheight(2));
-            shapeRenderer.rect(theCeiling.getPosition().x - camera.viewportWidth / 2f, theCeiling.getPosition().y - pheight(1), camera.viewportWidth + scale(50), pheight(2));
+            DrawFloorsAndCeiling();
 
 
             ArrayList<RenderTriangle> triangles = new ArrayList<RenderTriangle>();
@@ -616,68 +512,7 @@ public class derptest extends ApplicationAdapter {
                     continue;
                 }
 
-                if (o.cshape == null && o.shape.getVertexCount() == 3)//Triangle
-                {
-                    Vector2[] vects = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
-                    o.shape.getVertex(0, vects[0]);
-                    o.shape.getVertex(1, vects[1]);
-                    o.shape.getVertex(2, vects[2]);
-
-                    for (Vector2 v : vects) {
-                        v.x += o.getPos().x;
-                        v.y += o.getPos().y;
-                    }
-
-                    if(o.color == null) triangles.add(new RenderTriangle(vects, o.type));
-                    else triangles.add(new RenderTriangle(vects, o.type, o.color));
-                    /* Gdx.app.debug("RenderTriangle",
-                            vects[0].toString() + ", " + vects[1].toString() + ", " +
-                                    vects[2].toString()); */
-                } else if (o.cshape == null && o.shape.getVertexCount() == 4)//Trapezium/Box
-                {
-                    Vector2[] vects = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
-                    Vector2[] vects2 = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
-
-                    o.shape.getVertex(0, vects[0]);
-                    o.shape.getVertex(1, vects[1]);
-                    o.shape.getVertex(2, vects[2]);
-
-                    o.shape.getVertex(0, vects2[0]);
-                    o.shape.getVertex(2, vects2[1]);
-                    o.shape.getVertex(3, vects2[2]);
-
-                    for (Vector2 v : vects) {
-                        v.x += o.getPos().x;
-                        v.y += o.getPos().y;
-                    }
-                    for (Vector2 v : vects2) {
-                        v.x += o.getPos().x;
-                        v.y += o.getPos().y;
-                    }
-
-                    if(o.color == null) {
-                        triangles.add(new RenderTriangle(vects, o.type));
-                        triangles.add(new RenderTriangle(vects2, o.type));
-                    }
-                    else
-                    {
-                        triangles.add(new RenderTriangle(vects, o.type, o.color));
-                        triangles.add(new RenderTriangle(vects2, o.type, o.color));
-                    }
-
-                    /*Gdx.app.debug("RenderTriangle",
-                            vects[0].toString() + ", " + vects[1].toString() + ", " +
-                            vects[2].toString() + ", " + vects2[0].toString() + ", " +
-                            vects2[1].toString() + ", " + vects2[2].toString()); */
-                } else //circles
-                {
-                    if(o.color == null) {
-                        if (!o.type) shapeRenderer.setColor(0.4f, 0.4f, 0.2f, 0.45f);
-                        else shapeRenderer.setColor(0, 0.3f, 1f, 0.45f);
-                    }
-                    else shapeRenderer.setColor(o.color);
-                    shapeRenderer.circle(o.getPos().x, o.getPos().y, o.radius, 25);
-                }
+                CreateRenderTriangles(o, triangles);
 
                 //#buttons
                 //play button
@@ -716,7 +551,7 @@ public class derptest extends ApplicationAdapter {
             //           triangle, and not once per triangle per obstacle >.<
             for (int i = 0; i < triangles.size(); i++) {
                 RenderTriangle r = triangles.get(i);
-                shapeRenderer.setColor(r.c);
+                if(r.c != null) shapeRenderer.setColor(r.c);
                 shapeRenderer.triangle(r.x1, r.y1, r.x2, r.y2, r.x3, r.y3);
 
                 //remove out of screen render triangles
@@ -728,25 +563,14 @@ public class derptest extends ApplicationAdapter {
 
             batch.end();
             shapeRenderer.end();
+
+            triangles.clear();
             Gdx.gl.glDisable(GL20.GL_BLEND);
         }
 
         //#game init
         else if (mode == gameMode.GAME_INIT) {
-            if (Force)
-                ball.body.applyForceToCenter(0, 50, true);
-            if (Force2)
-                ball2.body.applyForceToCenter(0, 50, true);
-
-            //Constantly increase the balls' speed until a certain velocity
-            if (ball.body.getPosition().x < 0)
-                ball.body.applyForceToCenter(10, 0, true);
-            if (ball2.body.getPosition().x < 0)
-                ball2.body.applyForceToCenter(10, 0, true);
-            if (ball.body.getPosition().x > 0)
-                ball.body.applyForceToCenter(-10, 0, true);
-            if (ball2.body.getPosition().x > 0)
-                ball2.body.applyForceToCenter(-10, 0, true);
+            ProcessInput();
 
             lerp += Gdx.graphics.getDeltaTime() * 2;//Increase speed of obstacles to make a "zooming" effect
             //Accel: 2% width/s^2
@@ -762,18 +586,9 @@ public class derptest extends ApplicationAdapter {
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-            shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
-            shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, pheight(10), 45);
-            shapeRenderer.setColor(0f, 0f, 1f, 0.4f);
-            shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, pheight(10), 45);
+            DrawBall();
 
-            //Draw the floors and the ceiling
-            shapeRenderer.setColor(0.15f, 0.4f, 0.15f, 0.7f);
-
-            //NOTE: The origin of physical boxes are at the centre, but the origins of graphical boxes are at the bottom left corner.
-            //Which is why the differing values are needed for pheight and pwidth.
-            shapeRenderer.rect(theFloor.getPosition().x - camera.viewportWidth / 2f, theFloor.getPosition().y - pheight(1), camera.viewportWidth + scale(50), pheight(2));
-            shapeRenderer.rect(theCeiling.getPosition().x - camera.viewportWidth / 2f, theCeiling.getPosition().y - pheight(1), camera.viewportWidth + scale(50), pheight(2));
+            DrawFloorsAndCeiling();
 
 
             ArrayList<RenderTriangle> triangles = new ArrayList<RenderTriangle>();
@@ -791,67 +606,7 @@ public class derptest extends ApplicationAdapter {
                     continue;
                 }
 
-                if (o.cshape == null && o.shape.getVertexCount() == 3)//Triangle
-                {
-                    Vector2[] vects = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
-                    o.shape.getVertex(0, vects[0]);
-                    o.shape.getVertex(1, vects[1]);
-                    o.shape.getVertex(2, vects[2]);
-
-                    for (Vector2 v : vects) {
-                        v.x += o.getPos().x;
-                        v.y += o.getPos().y;
-                    }
-
-                    if (o.color == null) triangles.add(new RenderTriangle(vects, o.type));
-                    else triangles.add(new RenderTriangle(vects, o.type, o.color));
-                    /* Gdx.app.debug("RenderTriangle",
-                            vects[0].toString() + ", " + vects[1].toString() + ", " +
-                                    vects[2].toString()); */
-                } else if (o.cshape == null && o.shape.getVertexCount() == 4)//Trapezium/Box
-                {
-                    Vector2[] vects = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
-                    Vector2[] vects2 = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
-
-                    o.shape.getVertex(0, vects[0]);
-                    o.shape.getVertex(1, vects[1]);
-                    o.shape.getVertex(2, vects[2]);
-
-                    o.shape.getVertex(0, vects2[0]);
-                    o.shape.getVertex(2, vects2[1]);
-                    o.shape.getVertex(3, vects2[2]);
-
-                    for (Vector2 v : vects) {
-                        v.x += o.getPos().x;
-                        v.y += o.getPos().y;
-                    }
-                    for (Vector2 v : vects2) {
-                        v.x += o.getPos().x;
-                        v.y += o.getPos().y;
-                    }
-
-                    if (o.color == null) {
-                        triangles.add(new RenderTriangle(vects, o.type));
-                        triangles.add(new RenderTriangle(vects2, o.type));
-                    } else {
-                        triangles.add(new RenderTriangle(vects, o.type, o.color));
-                        triangles.add(new RenderTriangle(vects2, o.type, o.color));
-                    }
-
-                    /*Gdx.app.debug("RenderTriangle",
-                            vects[0].toString() + ", " + vects[1].toString() + ", " +
-                            vects[2].toString() + ", " + vects2[0].toString() + ", " +
-                            vects2[1].toString() + ", " + vects2[2].toString()); */
-                } else //circles
-                {
-                    if(o.color == null) {
-                        if (!o.type) shapeRenderer.setColor(0.4f, 0.4f, 0.2f, 0.45f);
-                        else shapeRenderer.setColor(0, 0.3f, 1f, 0.45f);
-                    }
-                    else shapeRenderer.setColor(o.color);
-
-                    shapeRenderer.circle(o.getPos().x, o.getPos().y, o.radius, 25);
-                }
+                CreateRenderTriangles(o, triangles);
 
                 //#render button
                 //play button
@@ -959,45 +714,7 @@ public class derptest extends ApplicationAdapter {
         float x1, y1, x2, y2, x3, y3;
         Color c;
 
-        public RenderTriangle(float x1, float y1, float x2, float y2, float x3, float y3, boolean type) {
-            this.x1 = x1;
-            this.x2 = x2;
-            this.x3 = x3;
-            this.y1 = y1;
-            this.y2 = y2;
-            this.y3 = y3;
-
-            if (!type) c = new Color(0.4f, 0.4f, 0.2f, 0.45f);
-            else c = new Color(0, 0.3f, 1f, 0.45f);
-        }
-
-        public RenderTriangle(Vector2 _1, Vector2 _2, Vector2 _3, boolean type) {
-            this.x1 = _1.x;
-            this.x2 = _2.x;
-            this.x3 = _3.x;
-            this.y1 = _1.y;
-            this.y2 = _2.y;
-            this.y3 = _3.y;
-
-            if (!type) c = new Color(0.4f, 0.4f, 0.2f, 0.45f);
-            else c = new Color(0, 0.3f, 1f, 0.45f);
-        }
-
-        public RenderTriangle(Vector2[] x, boolean type) {
-            if (x.length == 3) {
-                x1 = x[0].x;
-                x2 = x[1].x;
-                x3 = x[2].x;
-                y1 = x[0].y;
-                y2 = x[1].y;
-                y3 = x[2].y;
-            }
-
-            if (!type) c = new Color(0.4f, 0.4f, 0.2f, 0.45f);
-            else c = new Color(0, 0.3f, 1f, 0.45f);
-        }
-
-        public RenderTriangle(float x1, float y1, float x2, float y2, float x3, float y3, boolean type, Color _c) {
+        public RenderTriangle(float x1, float y1, float x2, float y2, float x3, float y3, Color _c) {
             this.x1 = x1;
             this.x2 = x2;
             this.x3 = x3;
@@ -1008,7 +725,7 @@ public class derptest extends ApplicationAdapter {
             c = _c;
         }
 
-        public RenderTriangle(Vector2 _1, Vector2 _2, Vector2 _3, boolean type, Color _c) {
+        public RenderTriangle(Vector2 _1, Vector2 _2, Vector2 _3, Color _c) {
             this.x1 = _1.x;
             this.x2 = _2.x;
             this.x3 = _3.x;
@@ -1019,7 +736,7 @@ public class derptest extends ApplicationAdapter {
             c = _c;
         }
 
-        public RenderTriangle(Vector2[] x, boolean type, Color _c) {
+        public RenderTriangle(Vector2[] x, Color _c) {
             if (x.length == 3) {
                 x1 = x[0].x;
                 x2 = x[1].x;
@@ -1051,5 +768,100 @@ public class derptest extends ApplicationAdapter {
 
     @Override
     public void resume() {
+    }
+
+    //#process input
+    public void ProcessInput()
+    {
+        if (Force)
+            ball.body.applyForceToCenter(0, 50, true);
+        if (Force2)
+            ball2.body.applyForceToCenter(0, 50, true);
+
+        //Constantly increase the balls' speed until a certain velocity
+        if (ball.body.getPosition().x < 0)
+            ball.body.applyForceToCenter(10, 0, true);
+        if (ball2.body.getPosition().x < 0)
+            ball2.body.applyForceToCenter(10, 0, true);
+        if (ball.body.getPosition().x > 0)
+            ball.body.applyForceToCenter(-10, 0, true);
+        if (ball2.body.getPosition().x > 0)
+            ball2.body.applyForceToCenter(-10, 0, true);
+    }
+
+    //#draw ball
+    public void DrawBall()
+    {
+        shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
+        shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, pheight(10), 45);
+        shapeRenderer.setColor(0f, 0f, 1f, 0.4f);
+        shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, pheight(10), 45);
+    }
+
+    //#draw floors and ceiling
+    public void DrawFloorsAndCeiling()
+    {
+        //Draw the floors and the ceiling
+        shapeRenderer.setColor(0.15f, 0.4f, 0.15f, 0.7f);
+
+        //NOTE: The origin of physical boxes are at the centre, but the origins of graphical boxes are at the bottom left corner.
+        //Which is why the differing values are needed for pheight and pwidth.
+        shapeRenderer.rect(theFloor.getPosition().x - camera.viewportWidth / 2f, theFloor.getPosition().y - pheight(1),
+                camera.viewportWidth + scale(50), pheight(2));
+        shapeRenderer.rect(theCeiling.getPosition().x - camera.viewportWidth / 2f, theCeiling.getPosition().y - pheight(1),
+                camera.viewportWidth + scale(50), pheight(2));
+    }
+
+    //#create RenderTriangles
+    public void CreateRenderTriangles(Obstacle o, ArrayList<RenderTriangle> triangles)
+    {
+        if (o.cshape == null && o.shape.getVertexCount() == 3)//Triangle
+        {
+            Vector2[] vects = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
+            o.shape.getVertex(0, vects[0]);
+            o.shape.getVertex(1, vects[1]);
+            o.shape.getVertex(2, vects[2]);
+
+            for (Vector2 v : vects) {
+                v.x += o.getPos().x;
+                v.y += o.getPos().y;
+            }
+
+            triangles.add(new RenderTriangle(vects, o.color));
+                    /* Gdx.app.debug("RenderTriangle",
+                            vects[0].toString() + ", " + vects[1].toString() + ", " +
+                                    vects[2].toString()); */
+        } else if (o.cshape == null && o.shape.getVertexCount() == 4)//Trapezium/Box
+        {
+            Vector2[] vects = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
+            Vector2[] vects2 = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
+
+            o.shape.getVertex(0, vects[0]);
+            o.shape.getVertex(1, vects[1]);
+            o.shape.getVertex(2, vects[2]);
+
+            o.shape.getVertex(0, vects2[0]);
+            o.shape.getVertex(2, vects2[1]);
+            o.shape.getVertex(3, vects2[2]);
+
+            for (Vector2 v : vects) {
+                v.x += o.getPos().x;
+                v.y += o.getPos().y;
+            }
+            for (Vector2 v : vects2) {
+                v.x += o.getPos().x;
+                v.y += o.getPos().y;
+            }
+
+            triangles.add(new RenderTriangle(vects, o.color));
+            triangles.add(new RenderTriangle(vects2, o.color));
+
+
+        }
+        else //circles
+        {
+            shapeRenderer.setColor(o.color);
+            shapeRenderer.circle(o.getPos().x, o.getPos().y, o.radius, 25);
+        }
     }
 }
