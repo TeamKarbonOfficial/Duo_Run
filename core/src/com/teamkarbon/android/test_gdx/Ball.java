@@ -65,8 +65,8 @@ public class Ball {
         for(int _sides = 0; _sides < sides; _sides ++)
         {
             v = polygonize((_sides / sides) * 360f, radius);
-            temp[_sides * 2] = v.x;
-            temp[_sides * 2 + 1] = v.y;
+            temp[_sides * 2] = v.x + this.getPos().x;
+            temp[_sides * 2 + 1] = v.y + this.getPos().y;
         }
         return temp;
     }
@@ -77,6 +77,8 @@ public class Ball {
         for(int _sides = 0; _sides < 30; _sides ++)
         {
             v[_sides] = polygonize((_sides / sides) * 360f, radius);
+            v[_sides].x += this.getPos().x;
+            v[_sides].y += this.getPos().y;
         }
         return v;
     }

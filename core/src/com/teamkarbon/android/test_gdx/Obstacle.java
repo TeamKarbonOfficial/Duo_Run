@@ -1,5 +1,6 @@
 package com.teamkarbon.android.test_gdx;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -25,6 +26,7 @@ public class Obstacle {
     float radius;
     String id;
     int sides;//The number of sides the circleshape, if non-null, has.
+    Color color;
 
     public Obstacle(PolygonShape _shape, World world, float x, float y, boolean _type)
     {
@@ -133,12 +135,11 @@ public class Obstacle {
         }
     }
 
-    public void setPos(float x, float y)
-    {
-        body.setTransform(x, y, 0);
-    }
+    public void setPos(float x, float y) { body.setTransform(x, y, 0); }
 
     public Vector2 getPos() { return body.getTransform().getPosition(); }//Make typing easier :P
+
+    public void setColor(Color _color) {this.color = _color;}
 
     public Vector2 translate(float x, float y)
     {
@@ -187,8 +188,8 @@ public class Obstacle {
         for(int _sides = 0; _sides < sides; _sides ++)
         {
             v = polygonize((_sides / sides) * 360f, radius);
-            temp[_sides * 2] = v.x;
-            temp[_sides * 2 + 1] = v.y;
+            temp[_sides * 2] = v.x + this.getPos().x;
+            temp[_sides * 2 + 1] = v.y + this.getPos().y;
         }
         return temp;
     }
@@ -211,6 +212,8 @@ public class Obstacle {
         for(int _sides = 0; _sides < 30; _sides ++)
         {
             v[_sides] = polygonize((_sides / sides) * 360f, radius);
+            v[_sides].x += this.getPos().x;
+            v[_sides].y += this.getPos().y;
         }
         return v;
     }

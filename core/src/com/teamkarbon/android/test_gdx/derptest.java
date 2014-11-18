@@ -7,6 +7,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -71,12 +72,12 @@ import java.util.ArrayList;
 
 
         #hashtags:
-            #readme, #hashtags, #start, #init, #game, #render main, #render triangle main, #render text main,
-            #make obstacles, #score, #main menu, #render menu, #buttons, #options, #about
+            readme, hashtags, start, init, game, render main, render triangle main, render text main,
+            make obstacles, score, main menu, render menu, buttons, options, about
 
      */
 public class derptest extends ApplicationAdapter {
-    //#start
+    //start
     gameMode mode; //A custom enum to manage multiple screens. (Game, main menu etc)
 
     ShapeRenderer shapeRenderer;//Draws basic shapes on screen based on the camera's position (Simulating a 2d infinite world)
@@ -90,12 +91,14 @@ public class derptest extends ApplicationAdapter {
     Ball ball2;
     //Texture balltexture;
     //Texture ball2texture;
+    Texture helpbuttontexture;
     BitmapFont font;
 
     Boolean Force = false;
     Boolean Force2 = false;
     int level;
     int score;
+    float lerp;//Linear interpolation (Cool animation when shifting between main menu -> game init -> game ;)
     float rawscore = 0;
     boolean instaDeathMode = true;
     boolean gameOver = false;
@@ -119,6 +122,7 @@ public class derptest extends ApplicationAdapter {
         //ball2file = "ball.png";
         //balltexture = new Texture(Gdx.files.internal(ballfile));
         //ball2texture = new Texture(Gdx.files.internal(ball2file));
+        helpbuttontexture = new Texture(Gdx.files.internal("helpbutton.png"));
 
         //Setting up the camera
         camera = new OrthographicCamera(pwidth(100), pheight(100));//Sets its rendering area to fill the whole screen.
@@ -219,6 +223,8 @@ public class derptest extends ApplicationAdapter {
                 return true;
             }
         });
+
+        lerp = 0;
 
         //Init the obstacles ArrayList
         obstacles = new ArrayList<Obstacle>();
@@ -556,6 +562,170 @@ public class derptest extends ApplicationAdapter {
         else if (mode == gameMode.MAIN_MENU)
         {
             if (Force)
+                    ball.body.applyForceToCenter(0, 50, true);
+                if (Force2)
+                    ball2.body.applyForceToCenter(0, 50, true);
+
+                //Constantly increase the balls' speed until a certain velocity
+                if (ball.body.getPosition().x < 0)
+                    ball.body.applyForceToCenter(10, 0, true);
+                if (ball2.body.getPosition().x < 0)
+                    ball2.body.applyForceToCenter(10, 0, true);
+                if (ball.body.getPosition().x > 0)
+                    ball.body.applyForceToCenter(-10, 0, true);
+                if (ball2.body.getPosition().x > 0)
+                    ball2.body.applyForceToCenter(-10, 0, true);
+
+
+
+                camera.update();//Duh
+
+                debugRenderer.render(world, camera.combined);//View all colliders and stuff
+
+                //Epic rendering
+
+                //#render menu
+                Gdx.gl.glEnable(GL20.GL_BLEND);//Allow for translucency (alpha blending) when shapes overlap
+
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+
+                shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
+                shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, pheight(10), 45);
+                shapeRenderer.setColor(0f, 0f, 1f, 0.4f);
+                shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, pheight(10), 45);
+
+                //Draw the floors and the ceiling
+                shapeRenderer.setColor(0.15f, 0.4f, 0.15f, 0.7f);
+
+                //NOTE: The origin of physical boxes are at the centre, but the origins of graphical boxes are at the bottom left corner.
+                //Which is why the differing values are needed for pheight and pwidth.
+                shapeRenderer.rect(theFloor.getPosition().x - camera.viewportWidth / 2f, theFloor.getPosition().y - pheight(1), camera.viewportWidth + scale(50), pheight(2));
+                shapeRenderer.rect(theCeiling.getPosition().x - camera.viewportWidth / 2f, theCeiling.getPosition().y - pheight(1), camera.viewportWidth + scale(50), pheight(2));
+
+
+
+                ArrayList<RenderTriangle> triangles = new ArrayList<RenderTriangle>();
+
+                //NOTE: Don't use for(object : array) type for loop as concurrent manipulations (deletions, in this case) to
+                //      the array is taking place while iterating.
+                for (int x = 0; x < obstacles.size(); x++) {
+
+                    Obstacle o = obstacles.get(x);
+
+                    o.translate(percent(-(7) * Gdx.graphics.getDeltaTime(), 0f));//Move left (6 + level) % of screen per second..
+
+                    if(o.getPos().x < pwidth(-85)){
+                        o.setPos(pwidth(60), pheight(48));
+                        continue;
+                    }
+
+                    if(o.cshape == null && o.shape.getVertexCount() == 3)//Triangle
+                    {
+                        Vector2[] vects = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
+                        o.shape.getVertex(0, vects[0]);
+                        o.shape.getVertex(1, vects[1]);
+                        o.shape.getVertex(2, vects[2]);
+
+                        for(Vector2 v : vects)
+                        {
+                            v.x += o.getPos().x;
+                            v.y += o.getPos().y;
+                        }
+
+                        triangles.add(new RenderTriangle(vects, o.type));
+                    /* Gdx.app.debug("RenderTriangle",
+                            vects[0].toString() + ", " + vects[1].toString() + ", " +
+                                    vects[2].toString()); */
+                    }
+                    else if(o.cshape == null && o.shape.getVertexCount() == 4)//Trapezium/Box
+                    {
+                        Vector2[] vects = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
+                        Vector2[] vects2 = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
+
+                        o.shape.getVertex(0, vects[0]);
+                        o.shape.getVertex(1, vects[1]);
+                        o.shape.getVertex(2, vects[2]);
+
+                        o.shape.getVertex(0, vects2[0]);
+                        o.shape.getVertex(2, vects2[1]);
+                        o.shape.getVertex(3, vects2[2]);
+
+                        for(Vector2 v : vects)
+                        {
+                            v.x += o.getPos().x;
+                            v.y += o.getPos().y;
+                        }
+                        for(Vector2 v : vects2)
+                        {
+                            v.x += o.getPos().x;
+                            v.y += o.getPos().y;
+                        }
+
+                        triangles.add(new RenderTriangle(vects, o.type));
+                        triangles.add(new RenderTriangle(vects2, o.type));
+
+                    /*Gdx.app.debug("RenderTriangle",
+                            vects[0].toString() + ", " + vects[1].toString() + ", " +
+                            vects[2].toString() + ", " + vects2[0].toString() + ", " +
+                            vects2[1].toString() + ", " + vects2[2].toString()); */
+                    }
+                    else //circles
+                    {
+                        if(!o.type) shapeRenderer.setColor(0.4f, 0.4f, 0.2f, 0.45f);
+                        else shapeRenderer.setColor(0, 0.3f, 1f, 0.45f);
+                        shapeRenderer.circle(o.getPos().x, o.getPos().y, o.radius, 25);
+                    }
+
+                    //#buttons
+                    //play button
+                    if(o.id == "play")
+                    {
+                        Polygon obs = new Polygon();
+                        Polygon playerleft = new Polygon();
+                        Polygon playerright = new Polygon();
+
+                        //TODO: Test!
+                        obs.setVertices(o.getVerticesAsFloatArray());
+                        playerleft.setVertices(ball.getVerticesAsFloatArray());
+                        playerright.setVertices(ball2.getVerticesAsFloatArray());
+
+                        if((Intersector.overlapConvexPolygons(obs, playerleft) && o.type == false) ||
+                                (Intersector.overlapConvexPolygons(obs, playerright) && o.type == true))
+                        {
+                            mode = gameMode.GAME_INIT;
+                            Color c = new Color();
+                            c.set(0.8f, 0.8f, 0.8f, 0.9f);
+                            o.setColor(c);
+                            break;
+                        }
+                    }
+            }
+
+            //NOTE: Don't use for(object : array) type for loop as concurrent manipulations to
+            //      the array is taking place while iterating.
+            //IMPORTANT: This shouldn't be in the for loop, as the triangles should be rendered once per
+            //           triangle, and not once per triangle per obstacle >.<
+            for(int i = 0; i < triangles.size(); i++)
+            {
+                RenderTriangle r = triangles.get(i);
+                shapeRenderer.setColor(r.c);
+                shapeRenderer.triangle(r.x1, r.y1, r.x2, r.y2, r.x3, r.y3);
+
+                //remove out of screen render triangles
+                if(r.x1 < pwidth(-64f)) {
+                    triangles.remove(r);
+                    i--;
+                }
+            }
+
+            shapeRenderer.end();
+            Gdx.gl.glDisable(GL20.GL_BLEND);
+        }
+
+        //#game init
+        else if (mode == gameMode.GAME_INIT)
+        {
+            if (Force)
                 ball.body.applyForceToCenter(0, 50, true);
             if (Force2)
                 ball2.body.applyForceToCenter(0, 50, true);
@@ -570,7 +740,8 @@ public class derptest extends ApplicationAdapter {
             if (ball2.body.getPosition().x > 0)
                 ball2.body.applyForceToCenter(-10, 0, true);
 
-
+            lerp += Gdx.graphics.getDeltaTime() * 2;//Increase speed of obstacles to make a "zooming" effect
+                                                    //Accel: 2% width/s^2
 
             camera.update();//Duh
 
@@ -578,7 +749,7 @@ public class derptest extends ApplicationAdapter {
 
             //Epic rendering
 
-            //#render menu
+            //#render game init
             Gdx.gl.glEnable(GL20.GL_BLEND);//Allow for translucency (alpha blending) when shapes overlap
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -600,16 +771,15 @@ public class derptest extends ApplicationAdapter {
 
             ArrayList<RenderTriangle> triangles = new ArrayList<RenderTriangle>();
 
-            //NOTE: Don't use for(object : array) type for loop as concurrent manipulations (deletions, in this case) to
-            //      the array is taking place while iterating.
             for (int x = 0; x < obstacles.size(); x++) {
 
                 Obstacle o = obstacles.get(x);
 
-                o.translate(percent(-(7) * Gdx.graphics.getDeltaTime(), 0f));//Move left (6 + level) % of screen per second..
+                o.translate(percent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
 
                 if(o.getPos().x < pwidth(-85)){
-                    o.setPos(pwidth(60), pheight(48));
+                    obstacles.remove(o);
+                    x--;
                     continue;
                 }
 
@@ -670,7 +840,7 @@ public class derptest extends ApplicationAdapter {
                     shapeRenderer.circle(o.getPos().x, o.getPos().y, o.radius, 25);
                 }
 
-                //#buttons
+                //#remove buttons
                 //play button
                 if(o.id == "play")
                 {
@@ -686,8 +856,8 @@ public class derptest extends ApplicationAdapter {
                     if((Intersector.overlapConvexPolygons(obs, playerleft) && o.type == false) ||
                             (Intersector.overlapConvexPolygons(obs, playerright) && o.type == true))
                     {
-                        obstacles.clear();
-                        mode = gameMode.GAME;
+                        mode = gameMode.GAME_INIT;
+                        break;
                     }
                 }
             }
@@ -778,7 +948,7 @@ public class derptest extends ApplicationAdapter {
 
     //A selection of current active states.
     public enum gameMode {
-        MAIN_MENU, OPTIONS, ABOUT, GAME, MAIN_MENU_INIT, GAME_OVER
+        MAIN_MENU, OPTIONS, ABOUT, GAME, MAIN_MENU_INIT, GAME_OVER, GAME_INIT
     }
 
     //#class rendertriangle
