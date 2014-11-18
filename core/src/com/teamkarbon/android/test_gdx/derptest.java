@@ -678,8 +678,7 @@ public class derptest extends ApplicationAdapter {
                     Polygon playerleft = new Polygon();
                     Polygon playerright = new Polygon();
 
-                    //TODO: FIXME!!
-                    //FIXME: TODO!!
+                    //TODO: Test!
                     obs.setVertices(o.getVerticesAsFloatArray());
                     playerleft.setVertices(ball.getVerticesAsFloatArray());
                     playerright.setVertices(ball2.getVerticesAsFloatArray());
@@ -687,7 +686,8 @@ public class derptest extends ApplicationAdapter {
                     if((Intersector.overlapConvexPolygons(obs, playerleft) && o.type == false) ||
                             (Intersector.overlapConvexPolygons(obs, playerright) && o.type == true))
                     {
-                        //Activate!
+                        obstacles.clear();
+                        mode = gameMode.GAME;
                     }
                 }
             }
