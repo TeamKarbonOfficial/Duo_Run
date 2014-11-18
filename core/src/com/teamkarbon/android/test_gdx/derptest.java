@@ -91,14 +91,11 @@ public class derptest extends ApplicationAdapter {
     //Texture balltexture;
     //Texture ball2texture;
     BitmapFont font;
-    BitmapFont displayscore;
 
     Boolean Force = false;
     Boolean Force2 = false;
     int level;
     int score;
-    static double xformula;
-    static double yformula;
     float rawscore = 0;
     boolean instaDeathMode = true;
     boolean gameOver = false;
@@ -515,7 +512,7 @@ public class derptest extends ApplicationAdapter {
                     cs.setPosition(percent(0, 0));//The position is already stored in obstacle class
                     cs.setRadius(rad);
 
-                    obstacles.add(new Obstacle(cs, world, pwidth(70), ypos, derp, rad));
+                    obstacles.add(new Obstacle(cs, world, pwidth(70), ypos, derp, rad, 25));
                 }
 
                 //Reset the obstacleTimer.
@@ -678,15 +675,19 @@ public class derptest extends ApplicationAdapter {
                 if(o.id == "play")
                 {
                     Polygon obs = new Polygon();
-                    Polygon player = new Polygon();
-
+                    Polygon playerleft = new Polygon();
+                    Polygon playerright = new Polygon();
 
                     //TODO: FIXME!!
                     //FIXME: TODO!!
                     obs.setVertices(o.getVerticesAsFloatArray());
-                    if(Intersector.overlapConvexPolygons(obs, player))
-                    {
+                    playerleft.setVertices(ball.getVerticesAsFloatArray());
+                    playerright.setVertices(ball2.getVerticesAsFloatArray());
 
+                    if((Intersector.overlapConvexPolygons(obs, playerleft) && o.type == false) ||
+                            (Intersector.overlapConvexPolygons(obs, playerright) && o.type == true))
+                    {
+                        //Activate!
                     }
                 }
             }
@@ -826,17 +827,6 @@ public class derptest extends ApplicationAdapter {
             if(!type) c = new Color(0.4f, 0.4f, 0.2f, 0.45f);
                 else  c = new Color(0, 0.3f, 1f, 0.45f);
         }
-    }
-
-    //The thingy you asked for xD
-    public static double xFunction(int theta, int radius) {
-        xformula = radius - Math.sqrt(radius * (2 * radius - 4 * Math.cos(theta) - radius * Math.pow(Math.sin(theta),2)));
-        return xformula;
-    }
-
-    public static double yFunction(int theta, int radius) {
-        yformula = radius * Math.sin(theta);
-        return yformula;
     }
 
     @Override

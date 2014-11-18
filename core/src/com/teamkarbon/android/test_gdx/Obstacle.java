@@ -24,6 +24,7 @@ public class Obstacle {
     boolean type;
     float radius;
     String id;
+    int sides;//The number of sides the circleshape, if non-null, has.
 
     public Obstacle(PolygonShape _shape, World world, float x, float y, boolean _type)
     {
@@ -94,7 +95,7 @@ public class Obstacle {
             this.fixture.setFilterData(tempFilter);
         }
     }
-    public Obstacle(CircleShape _shape, World world, float x, float y, boolean _type, float _radius)
+    public Obstacle(CircleShape _shape, World world, float x, float y, boolean _type, float _radius, int _sides)
     {
         //How to set shape: shape.set(new Vector2[]{new Vector2(3,4), new Vector2(0, 1)});
         //It is assumed that along the axis, 0 is the centre and the lateral
@@ -105,6 +106,7 @@ public class Obstacle {
         cshape = _shape;
         type = _type;
         radius = _radius;
+        sides = _sides;
 
         bodyDef.type = BodyDef.BodyType.StaticBody;
         bodyDef.position.set(x, y);
@@ -164,12 +166,12 @@ public class Obstacle {
         world.destroyBody(body);
     }
 
-    //Note getVertices are only valid for polygons, not circles!
+    //EDIT: This function also works for circles now!!!
     public float[] getVerticesAsFloatArray()
     {
-        if(this.shape != null) {
+        Vector2 v = new Vector2();
+        if(this.shape != null) {//If its a polygon shape
             float[] temp = new float[this.shape.getVertexCount() * 2];
-            Vector2 v = new Vector2();
 
             for (int i = 0; i < this.shape.getVertexCount(); i++) {
                 this.shape.getVertex(i, v);
@@ -180,7 +182,15 @@ public class Obstacle {
             return temp;
         }
 
-        return null;
+        //If its a circle shape :D
+        float[] temp = new float[sides * 2];
+        for(int _sides = 0; _sides < sides; _sides ++)
+        {
+            v = polygonize((_sides / sides) * 360f, radius);
+            temp[_sides * 2] = v.x;
+            temp[_sides * 2 + 1] = v.y;
+        }
+        return temp;
     }
 
     public Vector2[] getVerticesAsVectors()
@@ -196,6 +206,24 @@ public class Obstacle {
 
             return v;
         }
-        return null;
+
+        Vector2[] v = new Vector2[sides];
+        for(int _sides = 0; _sides < 30; _sides ++)
+        {
+            v[_sides] = polygonize((_sides / sides) * 360f, radius);
+        }
+        return v;
+    }
+
+    //The random function used to 'polygonize' a circle :P
+    //Note _theta is in degrees :P
+    public Vector2 polygonize(float _theta, float _radius)
+    {
+        Vector2 v = new Vector2();
+        double theta = ((double) _theta) * Math.PI / 180.0;//Convert to radians
+        double radius = (double) _radius;
+        v.x = (float) (radius - Math.sqrt(radius * (2.0 * radius - 4.0 * Math.cos(theta) - radius * Math.pow(Math.sin(theta),2))));
+        v.y = (float) (radius * Math.sin(theta));
+        return v;
     }
 }
