@@ -77,12 +77,11 @@ import java.util.ArrayList;
 
      */
 public class derptest extends ApplicationAdapter {
-    //start
     gameMode mode; //A custom enum to manage multiple screens. (Game, main menu etc)
 
-    ShapeRenderer shapeRenderer;//Draws basic shapes on screen based on the camera's position (Simulating a 2d infinite world)
-    SpriteBatch batch;//Draws pictures, text etc
-    Box2DDebugRenderer debugRenderer;//Visualises all entities and in-game physics objects (Fixtures, Bodies, forces etc)
+    ShapeRenderer shapeRenderer;
+    SpriteBatch batch;
+    Box2DDebugRenderer debugRenderer;
     OrthographicCamera camera;
     World world;
     Body theFloor;
