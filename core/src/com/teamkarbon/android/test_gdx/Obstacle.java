@@ -26,7 +26,10 @@ public class Obstacle {
     float radius;
     String id;
     int sides;//The number of sides the circleshape, if non-null, has.
+
+    //Vars used when the obstacle is a button instead
     Color color;
+    boolean isClicked = false;
 
     public Obstacle(PolygonShape _shape, World world, float x, float y, boolean _type)
     {

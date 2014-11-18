@@ -696,6 +696,7 @@ public class derptest extends ApplicationAdapter {
                             Color c = new Color();
                             c.set(0.8f, 0.8f, 0.8f, 0.9f);
                             o.setColor(c);
+                            o.isClicked = true;
                             break;
                         }
                     }
@@ -779,6 +780,7 @@ public class derptest extends ApplicationAdapter {
 
                 if(o.getPos().x < pwidth(-85)){
                     obstacles.remove(o);
+                    o.dispose(world);
                     x--;
                     continue;
                 }
@@ -842,23 +844,10 @@ public class derptest extends ApplicationAdapter {
 
                 //#remove buttons
                 //play button
-                if(o.id == "play")
+                if(o.isClicked)
                 {
-                    Polygon obs = new Polygon();
-                    Polygon playerleft = new Polygon();
-                    Polygon playerright = new Polygon();
-
-                    //TODO: Test!
-                    obs.setVertices(o.getVerticesAsFloatArray());
-                    playerleft.setVertices(ball.getVerticesAsFloatArray());
-                    playerright.setVertices(ball2.getVerticesAsFloatArray());
-
-                    if((Intersector.overlapConvexPolygons(obs, playerleft) && o.type == false) ||
-                            (Intersector.overlapConvexPolygons(obs, playerright) && o.type == true))
-                    {
-                        mode = gameMode.GAME_INIT;
-                        break;
-                    }
+                    //Pulsating alpha from 30% to 80%
+                    o.color.set(0.8f, 0.8f, 0.8f, (float) Math.sin((double) lerp) / 2f + 0.3f);
                 }
             }
 
@@ -873,7 +862,7 @@ public class derptest extends ApplicationAdapter {
                 shapeRenderer.triangle(r.x1, r.y1, r.x2, r.y2, r.x3, r.y3);
 
                 //remove out of screen render triangles
-                if(r.x1 < pwidth(-64f)) {
+                if(r.x1 < pwidth(-78f)) {
                     triangles.remove(r);
                     i--;
                 }
@@ -881,6 +870,12 @@ public class derptest extends ApplicationAdapter {
 
             shapeRenderer.end();
             Gdx.gl.glDisable(GL20.GL_BLEND);
+
+            if(obstacles.size() == 0)
+            {
+                //TODO: Proceed to game
+                //TODO: Dispose stuff
+            }
         }
         //#options
         else if (mode == gameMode.OPTIONS)
