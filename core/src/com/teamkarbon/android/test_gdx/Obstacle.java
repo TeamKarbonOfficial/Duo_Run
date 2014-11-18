@@ -239,7 +239,7 @@ public class Obstacle {
         }
 
         Vector2[] v = new Vector2[sides];
-        for(int _sides = 0; _sides < 30; _sides ++)
+        for(int _sides = 0; _sides < sides; _sides ++)
         {
             v[_sides] = polygonize((_sides / sides) * 360f, radius);
             v[_sides].x += this.getPos().x;

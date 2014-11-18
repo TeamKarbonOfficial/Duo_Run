@@ -230,6 +230,8 @@ public class derptest extends ApplicationAdapter {
         obstacles = new ArrayList<Obstacle>();
         obstaclesTimer = 0;//This makes sure that the obstacles are not too close to other obstacles
 
+        Gdx.gl.glEnable(GL20.GL_BLEND);//Allow for translucency (alpha blending) when shapes overlap
+
         //TODO: INFO: Debug!!! Remove when game functionality complete!
         //#debug init
         mode = gameMode.MAIN_MENU_INIT;
@@ -285,9 +287,6 @@ public class derptest extends ApplicationAdapter {
 
             //Epic rendering
 
-
-            Gdx.gl.glEnable(GL20.GL_BLEND);//Allow for translucency (alpha blending) when shapes overlap
-
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
             //#render main
@@ -315,25 +314,9 @@ public class derptest extends ApplicationAdapter {
                 CreateRenderTriangles(o, triangles);
             }
 
-            //NOTE: Don't use for(object : array) type for loop as concurrent manipulations to
-            //      the array is taking place while iterating.
-            //IMPORTANT: This shouldn't be in the for loop, as the triangles should be rendered once per
-            //           triangle, and not once per triangle per obstacle >.<
-            //#render triangle main
-            for (int i = 0; i < triangles.size(); i++) {
-                RenderTriangle r = triangles.get(i);
-                shapeRenderer.setColor(r.c);
-                shapeRenderer.triangle(r.x1, r.y1, r.x2, r.y2, r.x3, r.y3);
-
-                //remove out of screen render triangles
-                if (r.x1 < pwidth(-80f)) {
-                    triangles.remove(r);
-                    i--;
-                }
-            }
+            DrawAndUpdateRenderTriangles(triangles);
 
             shapeRenderer.end();
-            Gdx.gl.glDisable(GL20.GL_BLEND);
 
             //#render text main
             batch.begin();
@@ -485,7 +468,6 @@ public class derptest extends ApplicationAdapter {
             //Epic rendering
 
             //#render menu
-            Gdx.gl.glEnable(GL20.GL_BLEND);//Allow for translucency (alpha blending) when shapes overlap
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
@@ -545,27 +527,12 @@ public class derptest extends ApplicationAdapter {
                 }
             }
 
-            //NOTE: Don't use for(object : array) type for loop as concurrent manipulations to
-            //      the array is taking place while iterating.
-            //IMPORTANT: This shouldn't be in the for loop, as the triangles should be rendered once per
-            //           triangle, and not once per triangle per obstacle >.<
-            for (int i = 0; i < triangles.size(); i++) {
-                RenderTriangle r = triangles.get(i);
-                if(r.c != null) shapeRenderer.setColor(r.c);
-                shapeRenderer.triangle(r.x1, r.y1, r.x2, r.y2, r.x3, r.y3);
-
-                //remove out of screen render triangles
-                if (r.x1 < pwidth(-64f)) {
-                    triangles.remove(r);
-                    i--;
-                }
-            }
+            DrawAndUpdateRenderTriangles(triangles);
 
             batch.end();
             shapeRenderer.end();
 
             triangles.clear();
-            Gdx.gl.glDisable(GL20.GL_BLEND);
         }
 
         //#game init
@@ -582,7 +549,6 @@ public class derptest extends ApplicationAdapter {
             //Epic rendering
 
             //#render game init
-            Gdx.gl.glEnable(GL20.GL_BLEND);//Allow for translucency (alpha blending) when shapes overlap
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
@@ -616,24 +582,9 @@ public class derptest extends ApplicationAdapter {
                 }
             }
 
-            //NOTE: Don't use for(object : array) type for loop as concurrent manipulations to
-            //      the array is taking place while iterating.
-            //IMPORTANT: This shouldn't be in the for loop, as the triangles should be rendered once per
-            //           triangle, and not once per triangle per obstacle >.<
-            for (int i = 0; i < triangles.size(); i++) {
-                RenderTriangle r = triangles.get(i);
-                shapeRenderer.setColor(r.c);
-                shapeRenderer.triangle(r.x1, r.y1, r.x2, r.y2, r.x3, r.y3);
-
-                //remove out of screen render triangles
-                if (r.x1 < pwidth(-78f)) {
-                    triangles.remove(r);
-                    i--;
-                }
-            }
+            DrawAndUpdateRenderTriangles(triangles);
 
             shapeRenderer.end();
-            Gdx.gl.glDisable(GL20.GL_BLEND);
 
             if (obstacles.size() == 0) {
                 //TODO: Proceed to game
@@ -862,6 +813,23 @@ public class derptest extends ApplicationAdapter {
         {
             shapeRenderer.setColor(o.color);
             shapeRenderer.circle(o.getPos().x, o.getPos().y, o.radius, 25);
+        }
+    }
+
+    //#Draw RenderTriangles
+    public void DrawAndUpdateRenderTriangles(ArrayList<RenderTriangle> triangles)
+    {
+        for (int i = 0; i < triangles.size(); i++)
+        {
+            RenderTriangle r = triangles.get(i);
+            shapeRenderer.setColor(r.c);
+            shapeRenderer.triangle(r.x1, r.y1, r.x2, r.y2, r.x3, r.y3);
+
+            //remove out of screen render triangles
+            if (r.x1 < pwidth(-80f)) {
+                triangles.remove(r);
+                i--;
+            }
         }
     }
 }
