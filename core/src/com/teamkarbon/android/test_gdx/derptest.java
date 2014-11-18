@@ -241,8 +241,13 @@ public class derptest extends ApplicationAdapter {
     @Override
     public void render() {
 
+        //#prerender
         Gdx.gl.glClearColor(0, 0.06f, 0.13f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        camera.update();//Duh
+
+        debugRenderer.render(world, camera.combined);//View all colliders and stuff
 
 
         //This mode is for the init of "buttons" in the main menu.
@@ -252,9 +257,10 @@ public class derptest extends ApplicationAdapter {
         if (mode == gameMode.MAIN_MENU_INIT) {
             PolygonShape temp = new PolygonShape();
             temp.setAsBox(pwidth(20), pheight(20));
+            Gdx.app.debug("play button", "Vertices: " + temp.getVertexCount());
 
             //Create a new obstacle with id "play"
-            obstacles.add(new Obstacle(new PolygonShape(), world, pwidth(60), pheight(48), false, "play"));
+            obstacles.add(new Obstacle(temp, world, pwidth(60), pheight(48), false, "play"));
 
 
             mode = gameMode.MAIN_MENU;
@@ -342,7 +348,8 @@ public class derptest extends ApplicationAdapter {
                         v.y += o.getPos().y;
                     }
 
-                    triangles.add(new RenderTriangle(vects, o.type));
+                    if(o.color == null) triangles.add(new RenderTriangle(vects, o.type));
+                    else triangles.add(new RenderTriangle(vects, o.type, o.color));
                     /* Gdx.app.debug("RenderTriangle",
                             vects[0].toString() + ", " + vects[1].toString() + ", " +
                                     vects[2].toString()); */
@@ -368,17 +375,23 @@ public class derptest extends ApplicationAdapter {
                         v.y += o.getPos().y;
                     }
 
-                    triangles.add(new RenderTriangle(vects, o.type));
-                    triangles.add(new RenderTriangle(vects2, o.type));
+                    if(o.color == null) {
+                        triangles.add(new RenderTriangle(vects, o.type));
+                        triangles.add(new RenderTriangle(vects2, o.type));
+                    }
+                    else {
+                        triangles.add(new RenderTriangle(vects, o.type, o.color));
+                        triangles.add(new RenderTriangle(vects2, o.type, o.color));
+                    }
 
-                    /*Gdx.app.debug("RenderTriangle",
-                            vects[0].toString() + ", " + vects[1].toString() + ", " +
-                            vects[2].toString() + ", " + vects2[0].toString() + ", " +
-                            vects2[1].toString() + ", " + vects2[2].toString()); */
-                } else //circles
+                }
+                else //circles
                 {
-                    if (!o.type) shapeRenderer.setColor(0.4f, 0.4f, 0.2f, 0.45f);
-                    else shapeRenderer.setColor(0, 0.3f, 1f, 0.45f);
+                    if(o.color == null) {
+                        if (!o.type) shapeRenderer.setColor(0.4f, 0.4f, 0.2f, 0.45f);
+                        else shapeRenderer.setColor(0, 0.3f, 1f, 0.45f);
+                    }
+                    else shapeRenderer.setColor(o.color);
                     shapeRenderer.circle(o.getPos().x, o.getPos().y, o.radius, 25);
                 }
             }
@@ -394,7 +407,7 @@ public class derptest extends ApplicationAdapter {
                 shapeRenderer.triangle(r.x1, r.y1, r.x2, r.y2, r.x3, r.y3);
 
                 //remove out of screen render triangles
-                if (r.x1 < pwidth(-64f)) {
+                if (r.x1 < pwidth(-80f)) {
                     triangles.remove(r);
                     i--;
                 }
@@ -519,7 +532,7 @@ public class derptest extends ApplicationAdapter {
             //#Score
             rawscore = rawscore + Gdx.graphics.getDeltaTime();
             score = (int) rawscore;
-            instaDeathMode = true;
+
             //Game over :P
             if (instaDeathMode) {
                 //Collision detection (Cheap way around it :P)
@@ -542,7 +555,6 @@ public class derptest extends ApplicationAdapter {
             }
 
             obstaclesTimer += Gdx.graphics.getDeltaTime();
-            world.step(Gdx.graphics.getDeltaTime(), 6, 2);
         }
 
 
@@ -564,9 +576,6 @@ public class derptest extends ApplicationAdapter {
                 ball2.body.applyForceToCenter(-10, 0, true);
 
 
-            camera.update();//Duh
-
-            debugRenderer.render(world, camera.combined);//View all colliders and stuff
 
             //Epic rendering
 
@@ -575,9 +584,9 @@ public class derptest extends ApplicationAdapter {
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
-            shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
+            shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);//Yellow for left
             shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, pheight(10), 45);
-            shapeRenderer.setColor(0f, 0f, 1f, 0.4f);
+            shapeRenderer.setColor(0f, 0f, 1f, 0.4f);//Blue for right (temporarily, customisable colors coming soon XD)
             shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, pheight(10), 45);
 
             //Draw the floors and the ceiling
@@ -619,7 +628,8 @@ public class derptest extends ApplicationAdapter {
                         v.y += o.getPos().y;
                     }
 
-                    triangles.add(new RenderTriangle(vects, o.type));
+                    if(o.color == null) triangles.add(new RenderTriangle(vects, o.type));
+                    else triangles.add(new RenderTriangle(vects, o.type, o.color));
                     /* Gdx.app.debug("RenderTriangle",
                             vects[0].toString() + ", " + vects[1].toString() + ", " +
                                     vects[2].toString()); */
@@ -645,8 +655,15 @@ public class derptest extends ApplicationAdapter {
                         v.y += o.getPos().y;
                     }
 
-                    triangles.add(new RenderTriangle(vects, o.type));
-                    triangles.add(new RenderTriangle(vects2, o.type));
+                    if(o.color == null) {
+                        triangles.add(new RenderTriangle(vects, o.type));
+                        triangles.add(new RenderTriangle(vects2, o.type));
+                    }
+                    else
+                    {
+                        triangles.add(new RenderTriangle(vects, o.type, o.color));
+                        triangles.add(new RenderTriangle(vects2, o.type, o.color));
+                    }
 
                     /*Gdx.app.debug("RenderTriangle",
                             vects[0].toString() + ", " + vects[1].toString() + ", " +
@@ -654,14 +671,17 @@ public class derptest extends ApplicationAdapter {
                             vects2[1].toString() + ", " + vects2[2].toString()); */
                 } else //circles
                 {
-                    if (!o.type) shapeRenderer.setColor(0.4f, 0.4f, 0.2f, 0.45f);
-                    else shapeRenderer.setColor(0, 0.3f, 1f, 0.45f);
+                    if(o.color == null) {
+                        if (!o.type) shapeRenderer.setColor(0.4f, 0.4f, 0.2f, 0.45f);
+                        else shapeRenderer.setColor(0, 0.3f, 1f, 0.45f);
+                    }
+                    else shapeRenderer.setColor(o.color);
                     shapeRenderer.circle(o.getPos().x, o.getPos().y, o.radius, 25);
                 }
 
                 //#buttons
                 //play button
-                if (o.id == "play") {
+                if (o.id.equals("play")) {
                     Polygon obs = new Polygon();
                     Polygon playerleft = new Polygon();
                     Polygon playerright = new Polygon();
@@ -671,12 +691,15 @@ public class derptest extends ApplicationAdapter {
                     playerleft.setVertices(ball.getVerticesAsFloatArray());
                     playerright.setVertices(ball2.getVerticesAsFloatArray());
 
-                    font.draw(batch, "GO!", descale(o.getPos().x), descale(o.getPos().y));
+                    font.setScale(7f);
+                    font.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f),
+                            descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f));
 
                     Gdx.app.debug("text pos", descale(o.getPos().x) + ", " + descale(o.getPos().y));
 
-                    if ((Intersector.overlapConvexPolygons(obs, playerleft) && o.type == false) ||
-                            (Intersector.overlapConvexPolygons(obs, playerright) && o.type == true)) {
+
+                    if ((Intersector.overlapConvexPolygons(obs, playerleft) && !o.type) ||
+                            (Intersector.overlapConvexPolygons(obs, playerright) && o.type)) {
                         mode = gameMode.GAME_INIT;
                         Color c = new Color();
                         c.set(0.8f, 0.8f, 0.8f, 0.9f);
@@ -781,10 +804,7 @@ public class derptest extends ApplicationAdapter {
                     }
 
                     if (o.color == null) triangles.add(new RenderTriangle(vects, o.type));
-                    else {
-                        RenderTriangle temprt = new RenderTriangle(vects, o.type);
-                        temprt.setColor(o.color);
-                    }
+                    else triangles.add(new RenderTriangle(vects, o.type, o.color));
                     /* Gdx.app.debug("RenderTriangle",
                             vects[0].toString() + ", " + vects[1].toString() + ", " +
                                     vects[2].toString()); */
@@ -814,10 +834,8 @@ public class derptest extends ApplicationAdapter {
                         triangles.add(new RenderTriangle(vects, o.type));
                         triangles.add(new RenderTriangle(vects2, o.type));
                     } else {
-                        RenderTriangle rt1 = new RenderTriangle(vects, o.type);
-                        RenderTriangle rt2 = new RenderTriangle(vects2, o.type);
-                        rt1.setColor(o.color);
-                        rt2.setColor(o.color);
+                        triangles.add(new RenderTriangle(vects, o.type, o.color));
+                        triangles.add(new RenderTriangle(vects2, o.type, o.color));
                     }
 
                     /*Gdx.app.debug("RenderTriangle",
@@ -826,8 +844,12 @@ public class derptest extends ApplicationAdapter {
                             vects2[1].toString() + ", " + vects2[2].toString()); */
                 } else //circles
                 {
-                    if (!o.type) shapeRenderer.setColor(0.4f, 0.4f, 0.2f, 0.45f);
-                    else shapeRenderer.setColor(0, 0.3f, 1f, 0.45f);
+                    if(o.color == null) {
+                        if (!o.type) shapeRenderer.setColor(0.4f, 0.4f, 0.2f, 0.45f);
+                        else shapeRenderer.setColor(0, 0.3f, 1f, 0.45f);
+                    }
+                    else shapeRenderer.setColor(o.color);
+
                     shapeRenderer.circle(o.getPos().x, o.getPos().y, o.radius, 25);
                 }
 
@@ -873,6 +895,9 @@ public class derptest extends ApplicationAdapter {
         else if (mode == gameMode.ABOUT) {
 
         }
+
+        //#postrender
+        world.step(Gdx.graphics.getDeltaTime(), 6, 2);
     }
 
     //So that "1" =  1 px
@@ -970,6 +995,41 @@ public class derptest extends ApplicationAdapter {
 
             if (!type) c = new Color(0.4f, 0.4f, 0.2f, 0.45f);
             else c = new Color(0, 0.3f, 1f, 0.45f);
+        }
+
+        public RenderTriangle(float x1, float y1, float x2, float y2, float x3, float y3, boolean type, Color _c) {
+            this.x1 = x1;
+            this.x2 = x2;
+            this.x3 = x3;
+            this.y1 = y1;
+            this.y2 = y2;
+            this.y3 = y3;
+
+            c = _c;
+        }
+
+        public RenderTriangle(Vector2 _1, Vector2 _2, Vector2 _3, boolean type, Color _c) {
+            this.x1 = _1.x;
+            this.x2 = _2.x;
+            this.x3 = _3.x;
+            this.y1 = _1.y;
+            this.y2 = _2.y;
+            this.y3 = _3.y;
+
+            c = _c;
+        }
+
+        public RenderTriangle(Vector2[] x, boolean type, Color _c) {
+            if (x.length == 3) {
+                x1 = x[0].x;
+                x2 = x[1].x;
+                x3 = x[2].x;
+                y1 = x[0].y;
+                y2 = x[1].y;
+                y3 = x[2].y;
+            }
+
+            c = _c;
         }
 
         public void setColor(Color _c) {

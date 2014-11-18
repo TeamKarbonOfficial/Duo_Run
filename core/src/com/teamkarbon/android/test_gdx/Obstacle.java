@@ -1,5 +1,6 @@
 package com.teamkarbon.android.test_gdx;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -136,6 +137,9 @@ public class Obstacle {
             tempFilter.categoryBits = 2;
             this.fixture.setFilterData(tempFilter);
         }
+
+        //Set default fixture
+        this.setFixture(0.4f, 1f, 0.8f);
     }
 
     public void setPos(float x, float y) { body.setTransform(x, y, 0); }
@@ -175,6 +179,7 @@ public class Obstacle {
     {
         Vector2 v = new Vector2();
         if(this.shape != null) {//If its a polygon shape
+            Gdx.app.debug("polygon", "vertices: " + this.shape.getVertexCount());
             float[] temp = new float[this.shape.getVertexCount() * 2];
 
             for (int i = 0; i < this.shape.getVertexCount(); i++) {
@@ -187,6 +192,7 @@ public class Obstacle {
         }
 
         //If its a circle shape :D
+        Gdx.app.debug("circle shape", "sides: " + sides);
         float[] temp = new float[sides * 2];
         for(int _sides = 0; _sides < sides; _sides ++)
         {
