@@ -88,7 +88,7 @@ public class Ball {
         Vector2 v = new Vector2();
         double theta = ((double) _theta) * Math.PI / 180.0;//Convert to radians
         double radius = (double) _radius;
-        v.x = (float) (radius - Math.sqrt(radius * (2.0 * radius - 4.0 * Math.cos(theta) - radius * Math.pow(Math.sin(theta),2))));
+        v.x = (float) Math.sqrt(Math.pow(radius, 2) - Math.pow(radius * Math.sin(theta), 2));
         v.y = (float) (radius * Math.sin(theta));
         return v;
     }
