@@ -1,9 +1,9 @@
-package com.teamkarbon.android.test_gdx.client;
+package com.teamkarbon.android.duo_run.client;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import com.teamkarbon.android.test_gdx.derptest;
+import com.teamkarbon.android.duo_run.derptest;
 
 public class HtmlLauncher extends GwtApplication {
 

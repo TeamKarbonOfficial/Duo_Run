@@ -1,4 +1,4 @@
-package com.teamkarbon.android.test_gdx;
+package com.teamkarbon.android.duo_run;
 
 import com.badlogic.gdx.InputProcessor;
 

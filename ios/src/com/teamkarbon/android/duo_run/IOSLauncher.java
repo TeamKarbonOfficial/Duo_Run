@@ -1,11 +1,10 @@
-package com.teamkarbon.android.test_gdx;
+package com.teamkarbon.android.duo_run;
 
 import org.robovm.apple.foundation.NSAutoreleasePool;
 import org.robovm.apple.uikit.UIApplication;
 
 import com.badlogic.gdx.backends.iosrobovm.IOSApplication;
 import com.badlogic.gdx.backends.iosrobovm.IOSApplicationConfiguration;
-import com.teamkarbon.android.test_gdx.derptest;
 
 public class IOSLauncher extends IOSApplication.Delegate {
     @Override
