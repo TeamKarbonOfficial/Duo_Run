@@ -1,7 +1,5 @@
-GDXTest
+Duo Run
 =======
-
-~ A Lib GDX Experiment ~
 
 **NOTE: TO CHECK FOR COLLISION, USE**
 ```java
