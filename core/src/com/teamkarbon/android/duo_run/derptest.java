@@ -229,11 +229,10 @@ public class derptest extends ApplicationAdapter {
         obstacles = new ArrayList<Obstacle>();
         obstaclesTimer = 0;//This makes sure that the obstacles are not too close to other obstacles
 
-        Gdx.gl.glEnable(GL20.GL_BLEND);//Allow for translucency (alpha blending) when shapes overlap
 
         //TODO: INFO: Debug!!! Remove when game functionality complete!
         //#debug init
-        mode = gameMode.MAIN_MENU_INIT;
+        mode = gameMode.GAME;
         level = 1;
         instaDeathMode = false;
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
@@ -243,13 +242,14 @@ public class derptest extends ApplicationAdapter {
     public void render() {
 
         //#prerender
-        Gdx.gl.glClearColor(0, 0.06f, 0.13f, 1);
+        Gdx.gl.glClearColor(0, 0.06f, 0.13f, 0.8f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();//Duh
 
         debugRenderer.render(world, camera.combined);//View all colliders and stuff
 
+        //Gdx.gl.glEnable(GL20.GL_BLEND);
 
         //This mode is for the init of "buttons" in the main menu.
 
@@ -270,21 +270,9 @@ public class derptest extends ApplicationAdapter {
         else if (mode == gameMode.GAME) {
             ProcessInput();
 
-            /*
-            This isn't necessary for now...
-
-            //This sets the floor's position such that it follows the ball. At least it should :P
-            theFloor.setTransform((ball.body.getPosition().x + ball2.body.getPosition().x) / 2, pheight(-50) + scale(1), 0);
-            //Same for the ceiling
-            theCeiling.setTransform(theFloor.getPosition().x, pheight(50) - scale(1), 0);
-
-            */
-
             camera.update();//Duh
 
             debugRenderer.render(world, camera.combined);//View all colliders and stuff
-
-            //Epic rendering
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 
@@ -334,19 +322,10 @@ public class derptest extends ApplicationAdapter {
             //#make obstacles
             if (obstaclesTimer > 3.5f - (level / 2f) && Math.random() >= 0.5) {
                 PolygonShape temp = new PolygonShape();
-                //the .set function assumes the vectors are in CCW direction
-                //and also assumes that the origin of the object (it's relative [0, 0]) is actually (0, 0)
 
                 float tempfloat = (float) Math.random();
                 boolean derp = (Math.random() < 0.5f);
                 if (tempfloat < (1f / 4f)) {
-                    //Vectors are in CCW direction!!!
-                    //This makes either a sharp right angled triangle like a ramp on the floor,
-                    //or a hook from the ceiling
-                    //or an inverted ramp on the ceiling.
-                    //or a hook on the floor
-
-                    //Whether to spawn a blue collider or a yellow collider.
 
                     if (Math.random() < 0.5) {
                         temp.set(new Vector2[]{
@@ -355,8 +334,6 @@ public class derptest extends ApplicationAdapter {
                                 percent(13f, 34f)
                         });
 
-                        //Don't worry, this is an if/else statement :P
-                        //The hook should be less common, hence the greater '0.7' chance of getting a ramp.
                         obstacles.add(Math.random() < 0.7 ? new Obstacle(temp, world, pwidth(70), pheight(-48f), derp)
                                 :
                                 new Obstacle(temp, world, pwidth(70), pheight(+49f - 34f), derp));
@@ -511,7 +488,7 @@ public class derptest extends ApplicationAdapter {
                     font.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f),
                             descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f));
 
-                    Gdx.app.debug("text pos", descale(o.getPos().x) + ", " + descale(o.getPos().y));
+                    //Gdx.app.debug("text pos", descale(o.getPos().x) + ", " + descale(o.getPos().y));
 
 
                     if ((Intersector.overlapConvexPolygons(obs, playerleft) && !o.type) ||
@@ -603,6 +580,7 @@ public class derptest extends ApplicationAdapter {
 
         //#postrender
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
+        //Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     //So that "1" =  1 px
@@ -742,15 +720,18 @@ public class derptest extends ApplicationAdapter {
     //#draw ball
     public void DrawBall()
     {
+        Gdx.gl.glEnable(GL20.GL_BLEND);
         shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
         shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, pheight(10), 45);
         shapeRenderer.setColor(0f, 0f, 1f, 0.4f);
         shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, pheight(10), 45);
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     //#draw floors and ceiling
     public void DrawFloorsAndCeiling()
     {
+        Gdx.gl.glEnable(GL20.GL_BLEND);
         //Draw the floors and the ceiling
         shapeRenderer.setColor(0.15f, 0.4f, 0.15f, 0.7f);
 
@@ -760,6 +741,7 @@ public class derptest extends ApplicationAdapter {
                 camera.viewportWidth + scale(50), pheight(2));
         shapeRenderer.rect(theCeiling.getPosition().x - camera.viewportWidth / 2f, theCeiling.getPosition().y - pheight(1),
                 camera.viewportWidth + scale(50), pheight(2));
+        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     //#create RenderTriangles
@@ -778,9 +760,6 @@ public class derptest extends ApplicationAdapter {
             }
 
             triangles.add(new RenderTriangle(vects, o.color));
-                    /* Gdx.app.debug("RenderTriangle",
-                            vects[0].toString() + ", " + vects[1].toString() + ", " +
-                                    vects[2].toString()); */
         } else if (o.cshape == null && o.shape.getVertexCount() == 4)//Trapezium/Box
         {
             Vector2[] vects = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
