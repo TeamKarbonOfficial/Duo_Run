@@ -112,9 +112,6 @@ public class derptest extends ApplicationAdapter {
     @Override
     public void create() {
 
-        //Random graphics init to allow alpha blending...
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
         //Load in ball's texture
         //Download textures from "http://teamkarbon.com/cloud/public.php?service=files&t=69d7aca788e27f04971fad1bd79a314c"
         //ballfile = "ball.png";
@@ -229,10 +226,9 @@ public class derptest extends ApplicationAdapter {
         obstacles = new ArrayList<Obstacle>();
         obstaclesTimer = 0;//This makes sure that the obstacles are not too close to other obstacles
 
-
         //TODO: INFO: Debug!!! Remove when game functionality complete!
         //#debug init
-        mode = gameMode.GAME;
+        mode = gameMode.MAIN_MENU_INIT;
         level = 1;
         instaDeathMode = false;
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
@@ -249,7 +245,8 @@ public class derptest extends ApplicationAdapter {
 
         debugRenderer.render(world, camera.combined);//View all colliders and stuff
 
-        //Gdx.gl.glEnable(GL20.GL_BLEND);
+        //Random graphics init to allow alpha blending...
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         //This mode is for the init of "buttons" in the main menu.
 
@@ -275,7 +272,7 @@ public class derptest extends ApplicationAdapter {
             debugRenderer.render(world, camera.combined);//View all colliders and stuff
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-
+            Gdx.gl.glEnable(GL20.GL_BLEND);
             //#render main
             DrawBall();
 
@@ -303,6 +300,7 @@ public class derptest extends ApplicationAdapter {
 
             DrawAndUpdateRenderTriangles(triangles);
 
+            Gdx.gl.glEnable(GL20.GL_BLEND);
             shapeRenderer.end();
 
             //#render text main
@@ -446,15 +444,13 @@ public class derptest extends ApplicationAdapter {
             //#render menu
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-
+            Gdx.gl.glEnable(GL20.GL_BLEND);
             DrawBall();
 
             DrawFloorsAndCeiling();
 
-
             ArrayList<RenderTriangle> triangles = new ArrayList<RenderTriangle>();
-    
-            batch.begin();
+
 
             //NOTE: Don't use for(object : array) type for loop as concurrent manipulations (deletions, in this case) to
             //      the array is taking place while iterating.
@@ -485,9 +481,10 @@ public class derptest extends ApplicationAdapter {
                     playerright.setVertices(ball2.getVerticesAsFloatArray());
 
                     font.setScale(7f);
+                    batch.begin();
                     font.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f),
                             descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f));
-
+                    batch.end();
                     //Gdx.app.debug("text pos", descale(o.getPos().x) + ", " + descale(o.getPos().y));
 
 
@@ -505,8 +502,10 @@ public class derptest extends ApplicationAdapter {
 
             DrawAndUpdateRenderTriangles(triangles);
 
-            batch.end();
+            Gdx.gl.glEnable(GL20.GL_BLEND);
             shapeRenderer.end();
+
+            //Gdx.gl.glDisable(GL20.GL_BLEND);
 
             triangles.clear();
         }
@@ -527,7 +526,7 @@ public class derptest extends ApplicationAdapter {
             //#render game init
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-
+            Gdx.gl.glEnable(GL20.GL_BLEND);
             DrawBall();
 
             DrawFloorsAndCeiling();
@@ -560,6 +559,7 @@ public class derptest extends ApplicationAdapter {
 
             DrawAndUpdateRenderTriangles(triangles);
 
+            Gdx.gl.glDisable(GL20.GL_BLEND);
             shapeRenderer.end();
 
             if (obstacles.size() == 0) {
@@ -580,7 +580,6 @@ public class derptest extends ApplicationAdapter {
 
         //#postrender
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
-        //Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     //So that "1" =  1 px
@@ -720,18 +719,16 @@ public class derptest extends ApplicationAdapter {
     //#draw ball
     public void DrawBall()
     {
-        Gdx.gl.glEnable(GL20.GL_BLEND);
         shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
+        Gdx.app.debug("alpha problem", "t" + shapeRenderer.getColor());
         shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, pheight(10), 45);
         shapeRenderer.setColor(0f, 0f, 1f, 0.4f);
         shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, pheight(10), 45);
-        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     //#draw floors and ceiling
     public void DrawFloorsAndCeiling()
     {
-        Gdx.gl.glEnable(GL20.GL_BLEND);
         //Draw the floors and the ceiling
         shapeRenderer.setColor(0.15f, 0.4f, 0.15f, 0.7f);
 
@@ -741,7 +738,6 @@ public class derptest extends ApplicationAdapter {
                 camera.viewportWidth + scale(50), pheight(2));
         shapeRenderer.rect(theCeiling.getPosition().x - camera.viewportWidth / 2f, theCeiling.getPosition().y - pheight(1),
                 camera.viewportWidth + scale(50), pheight(2));
-        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     //#create RenderTriangles
@@ -801,8 +797,8 @@ public class derptest extends ApplicationAdapter {
         {
             RenderTriangle r = triangles.get(i);
             shapeRenderer.setColor(r.c);
+            Gdx.app.debug("alpha problem", "RenderTriCol: " + r.c.toString());
             shapeRenderer.triangle(r.x1, r.y1, r.x2, r.y2, r.x3, r.y3);
-
             //remove out of screen render triangles
             if (r.x1 < pwidth(-80f)) {
                 triangles.remove(r);
