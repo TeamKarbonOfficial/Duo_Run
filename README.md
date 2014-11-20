@@ -31,6 +31,18 @@ TODO
 - Create levels *suggestions?*
 - Create a level select screen
 - Create a main menu screen
+    - Create an interface. **done**
+        - The user collides with the buttons using the respectively coloured balls to "click" the buttons.
+        - Make the interface work **done**
+    - GO! button **done. TODO: Move to level select screen of some sort :P**
+    - Options button
+    - About button
+    - Exit button *?*
+    - Gamer Services button _**??**_
+    - Help button
+        - Note: This button is a tapped button, and not activated like the other buttons as an "Obstacle".
+                Because the user needs to know how to play the game. And since the interface IS the game,
+                making the help button part of the interface is just... Use helpbutton.png for this one.
 - Have some options/whatever
 - Add Game Service
     - Add at least 5 achievements (Required by Playstore) **suggestions?**
