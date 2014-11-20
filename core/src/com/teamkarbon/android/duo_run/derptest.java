@@ -409,7 +409,7 @@ public class derptest extends ApplicationAdapter {
             rawscore = rawscore + Gdx.graphics.getDeltaTime();
             score = (int) rawscore;
 
-            //Game over :P
+            //#Game over :P
             if (instaDeathMode) {
                 //Collision detection (Cheap way around it :P)
                 //Checks if ball and ball2 x-axis is 0, if not, game over
@@ -420,13 +420,13 @@ public class derptest extends ApplicationAdapter {
                     gameOver = true;
                     //Do something else
                     //...
-                    obstacles = new ArrayList<Obstacle>();//Clearin' everythin'
+                    ClearAllObstacles(obstacles, world);//Clearin' everythin'
                     //Gdx.app.exit();//Seriously?
                 }
             } else if (!inRange(ball.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN) ||
                     !inRange(ball2.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN)) {
                 Gdx.app.debug("Normal mode", "Game over!");
-                obstacles = new ArrayList<Obstacle>();//Clearin' everythin'
+                ClearAllObstacles(obstacles, world);//Clearin' everythin'
                 gameOver = true;
             }
 
@@ -805,5 +805,14 @@ public class derptest extends ApplicationAdapter {
                 i--;
             }
         }
+    }
+
+    public void ClearAllObstacles(ArrayList<Obstacle> obs, World world)
+    {
+        for(Obstacle o : obs)
+        {
+            o.dispose(world);
+        }
+        obs.clear();
     }
 }
