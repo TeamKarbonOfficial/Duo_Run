@@ -460,7 +460,7 @@ public class derptest extends ApplicationAdapter {
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             Gdx.gl.glEnable(GL20.GL_BLEND);
-            //DrawBall();
+            DrawBall();
 
             DrawFloorsAndCeiling();
 
@@ -476,8 +476,8 @@ public class derptest extends ApplicationAdapter {
 
                 o.translate(percent(-(7) * Gdx.graphics.getDeltaTime(), 0f));//Move left (6 + level) % of screen per second..
 
-                if (o.getPos().x < pwidth(-85)) {
-                    o.setPos(pwidth(60), pheight(48));
+                if (o.getPos().x < pwidth(-50f - 24f)) {
+                    o.setPos(pwidth(50f + 24f), pheight(48));
                     continue;
                 }
 
@@ -506,7 +506,7 @@ public class derptest extends ApplicationAdapter {
                     smallfont.draw(batch, "rightint: " + Intersector.overlapConvexPolygons(obs, playerright), 100, 300);
                     batch.end();
 
-                    //Random debug to draw polygons to be checked
+                    /*//Random debug to draw polygons to be checked
                     shapeRenderer.setAutoShapeType(true);
                     shapeRenderer.set(ShapeRenderer.ShapeType.Line);
                     shapeRenderer.setColor(new Color(0.8f, 0.1f, 0.1f, 0.6f));
@@ -514,9 +514,9 @@ public class derptest extends ApplicationAdapter {
                     shapeRenderer.setColor(new Color(0.8f, 0.8f, 0.5f, 0.2f));
                     shapeRenderer.polygon(ball.getVerticesAsFloatArray());
                     shapeRenderer.setColor(new Color(0.5f, 0.5f, 0.9f, 0.2f));
-                    shapeRenderer.polygon(ball2.getVerticesAsFloatArray());
+                    shapeRenderer.polygon(ball2.getVerticesAsFloatArray()); */
 
-                    Gdx.app.debug("intersect problem", "left: " + floatArrayToString(ball.getVerticesAsFloatArray()));
+                    //Gdx.app.debug("intersect problem", "left: " + floatArrayToString(ball.getVerticesAsFloatArray()));
 
                     shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
                     shapeRenderer.setAutoShapeType(false);
@@ -847,6 +847,7 @@ public class derptest extends ApplicationAdapter {
         obs.clear();
     }
 
+    //For debug purposes.
     public String floatArrayToString(float[] floats)
     {
         String s = "";
