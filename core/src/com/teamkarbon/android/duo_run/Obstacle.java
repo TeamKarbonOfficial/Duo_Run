@@ -26,7 +26,7 @@ public class Obstacle {
     boolean type;
     float radius;
     String id;
-    int sides;//The number of sides the circleshape, if non-null, has.
+    float sides;//The number of sides the circleshape, if non-null, has.
 
     //Vars used when the obstacle is a button instead
     Color color;
@@ -213,7 +213,7 @@ public class Obstacle {
 
         //If its a circle shape :D
         Gdx.app.debug("circle shape", "sides: " + sides);
-        float[] temp = new float[sides * 2];
+        float[] temp = new float[(int)sides * 2];
         for(int _sides = 0; _sides < sides; _sides ++)
         {
             v = polygonize((_sides / sides) * 360f, radius);
@@ -237,7 +237,7 @@ public class Obstacle {
             return v;
         }
 
-        Vector2[] v = new Vector2[sides];
+        Vector2[] v = new Vector2[(int)sides];
         for(int _sides = 0; _sides < sides; _sides ++)
         {
             v[_sides] = polygonize((_sides / sides) * 360f, radius);

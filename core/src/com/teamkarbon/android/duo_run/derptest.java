@@ -460,7 +460,7 @@ public class derptest extends ApplicationAdapter {
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             Gdx.gl.glEnable(GL20.GL_BLEND);
-            DrawBall();
+            //DrawBall();
 
             DrawFloorsAndCeiling();
 
@@ -506,7 +506,21 @@ public class derptest extends ApplicationAdapter {
                     smallfont.draw(batch, "rightint: " + Intersector.overlapConvexPolygons(obs, playerright), 100, 300);
                     batch.end();
 
-                    //Random debug to check for overlapping polygons :P
+                    //Random debug to draw polygons to be checked
+                    shapeRenderer.setAutoShapeType(true);
+                    shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+                    shapeRenderer.setColor(new Color(0.8f, 0.1f, 0.1f, 0.6f));
+                    shapeRenderer.polygon(o.getVerticesAsFloatArray());
+                    shapeRenderer.setColor(new Color(0.8f, 0.8f, 0.5f, 0.2f));
+                    shapeRenderer.polygon(ball.getVerticesAsFloatArray());
+                    shapeRenderer.setColor(new Color(0.5f, 0.5f, 0.9f, 0.2f));
+                    shapeRenderer.polygon(ball2.getVerticesAsFloatArray());
+
+                    Gdx.app.debug("intersect problem", "left: " + floatArrayToString(ball.getVerticesAsFloatArray()));
+
+                    shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
+                    shapeRenderer.setAutoShapeType(false);
+
                     if ((Intersector.overlapConvexPolygons(obs, playerleft) && !o.type) ||
                             (Intersector.overlapConvexPolygons(obs, playerright) && o.type)) {
                         mode = gameMode.GAME_INIT;
@@ -815,7 +829,6 @@ public class derptest extends ApplicationAdapter {
         {
             RenderTriangle r = triangles.get(i);
             shapeRenderer.setColor(r.c);
-            Gdx.app.debug("alpha problem", "RenderTriCol: " + r.c.toString());
             shapeRenderer.triangle(r.x1, r.y1, r.x2, r.y2, r.x3, r.y3);
             //remove out of screen render triangles
             if (r.x1 < pwidth(-80f)) {

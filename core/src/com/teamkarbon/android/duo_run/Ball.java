@@ -18,7 +18,7 @@ public class Ball {
     CircleShape shape;
     Body body;
     Fixture fixture;
-    final int sides = 45;
+    final float sides = 45;
 
     public Ball(float _x, float _y, World _world, float _radius){
         //Initialise classes
@@ -61,7 +61,7 @@ public class Ball {
     public float[] getVerticesAsFloatArray()
     {
         Vector2 v = new Vector2();
-        float[] temp = new float[sides * 2];
+        float[] temp = new float[(int)sides * 2];
         for(int _sides = 0; _sides < sides; _sides ++)
         {
             v = polygonize((_sides / sides) * 360f, radius);
@@ -73,7 +73,7 @@ public class Ball {
 
     public Vector2[] getVerticesAsVectors()
     {
-        Vector2[] v = new Vector2[sides];
+        Vector2[] v = new Vector2[(int)sides];
         for(int _sides = 0; _sides < sides; _sides ++)
         {
             v[_sides] = polygonize((_sides / sides) * 360f, radius);
