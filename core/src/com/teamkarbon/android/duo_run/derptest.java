@@ -500,10 +500,10 @@ public class derptest extends ApplicationAdapter {
                     bigfont.setColor(new Color(1, 1, 1, 1));
                     bigfont.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - 20f,
                             descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) - 20f);
-                    smallfont.setScale(0.5f);
+                    smallfont.setScale(1.5f);
                     smallfont.setColor(new Color(1, 1, 1, 1));
-                    smallfont.draw(batch, "obs: " + floatArrayToString(o.getVerticesAsFloatArray()),
-                                            300, 400);
+                    smallfont.draw(batch, "leftint: " + Intersector.overlapConvexPolygons(obs, playerleft), 100, 400);
+                    smallfont.draw(batch, "rightint: " + Intersector.overlapConvexPolygons(obs, playerright), 100, 300);
                     batch.end();
 
                     //Random debug to check for overlapping polygons :P

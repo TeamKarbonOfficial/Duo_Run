@@ -256,6 +256,13 @@ public class Obstacle {
         double radius = (double) _radius;
         v.x = (float) Math.sqrt(Math.pow(radius, 2) - Math.pow(radius * Math.sin(theta), 2));
         v.y = (float) (radius * Math.sin(theta));
+
+        //Invert x when theta is 90 deg <-> 270 deg
+        //Reason: ASTC rule. Because theta is anti-clockwise, -sin t = cos t.
+        //Hence the S and T quadrants are negated :P
+        //A-Math for the win.
+        if (_theta > 90f && _theta < 270f)
+            v.x *= -1;
         return v;
     }
 }
