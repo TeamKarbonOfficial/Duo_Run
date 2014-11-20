@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
@@ -25,6 +26,8 @@ import com.badlogic.gdx.physics.box2d.World;
 
 import java.util.ArrayList;
 
+import static com.badlogic.gdx.graphics.Texture.*;
+
 //import com.badlogic.gdx.graphics.Texture;
 
 /*
@@ -36,6 +39,11 @@ import java.util.ArrayList;
         not necessarily (15, 30) being the corner of the shape.
         Origin for circles and boxes are at the centre, and origin for polygonshapes are always (0, 0) in the
         PolygonShape.set() function.
+
+        Use BMFont program to create .fnt files to use in android/assets as good fonts!
+        Set font size to 150, then scale down when using in the game!
+        This prevents lousy text appearance!
+        AngelCode/BMFont.exe
  */
 
 /*
@@ -91,7 +99,10 @@ public class derptest extends ApplicationAdapter {
     //Texture balltexture;
     //Texture ball2texture;
     Texture helpbuttontexture;
-    BitmapFont font;
+    BitmapFont smallfont;
+    BitmapFont bigfont;
+    Texture smallfonttexture;//These textures allow alpha filtering, which will then make the text look smoother :P
+    Texture bigfonttexture;
 
     Boolean Force = false;
     Boolean Force2 = false;
@@ -133,9 +144,14 @@ public class derptest extends ApplicationAdapter {
 
         //Create text
         batch = new SpriteBatch();
-        font = new BitmapFont();
-        font.setColor(Color.LIGHT_GRAY);
-        font.setScale(4);
+        smallfonttexture = new Texture(Gdx.files.internal("rockwellsmall_0.png"), true);    //Get png to use in .fnt package
+        smallfonttexture.setFilter(TextureFilter.MipMapLinearNearest, TextureFilter.Linear);//Set a midmap and linear alpha filter.
+        bigfonttexture = new Texture(Gdx.files.internal("agencyFBbig_0.png"), true);        //which allows for descaling as well.
+        bigfonttexture.setFilter(TextureFilter.MipMapLinearNearest, TextureFilter.Linear);
+
+        //Creates the font using the .fnt position data and the filtered .png in _fonttexture.png
+        smallfont = new BitmapFont(Gdx.files.internal("rockwellsmall.fnt"), new TextureRegion(smallfonttexture), false);
+        bigfont = new BitmapFont(Gdx.files.internal("agencyFBbig.fnt"), new TextureRegion(bigfonttexture), false);
 
         //Init ball classes
         //The meaning of each param
@@ -305,13 +321,13 @@ public class derptest extends ApplicationAdapter {
 
             //#render text main
             batch.begin();
-            font.setColor(Color.LIGHT_GRAY);
-            font.setScale(4);
+            smallfont.setColor(Color.LIGHT_GRAY);
+            smallfont.setScale(3);
             //debug!!!!
-            font.draw(batch, "dLevel: " + level, 300, 200);
-            font.setColor(Color.MAGENTA);
-            font.setScale(5);
-            font.draw(batch, "Score: " + score, 100, 100);
+            smallfont.draw(batch, "dLevel: " + level, 300, 200);
+            smallfont.setColor(Color.MAGENTA);
+            smallfont.setScale(4);
+            smallfont.draw(batch, "Score: " + score, 100, 100);
             batch.end();
 
 
@@ -421,7 +437,6 @@ public class derptest extends ApplicationAdapter {
                     //Do something else
                     //...
                     ClearAllObstacles(obstacles, world);//Clearin' everythin'
-                    //Gdx.app.exit();//Seriously?
                 }
             } else if (!inRange(ball.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN) ||
                     !inRange(ball2.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN)) {
@@ -480,14 +495,19 @@ public class derptest extends ApplicationAdapter {
                     playerleft.setVertices(ball.getVerticesAsFloatArray());
                     playerright.setVertices(ball2.getVerticesAsFloatArray());
 
-                    font.setScale(7f);
+                    bigfont.setScale(3f);
                     batch.begin();
-                    font.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f),
+                    bigfont.setColor(new Color(1, 1, 1, 1));
+                    bigfont.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f),
                             descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f));
+                    smallfont.setScale(3f);
+                    smallfont.setColor(new Color(1, 1, 1, 1));
+                    smallfont.draw(batch, "left: " + Intersector.overlapConvexPolygons(obs, playerleft) +
+                                            ", right: " + Intersector.overlapConvexPolygons(obs, playerright),
+                                            300, 200);
                     batch.end();
-                    //Gdx.app.debug("text pos", descale(o.getPos().x) + ", " + descale(o.getPos().y));
 
-
+                    //Random debug to check for overlapping polygons :P
                     if ((Intersector.overlapConvexPolygons(obs, playerleft) && !o.type) ||
                             (Intersector.overlapConvexPolygons(obs, playerright) && o.type)) {
                         mode = gameMode.GAME_INIT;

@@ -200,7 +200,6 @@ public class Obstacle {
     {
         Vector2 v = new Vector2();
         if(this.shape != null) {//If its a polygon shape
-            Gdx.app.debug("polygon", "vertices: " + this.shape.getVertexCount());
             float[] temp = new float[this.shape.getVertexCount() * 2];
 
             for (int i = 0; i < this.shape.getVertexCount(); i++) {
