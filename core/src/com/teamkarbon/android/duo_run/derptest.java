@@ -498,13 +498,12 @@ public class derptest extends ApplicationAdapter {
                     bigfont.setScale(3f);
                     batch.begin();
                     bigfont.setColor(new Color(1, 1, 1, 1));
-                    bigfont.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f),
-                            descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f));
-                    smallfont.setScale(3f);
+                    bigfont.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - 20f,
+                            descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) - 20f);
+                    smallfont.setScale(0.5f);
                     smallfont.setColor(new Color(1, 1, 1, 1));
-                    smallfont.draw(batch, "left: " + Intersector.overlapConvexPolygons(obs, playerleft) +
-                                            ", right: " + Intersector.overlapConvexPolygons(obs, playerright),
-                                            300, 200);
+                    smallfont.draw(batch, "obs: " + floatArrayToString(o.getVerticesAsFloatArray()),
+                                            300, 400);
                     batch.end();
 
                     //Random debug to check for overlapping polygons :P
@@ -740,7 +739,6 @@ public class derptest extends ApplicationAdapter {
     public void DrawBall()
     {
         shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
-        Gdx.app.debug("alpha problem", "t" + shapeRenderer.getColor());
         shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, pheight(10), 45);
         shapeRenderer.setColor(0f, 0f, 1f, 0.4f);
         shapeRenderer.circle(ball2.body.getPosition().x, ball2.body.getPosition().y, pheight(10), 45);
@@ -834,5 +832,17 @@ public class derptest extends ApplicationAdapter {
             o.dispose(world);
         }
         obs.clear();
+    }
+
+    public String floatArrayToString(float[] floats)
+    {
+        String s = "";
+        for(float f : floats)
+        {
+            s += String.valueOf(f);
+            s += ", ";
+        }
+        s.trim();
+        return s;
     }
 }

@@ -205,7 +205,7 @@ public class Obstacle {
             for (int i = 0; i < this.shape.getVertexCount(); i++) {
                 this.shape.getVertex(i, v);
                 temp[i * 2] = v.x + this.getPos().x;
-                temp[i * 2 + 1] = v.y = this.getPos().y;
+                temp[i * 2 + 1] = v.y + this.getPos().y;
             }
 
             return temp;
