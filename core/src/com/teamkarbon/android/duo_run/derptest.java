@@ -594,13 +594,6 @@ public class derptest extends ApplicationAdapter {
 
             Gdx.gl.glDisable(GL20.GL_BLEND);
             shapeRenderer.end();
-
-            if (obstacles.size() == 0) {
-                //TODO: Proceed to game
-                //TODO: Dispose stuff
-                mode = gameMode.GAME;
-
-            }
         }
         //#options
         else if (mode == gameMode.OPTIONS) {
