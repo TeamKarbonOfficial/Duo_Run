@@ -535,6 +535,7 @@ public class derptest extends ApplicationAdapter {
                         ArrayList<String> tempOptions = new ArrayList<String>();
                         tempOptions.add("Continue");
                         tempOptions.add("Back");
+                        lerp = 0f;
                         //TODO: Make this work :P
                         dialogBox = new CustomDialogBox(batch, descalepercent(110, 80), descalepercent(60, 60), dialogBoxTexture,
                                                         tempOptions, new Color(0.2f, 0.2f, 0.6f, 1));
@@ -557,7 +558,10 @@ public class derptest extends ApplicationAdapter {
         else if (mode == gameMode.GAME_INIT) {
             ProcessInput();
 
-            lerp += Gdx.graphics.getDeltaTime() * 2;//Increase speed of obstacles to make a "zooming" effect
+            if(lerp < 10f && lerp != -1)
+                lerp += Gdx.graphics.getDeltaTime() * 2;//Increase speed of obstacles to make a "zooming" effect
+            else
+                lerp = -1;//Stop lerping around
             //Accel: 2% width/s^2
 
             camera.update();//Duh
@@ -581,7 +585,8 @@ public class derptest extends ApplicationAdapter {
 
                 Obstacle o = obstacles.get(x);
 
-                o.translate(percent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
+                if(lerp != -1)
+                    o.translate(percent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
 
                 if (o.getPos().x < pwidth(-85)) {
                     obstacles.remove(o);
