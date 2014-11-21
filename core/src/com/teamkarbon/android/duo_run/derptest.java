@@ -120,6 +120,9 @@ public class derptest extends ApplicationAdapter {
 
     public final float PixelsPerMeter = 50f;
 
+    CustomDialogBox dialogBox;
+    Texture dialogBoxTexture;
+
     @Override
     public void create() {
 
@@ -130,6 +133,7 @@ public class derptest extends ApplicationAdapter {
         //balltexture = new Texture(Gdx.files.internal(ballfile));
         //ball2texture = new Texture(Gdx.files.internal(ball2file));
         helpbuttontexture = new Texture(Gdx.files.internal("helpbutton.png"));
+        dialogBoxTexture = new Texture(Gdx.files.internal("DialogBoxTexture200.png"));
 
         //Setting up the camera
         camera = new OrthographicCamera(pwidth(100), pheight(100));//Sets its rendering area to fill the whole screen.
@@ -528,6 +532,12 @@ public class derptest extends ApplicationAdapter {
                         c.set(0.8f, 0.8f, 0.8f, 0.9f);
                         o.setColor(c);
                         o.isClicked = true;
+                        ArrayList<String> tempOptions = new ArrayList<String>();
+                        tempOptions.add("Continue");
+                        tempOptions.add("Back");
+                        //TODO: Make this work :P
+                        dialogBox = new CustomDialogBox(batch, descalepercent(110, 80), descalepercent(60, 60), dialogBoxTexture,
+                                                        tempOptions, new Color(0.2f, 0.2f, 0.6f, 1));
                         break;
                     }
                 }
@@ -632,6 +642,14 @@ public class derptest extends ApplicationAdapter {
         Vector2 temp = new Vector2();
         temp.x = scale((x / 100f) * Gdx.graphics.getWidth());
         temp.y = scale((y / 100f) * Gdx.graphics.getHeight());
+        return temp;
+    }
+
+    public Vector2 descalepercent(float x, float y)
+    {
+        Vector2 temp = new Vector2();
+        temp.x = (x / 100f) * Gdx.graphics.getWidth();
+        temp.y = (y / 100f) * Gdx.graphics.getHeight();
         return temp;
     }
 
