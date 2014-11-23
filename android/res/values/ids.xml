@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+Place anything Game Services related strings here
+
+    https://play.google.com/apps/publish/
+-->
+
+<resources>
+    <!-- TODO: Replace App ID -->
+    <string name="app_id">ReplaceMe</string>
+
+    <!-- TODO: Replace achievement/leader board IDs! -->
+    <string name="achievement_prime">ReplaceMe</string>
+    <string name="achievement_really_bored">ReplaceMe</string>
+    <string name="achievement_bored">ReplaceMe</string>
+    <string name="achievement_humble">ReplaceMe</string>
+    <string name="achievement_arrogant">ReplaceMe</string>
+    <string name="achievement_leet">ReplaceMe</string>
+
+    <string name="leaderboard_easy">ReplaceMe</string>
+    <string name="leaderboard_hard">ReplaceMe</string>
+</resources>
