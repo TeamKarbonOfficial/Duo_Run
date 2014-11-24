@@ -250,7 +250,7 @@ public class derptest extends ApplicationAdapter {
         //#debug init
         mode = gameMode.MAIN_MENU_INIT;
         level = 1;
-        instaDeathMode = false;
+        instaDeathMode = true;
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
     }
 
@@ -438,15 +438,15 @@ public class derptest extends ApplicationAdapter {
                         !inRange(ball2.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN)) {
                     Gdx.app.debug("instaDeathMode", "Game Over!");
                     gameOver = true;
-                    //Do something else
-                    //...
                     ClearAllObstacles(obstacles, world);//Clearin' everythin'
+                    rawscore = 0;
                 }
             } else if (!inRange(ball.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN) ||
                     !inRange(ball2.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN)) {
                 Gdx.app.debug("Normal mode", "Game over!");
                 ClearAllObstacles(obstacles, world);//Clearin' everythin'
                 gameOver = true;
+                rawscore = 0;
             }
 
             obstaclesTimer += Gdx.graphics.getDeltaTime();
