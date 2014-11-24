@@ -51,9 +51,15 @@ public class CustomGUIBox {
 
             font.setScale(1.2f);
             font.setColor(new Color(1f, 1f, 1f, 0.6f));//Just set it to white first :P
-            font.draw(batch, DialogMessage, pos.x + size.x * (10f / 100f), pos.y + size.y * (10f / 100f));
+            font.draw(batch, DialogMessage, pos.x + size.x * 0.1f, pos.y + size.y * 0.1f);
 
-
+            int count = 0;
+            for(String s : options)
+            {
+                //TODO: Figure out a formula for auto positioning/sizing of the select buttons.
+                batch.draw(DialogPic, pos.x + size.x * (0.1f), pos.y + size.y * 0.4f, size.x * 0.35f, size.y * 0.5f);
+                count++;
+            }
         }
 
         batch.end();
