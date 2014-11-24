@@ -7,9 +7,7 @@ Intersect.overlapConvexPolygons();//!!!!
 ```
 **Images for Balls: (Place images in \android\assets)**
 http://teamkarbon.com/cloud/public.php?service=files&t=69d7aca788e27f04971fad1bd79a314c
-**Image for helpbutton:**
-http://teamkarbon.com/cloud/public.php?service=files&t=e529fe4665ded4c64cfb423db3f42948
-**File of fonts**
+**File of Shared Stuff** includes graphics, pics, etc.. :P
 http://teamkarbon.com/cloud/public.php?service=files&t=739066b6a6d5000a7b929fb72e55a859
 
 That's all folks...
@@ -42,9 +40,7 @@ TODO
     - Exit button *?*
     - Gamer Services button _**??**_
     - Help button
-        - Note: This button is a tapped button, and not activated like the other buttons as an "Obstacle".
-                Because the user needs to know how to play the game. And since the interface IS the game,
-                making the help button part of the interface is just... Use helpbutton.png for this one.
+        - Note: This button is a tapped button... Use helpbutton.png for this one.
 - Have some options/whatever
 - Add Game Service
     - Add at least 5 achievements (Required by Playstore) **suggestions?**

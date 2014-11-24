@@ -537,8 +537,8 @@ public class derptest extends ApplicationAdapter {
                         tempOptions.add("Back");
                         lerp = 0f;
                         //TODO: Make this work :P
-                        dialogBox = new CustomGUIBox(batch, "Game Mode: ", descalepercent(110, 80), descalepercent(60, 60), dialogBoxTexture,
-                                                        tempOptions, new Color(0.2f, 0.2f, 0.6f, 1));
+                        dialogBox = new CustomGUIBox(batch, "Game Mode", descalepercent(110, 80), descalepercent(60, 60),
+                                                dialogBoxTexture, tempOptions, new Color(0.2f, 0.2f, 0.6f, 1), CustomGUIBox.BoxType.MODESELECT);
                         break;
                     }
                 }
