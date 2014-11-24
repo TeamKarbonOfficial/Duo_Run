@@ -20,6 +20,8 @@ public class CustomDialogBox {
     Texture DialogPic;
     ArrayList<String> options;
     Color color;
+    String DialogMessage;
+
 
     public CustomDialogBox(SpriteBatch _batch, Vector2 _pos, Vector2 _size, Texture _DialogPic, ArrayList<String> _options, Color _color)
     {
