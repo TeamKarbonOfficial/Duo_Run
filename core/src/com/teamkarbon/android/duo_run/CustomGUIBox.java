@@ -45,6 +45,10 @@ public class CustomGUIBox {
 
         if(boxType == BoxType.MODESELECT)
         {
+            /*
+                options list are used as game modes in this BoxType
+             */
+
             font.setScale(1.2f);
             font.setColor(new Color(1f, 1f, 1f, 0.6f));//Just set it to white first :P
             font.draw(batch, DialogMessage, pos.x + size.x * (10f / 100f), pos.y + size.y * (10f / 100f));
