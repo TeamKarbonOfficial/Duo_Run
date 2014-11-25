@@ -3,6 +3,7 @@ package com.teamkarbon.android.duo_run.android;
 import com.teamkarbon.android.duo_run.derptest;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -14,9 +15,12 @@ import com.google.android.gms.games.Games;
 import com.google.android.gms.games.Player;
 import com.google.android.gms.plus.Plus;
 
+import com.google.example.games.basegameutils.GameHelper;
 
+public class AndroidLauncher extends AndroidApplication implements derptest.IGoogleServices, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-public class AndroidLauncher extends AndroidApplication implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    //GameHelper
+    private GameHelper _gameHelper;
 
     // Client used to interact with Google APIs
     private GoogleApiClient mGoogleApiClient;
@@ -40,6 +44,25 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
         super.onCreate(savedInstanceState);
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         initialize(new derptest(), config);
+
+        // Create the GameHelper.
+        _gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);
+        _gameHelper.enableDebugLog(false);
+
+        GameHelper.GameHelperListener gameHelperListener = new GameHelper.GameHelperListener()
+        {
+            @Override
+            public void onSignInSucceeded()
+            {
+            }
+
+            @Override
+            public void onSignInFailed()
+            {
+            }
+        };
+
+        _gameHelper.setup(gameHelperListener);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -117,5 +140,55 @@ public class AndroidLauncher extends AndroidApplication implements GoogleApiClie
             /* TODO: This is left as an exercise. Write code here that loads data
              * from the file you wrote in saveLocal(). */
         }
+    }
+
+    //Arghhh, I don't think we need the code above, going to keep it for now
+    @Override
+    public void signIn() {
+
+    }
+
+    @Override
+    public void signOut() {
+
+    }
+
+    @Override
+    public void rateGame() {
+
+    }
+
+    @Override
+    public void submitScore(long score) {
+
+    }
+
+    @Override
+    public void showScores() {
+
+    }
+
+    @Override
+    public boolean isSignedIn() {
+        return false;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //TODO: App wouldn't run with this because of signing stuff
+        //_gameHelper.onStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        _gameHelper.onStop();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        _gameHelper.onActivityResult(requestCode, resultCode, data);
     }
 }
