@@ -120,7 +120,7 @@ public class derptest extends ApplicationAdapter {
 
     public final float PixelsPerMeter = 50f;
 
-    CustomGUIBox dialogBox;
+    CustomGUIBox customGUIBox;
     Texture dialogBoxTexture;
 
     @Override
@@ -537,7 +537,7 @@ public class derptest extends ApplicationAdapter {
                         tempOptions.add("Back");
                         lerp = 0f;
                         //TODO: Make this work :P
-                        dialogBox = new CustomGUIBox(batch, "Game Mode", descalepercent(110, 80), descalepercent(60, 60),
+                        customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(110, 80), descalepercent(60, 60),
                                                 dialogBoxTexture, tempOptions, new Color(0.2f, 0.2f, 0.6f, 1), CustomGUIBox.BoxType.MODESELECT);
                         break;
                     }
@@ -585,8 +585,7 @@ public class derptest extends ApplicationAdapter {
 
                 Obstacle o = obstacles.get(x);
 
-                if(lerp != -1)
-                    o.translate(percent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
+                if(lerp != -1) o.translate(percent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
 
                 if (o.getPos().x < pwidth(-85)) {
                     obstacles.remove(o);
@@ -604,6 +603,9 @@ public class derptest extends ApplicationAdapter {
                     o.color.set(0.8f, 0.8f, 0.8f, (float) Math.sin((double) lerp) / 2f + 0.3f);
                 }
             }
+
+            if(lerp != -1) customGUIBox.Translate(new Vector2(descalepercent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f)));
+            customGUIBox.Draw(bigfont);
 
             DrawAndUpdateRenderTriangles(triangles);
 

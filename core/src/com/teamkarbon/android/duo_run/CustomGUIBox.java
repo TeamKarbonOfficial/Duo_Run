@@ -8,6 +8,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 
+/*
+    A simple box used as a DialogBox, Level Select or a Game Mode select.
+*/
 public class CustomGUIBox {
     /*
         Note: Size of DialogBoxTexture200.png is 200x200
@@ -41,6 +44,7 @@ public class CustomGUIBox {
     {
         if(!batch.isDrawing()) batch.begin();
 
+        batch.setColor(color);
         batch.draw(DialogPic, pos.x, pos.y, size.x, size.y);
 
         if(boxType == BoxType.MODESELECT)
@@ -51,13 +55,14 @@ public class CustomGUIBox {
 
             font.setScale(1.2f);
             font.setColor(new Color(1f, 1f, 1f, 0.6f));//Just set it to white first :P
-            font.draw(batch, DialogMessage, pos.x + size.x * 0.1f, pos.y + size.y * 0.1f);
+            font.draw(batch, DialogMessage, pos.x + pwidth(50f) - (font.getBounds(DialogMessage).width / 2f), pos.y + pheight(10f));
 
-            int count = 0;
+            float count = 0;
             for(String s : options)
             {
-                //TODO: Figure out a formula for auto positioning/sizing of the select buttons.
-                batch.draw(DialogPic, pos.x + size.x * (0.1f), pos.y + size.y * 0.4f, size.x * 0.35f, size.y * 0.5f);
+                batch.setColor(invert(color).sub(0.1f, 0.1f, 0.1f, 0f));
+                batch.draw(DialogPic, pos.x + pwidth(10f + (count / options.size()) * 80f),
+                        pos.y + pheight(40f), pwidth(90f / options.size()), pheight(45f));
                 count++;
             }
         }
@@ -74,5 +79,25 @@ public class CustomGUIBox {
     public enum BoxType
     {
         NORMAL, CHECKBOX, MODESELECT
+    }
+
+    //This set of pwidth and pheight is regarding the local size.x and size.y values
+    private float pwidth(float percent)
+    {
+        return (percent / 100) * size.x;
+    }
+
+    private float pheight(float percent)
+    {
+        return (percent / 100) * size.y;
+    }
+
+    private Color invert(Color c){
+        Color temp = new Color();
+        temp.a = c.a;
+        temp.r = 1f - c.r;
+        temp.g = 1f - c.g;
+        temp.b = 1f - c.b;
+        return temp;
     }
 }
