@@ -24,6 +24,7 @@ public class CustomGUIBox {
     Color color;
     String DialogMessage;
     BoxType boxType;
+    TouchData touchData;
 
     Vector2 MessagePosition;
 
@@ -68,6 +69,11 @@ public class CustomGUIBox {
         }
 
         batch.end();
+    }
+
+    public void CheckOptionClicked(TouchData touchData)
+    {
+
     }
 
     public void Translate(Vector2 translation)

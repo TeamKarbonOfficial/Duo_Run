@@ -122,6 +122,7 @@ public class derptest extends ApplicationAdapter {
 
     CustomGUIBox customGUIBox;
     Texture dialogBoxTexture;
+    TouchData touchData;
 
     @Override
     public void create() {
@@ -222,20 +223,23 @@ public class derptest extends ApplicationAdapter {
 
         debugRenderer = new Box2DDebugRenderer();
 
+        touchData = new TouchData();
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             public boolean touchDown(int x, int y, int pointer, int button) {
-                if (x < Gdx.graphics.getWidth() / 2f)
-                    Force = true;
-                if (x >= Gdx.graphics.getWidth() / 2f)
-                    Force2 = true;
+                if (x < descalepercent(50, 0).x)  Force = true;
+                if (x >= descalepercent(50, 0).x) Force2 = true;
 
+                touchData.set(x, y);
                 return true;
             }
 
             public boolean touchUp(int x, int y, int pointer, int button) {
-                Force = false;
-                Force2 = false;
+                /* This might note be the best way though...*/
+                if (x < descalepercent(50, 0).x)  Force = false;
+                if (x >= descalepercent(50, 0).x) Force2 = false;
+
+                touchData.deactivate();
                 return true;
             }
         });
@@ -731,6 +735,7 @@ public class derptest extends ApplicationAdapter {
             this.c = _c;
         }
     }
+
 
     @Override
     public void dispose() {
