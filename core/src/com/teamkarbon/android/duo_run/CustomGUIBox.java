@@ -20,16 +20,17 @@ public class CustomGUIBox {
     Vector2 pos;
     Vector2 size;
     Texture DialogPic;
-    ArrayList<String> options;
+    String[] options;
     Color color;
     String DialogMessage;
     BoxType boxType;
     TouchData touchData;
 
     Vector2 MessagePosition;
+    ArrayList<CustomButton> buttons;
 
     public CustomGUIBox(SpriteBatch _batch, String _DialogMessage, Vector2 _pos, Vector2 _size, Texture _DialogPic,
-                        ArrayList<String> _options, Color _color, BoxType _boxType)
+                        String[] _options, Color _color, BoxType _boxType)
     {
         batch = _batch;
         pos = _pos;
@@ -39,6 +40,24 @@ public class CustomGUIBox {
         color = _color;
         DialogMessage = _DialogMessage;
         boxType = _boxType;
+
+        if(boxType == BoxType.MODESELECT)
+        {
+            buttons = new ArrayList<CustomButton>();
+            int count = 0;
+            for(String s : options)
+            {
+                Vector2 tempPos = pos;
+                tempPos.add(pwidth(10f + (count / options.length) * 80f), pheight(40f));
+                Vector2 tempSize = new Vector2(pwidth(90f / options.length), pheight(45f));
+
+                buttons.add(new CustomButton(tempPos, tempSize, options[count], invert(color).sub(0.1f, 0.1f, 0.1f, 0f)));
+                batch.setColor(invert(color).sub(0.1f, 0.1f, 0.1f, 0f));
+                batch.draw(DialogPic, pos.x + pwidth(10f + (count / options.length) * 80f),
+                        pos.y + pheight(40f), pwidth(90f / options.length), pheight(45f));
+                count++;
+            }
+        }
     }
 
     public void Draw(BitmapFont font)
@@ -62,8 +81,8 @@ public class CustomGUIBox {
             for(String s : options)
             {
                 batch.setColor(invert(color).sub(0.1f, 0.1f, 0.1f, 0f));
-                batch.draw(DialogPic, pos.x + pwidth(10f + (count / options.size()) * 80f),
-                        pos.y + pheight(40f), pwidth(90f / options.size()), pheight(45f));
+                batch.draw(DialogPic, pos.x + pwidth(10f + (count / options.length) * 80f),
+                        pos.y + pheight(40f), pwidth(90f / options.length), pheight(45f));
                 count++;
             }
         }
@@ -75,6 +94,7 @@ public class CustomGUIBox {
     {
 
     }
+
 
     public void Translate(Vector2 translation)
     {
