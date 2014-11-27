@@ -18,18 +18,19 @@ TODO
 =======
 - Replace Ball with sprites
 - Make the obstacles.  **done**
-- Make them work.
+- Make them work. **done**
     - Get polygons done **done**
     - Get them to render via filled triangles **done**
     - Get them to have the proper colours and collision checks **done**
-    - Make them bigger
-    - Make them spawn properly
-    - Make them less laggy...
+    - Make them bigger **done**
+    - Make them spawn properly **done**
+    - Make them less laggy...  **done**
 - Find out a way to check for collisions **done**
 - Actually check for collisions **done**
 - Make an endgame situation function
 - Create levels *suggestions?*
 - Create a level select screen
+    - Make proper GUI **In progress**
 - Create a main menu screen
     - Create an interface. **done**
         - The user collides with the buttons using the respectively coloured balls to "click" the buttons.
@@ -42,7 +43,9 @@ TODO
     - Help button
         - Note: This button is a tapped button... Use helpbutton.png for this one.
 - Have some options/whatever
-- Add Game Service
+- Add Game Service **In progress**
+    - Get necessary libraries **Done**
+    - Figure it out **In progress**
     - Add at least 5 achievements (Required by Playstore) **suggestions?**
     - Add Events??
     - Add leaderboards for all the gamemodes
