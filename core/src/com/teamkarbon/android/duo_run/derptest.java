@@ -109,6 +109,7 @@ public class derptest extends ApplicationAdapter {
     int level;
     int score;
     float lerp;//Linear interpolation (Cool animation when shifting between main menu -> game init -> game ;)
+    boolean lerpFlag;
     float rawscore = 0;
     boolean instaDeathMode = true;
     boolean gameOver = false;
@@ -119,6 +120,7 @@ public class derptest extends ApplicationAdapter {
     float obstaclesTimer;//in Seconds...
 
     public final float PixelsPerMeter = 50f;
+    public float OUT_OF_BOUNDS_THRESHOLD;
 
     CustomGUIBox customGUIBox;
     Texture dialogBoxTexture;
@@ -245,10 +247,13 @@ public class derptest extends ApplicationAdapter {
         });
 
         lerp = 0;
+        lerpFlag = false;
 
         //Init the obstacles ArrayList
         obstacles = new ArrayList<Obstacle>();
         obstaclesTimer = 0;//This makes sure that the obstacles are not too close to other obstacles
+
+        OUT_OF_BOUNDS_THRESHOLD = pwidth(-120f);
 
         //TODO: INFO: Debug!!! Remove when game functionality complete!
         //#debug init
@@ -312,7 +317,7 @@ public class derptest extends ApplicationAdapter {
 
                 o.translate(percent(-(7 + level) * Gdx.graphics.getDeltaTime(), 0f));//Move left (6 + level) % of screen per second..
 
-                if (o.getPos().x < pwidth(-85)) {
+                if (o.getPos().x < OUT_OF_BOUNDS_THRESHOLD) {
                     obstacles.remove(o);
                     x--;
                     o.dispose(world);
@@ -500,13 +505,14 @@ public class derptest extends ApplicationAdapter {
 
                     //TODO: Test!
                     obs.setVertices(o.getVerticesAsFloatArray());
+                    obs.translate(0f, -pheight(3f));//Move it down a bit to ensure expected collision.
                     playerleft.setVertices(ball.getVerticesAsFloatArray());
                     playerright.setVertices(ball2.getVerticesAsFloatArray());
 
                     bigfont.setScale(3f);
                     batch.begin();
                     bigfont.setColor(new Color(1, 1, 1, 1));
-                    bigfont.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - 20f,
+                    bigfont.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - 40f,
                             descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) - 20f);
                     smallfont.setScale(1.5f);
                     smallfont.setColor(new Color(1, 1, 1, 1));
@@ -538,20 +544,18 @@ public class derptest extends ApplicationAdapter {
                         o.isClicked = true;
                         String[] tempOptions = new String[]{"Continue", "Back"};
                         lerp = 0f;
+                        lerpFlag = true;
                         //TODO: Make this work :P
-                        customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(110, 80), descalepercent(60, 60),
-                                               dialogBoxTexture, tempOptions, new Color(0.2f, 0.2f, 0.6f, 1), CustomGUIBox.BoxType.MODESELECT);
-                        break;
+                        customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(110, -25), descalepercent(60, 60),
+                                dialogBoxTexture, tempOptions, new Color(0.2f, 0.2f, 0.6f, 1), CustomGUIBox.BoxType.MODESELECT);
                     }
                 }
             }
-
             DrawAndUpdateRenderTriangles(triangles);
 
             Gdx.gl.glEnable(GL20.GL_BLEND);
             shapeRenderer.end();
 
-            //Gdx.gl.glDisable(GL20.GL_BLEND);
 
             triangles.clear();
         }
@@ -560,10 +564,13 @@ public class derptest extends ApplicationAdapter {
         else if (mode == gameMode.GAME_INIT) {
             ProcessInput();
 
-            if(lerp < 10f && lerp != -1)
+            if(lerp < 12f && lerpFlag)
                 lerp += Gdx.graphics.getDeltaTime() * 2;//Increase speed of obstacles to make a "zooming" effect
-            else
-                lerp = -1;//Stop lerping around
+            else {
+                lerpFlag = false;
+                if(lerp > -8) lerp -= Gdx.graphics.getDeltaTime() * 4;//Decelerate...
+                else lerp = -8;//Stop...
+            }
             //Accel: 2% width/s^2
 
             camera.update();//Duh
@@ -587,11 +594,11 @@ public class derptest extends ApplicationAdapter {
 
                 Obstacle o = obstacles.get(x);
 
-                if(lerp != -1) o.translate(percent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
+                if(lerpFlag) o.translate(percent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
 
-                if (o.getPos().x < pwidth(-85)) {
+                else {
+                    ClearAllObstacles(obstacles, world);
                     obstacles.remove(o);
-                    o.dispose(world);
                     x--;
                     continue;
                 }
@@ -602,16 +609,30 @@ public class derptest extends ApplicationAdapter {
                 //play button
                 if (o.isClicked) {
                     //Pulsating alpha from 30% to 80%
-                    o.color.set(0.8f, 0.8f, 0.8f, (float) Math.sin((double) lerp) / 2f + 0.3f);
+                    o.color.set(0.8f, 0.8f, 0.8f, (float) Math.sin((double) lerp * 4) / 2f + 0.4f);
                 }
             }
 
-            if(lerp != -1) customGUIBox.Translate(new Vector2(descalepercent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f)));
-            customGUIBox.Draw(bigfont);
+            customGUIBox.Translate(new Vector2(descalepercent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f)));
+            CustomButton tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);//As this function returns button clicked
+            batch.begin();
+            bigfont.draw(batch, "GUI pos: " + customGUIBox.pos.x + ", " + customGUIBox.pos.y, 60, 200);
+            batch.end();
+            if(tempButton != null)
+            {
+                if(tempButton.text.equals("Continue"))
+                {
+                    //TODO: Fill up
+                }
+                else if(tempButton.text.equals("Back"))
+                {
+                    //TODO: Fill up
+                }
+            }
 
             DrawAndUpdateRenderTriangles(triangles);
 
-            Gdx.gl.glDisable(GL20.GL_BLEND);
+            Gdx.gl.glEnable(GL20.GL_BLEND);
             shapeRenderer.end();
         }
         //#options
@@ -782,7 +803,7 @@ public class derptest extends ApplicationAdapter {
     //#draw floors and ceiling
     public void DrawFloorsAndCeiling()
     {
-        //Draw the floors and the ceiling
+        //DrawAndUpdate the floors and the ceiling
         shapeRenderer.setColor(0.15f, 0.4f, 0.15f, 0.7f);
 
         //NOTE: The origin of physical boxes are at the centre, but the origins of graphical boxes are at the bottom left corner.
@@ -843,7 +864,7 @@ public class derptest extends ApplicationAdapter {
         }
     }
 
-    //#Draw RenderTriangles
+    //#DrawAndUpdate RenderTriangles
     public void DrawAndUpdateRenderTriangles(ArrayList<RenderTriangle> triangles)
     {
         for (int i = 0; i < triangles.size(); i++)
@@ -852,7 +873,7 @@ public class derptest extends ApplicationAdapter {
             shapeRenderer.setColor(r.c);
             shapeRenderer.triangle(r.x1, r.y1, r.x2, r.y2, r.x3, r.y3);
             //remove out of screen render triangles
-            if (r.x1 < pwidth(-80f)) {
+            if (r.x1 < OUT_OF_BOUNDS_THRESHOLD) {
                 triangles.remove(r);
                 i--;
             }

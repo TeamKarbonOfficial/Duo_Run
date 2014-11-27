@@ -44,23 +44,20 @@ public class CustomGUIBox {
         if(boxType == BoxType.MODESELECT)
         {
             buttons = new ArrayList<CustomButton>();
-            int count = 0;
+            float count = 0;
             for(String s : options)
             {
                 Vector2 tempPos = pos;
                 tempPos.add(pwidth(10f + (count / options.length) * 80f), pheight(40f));
                 Vector2 tempSize = new Vector2(pwidth(90f / options.length), pheight(45f));
 
-                buttons.add(new CustomButton(tempPos, tempSize, options[count], invert(color).sub(0.1f, 0.1f, 0.1f, 0f)));
-                batch.setColor(invert(color).sub(0.1f, 0.1f, 0.1f, 0f));
-                batch.draw(DialogPic, pos.x + pwidth(10f + (count / options.length) * 80f),
-                        pos.y + pheight(40f), pwidth(90f / options.length), pheight(45f));
+                buttons.add(new CustomButton(tempPos, tempSize, options[(int)count], invert(color).sub(0.1f, 0.1f, 0.1f, 0f)));
                 count++;
             }
         }
     }
 
-    public void Draw(BitmapFont font)
+    public CustomButton DrawAndUpdate(BitmapFont font, TouchData touchData)
     {
         if(!batch.isDrawing()) batch.begin();
 
@@ -75,19 +72,20 @@ public class CustomGUIBox {
 
             font.setScale(1.2f);
             font.setColor(new Color(1f, 1f, 1f, 0.6f));//Just set it to white first :P
-            font.draw(batch, DialogMessage, pos.x + pwidth(50f) - (font.getBounds(DialogMessage).width / 2f), pos.y + pheight(10f));
+            font.draw(batch, DialogMessage, pos.x + pwidth(50f) - (font.getBounds(DialogMessage).width / 2f),
+                    pos.y + size.y - pheight(10f));
 
-            float count = 0;
-            for(String s : options)
+            for(CustomButton b : buttons)
             {
-                batch.setColor(invert(color).sub(0.1f, 0.1f, 0.1f, 0f));
-                batch.draw(DialogPic, pos.x + pwidth(10f + (count / options.length) * 80f),
-                        pos.y + pheight(40f), pwidth(90f / options.length), pheight(45f));
-                count++;
+                batch.setColor(b.color);
+                batch.draw(DialogPic, b.pos.x, b.pos.y, b.size.x, b.size.y);
+                //Single touch capabilities for now...
+                if(b.isClicked(touchData)) { batch.end(); return b; }
             }
         }
 
         batch.end();
+        return null;
     }
 
     public void CheckOptionClicked(TouchData touchData)
