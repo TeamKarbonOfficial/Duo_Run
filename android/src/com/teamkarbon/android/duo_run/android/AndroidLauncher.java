@@ -12,7 +12,6 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
-import com.google.android.gms.games.Player;
 import com.google.android.gms.plus.Plus;
 
 import com.google.example.games.basegameutils.GameHelper;
@@ -43,7 +42,7 @@ public class AndroidLauncher extends AndroidApplication implements derptest.IGoo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-        initialize(new derptest(), config);
+        initialize(new derptest(this), config);
 
         // Create the GameHelper.
         _gameHelper = new GameHelper(this, GameHelper.CLIENT_GAMES);

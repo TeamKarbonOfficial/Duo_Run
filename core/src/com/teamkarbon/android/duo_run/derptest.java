@@ -85,6 +85,9 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
      */
 public class derptest extends ApplicationAdapter {
+
+    public static IGoogleServices googleServices;
+
     gameMode mode; //A custom enum to manage multiple screens. (Game, main menu etc)
 
     ShapeRenderer shapeRenderer;
@@ -125,6 +128,13 @@ public class derptest extends ApplicationAdapter {
     CustomGUIBox customGUIBox;
     Texture dialogBoxTexture;
     TouchData touchData;
+
+    //Constructor
+    public derptest(IGoogleServices googleServices) {
+        super();
+        derptest.googleServices = googleServices;
+    }
+
 
     @Override
     public void create() {

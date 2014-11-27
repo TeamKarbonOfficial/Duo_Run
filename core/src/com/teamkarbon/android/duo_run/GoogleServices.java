@@ -11,7 +11,7 @@ public class GoogleServices implements derptest.IGoogleServices {
         return ourInstance;
     }
 
-    private GoogleServices() {
+    public GoogleServices() {
 
     }
 
