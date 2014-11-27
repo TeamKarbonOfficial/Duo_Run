@@ -536,9 +536,7 @@ public class derptest extends ApplicationAdapter {
                         c.set(0.8f, 0.8f, 0.8f, 0.9f);
                         o.setColor(c);
                         o.isClicked = true;
-                        ArrayList<String> tempOptions = new ArrayList<String>();
-                        tempOptions.add("Continue");
-                        tempOptions.add("Back");
+                        String[] tempOptions = new String[]{"Continue", "Back"};
                         lerp = 0f;
                         //TODO: Make this work :P
                         customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(110, 80), descalepercent(60, 60),
