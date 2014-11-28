@@ -152,7 +152,7 @@ public class AndroidLauncher extends AndroidApplication implements derptest.IGoo
     public void signIn() {
         try {
             runOnUiThread(new Runnable() {
-                //@Override
+                @Override
                 public void run() {
                     _gameHelper.beginUserInitiatedSignIn();
                 }
@@ -167,7 +167,7 @@ public class AndroidLauncher extends AndroidApplication implements derptest.IGoo
     public void signOut() {
         try {
             runOnUiThread(new Runnable() {
-                //@Override
+                @Override
                 public void run()
                 {
                     _gameHelper.signOut();
