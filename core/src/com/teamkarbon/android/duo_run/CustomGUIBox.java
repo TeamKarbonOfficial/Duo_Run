@@ -48,8 +48,8 @@ public class CustomGUIBox {
             for(String s : options)
             {
                 Vector2 tempPos = pos;
-                tempPos.add(pwidth(10f + (count / options.length) * 80f), pheight(40f));
-                Vector2 tempSize = new Vector2(pwidth(90f / options.length), pheight(45f));
+                tempPos.add(pwidth(10f + (count / (float)options.length) * 80f), pheight(40f));
+                Vector2 tempSize = new Vector2(pwidth(90f / (float)options.length), pheight(45f));
 
                 buttons.add(new CustomButton(tempPos, tempSize, options[(int)count], invert(color).sub(0.1f, 0.1f, 0.1f, 0f)));
                 count++;
