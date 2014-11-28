@@ -1,6 +1,8 @@
 package com.teamkarbon.android.duo_run;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -47,11 +49,14 @@ public class CustomGUIBox {
             float count = 0;
             for(String s : options)
             {
-                Vector2 tempPos = pos;
-                tempPos.add(pwidth(10f + (count / (float)options.length) * 80f), pheight(40f));
-                Vector2 tempSize = new Vector2(pwidth(90f / (float)options.length), pheight(45f));
+                Vector2 tempPos = new Vector2();
+                //tempPos is position of buttons where (0, 0) is the bottom left of the gui box
+                tempPos.x = pwidth(10f + (count / (float)options.length) * 80f);
+                tempPos.y = pheight(10f);
+                Vector2 tempSize = new Vector2(pwidth(70f / (float)options.length), pheight(45f));
 
                 buttons.add(new CustomButton(tempPos, tempSize, options[(int)count], invert(color).sub(0.1f, 0.1f, 0.1f, 0f)));
+                Gdx.app.debug("Button Pos", buttons.get((int)count).pos.x + ", " + buttons.get((int)count).pos.y);
                 count++;
             }
         }
@@ -60,7 +65,7 @@ public class CustomGUIBox {
     public CustomButton DrawAndUpdate(BitmapFont font, TouchData touchData)
     {
         if(!batch.isDrawing()) batch.begin();
-
+        Gdx.gl.glEnable(GL20.GL_BLEND);
         batch.setColor(color);
         batch.draw(DialogPic, pos.x, pos.y, size.x, size.y);
 
@@ -78,7 +83,7 @@ public class CustomGUIBox {
             for(CustomButton b : buttons)
             {
                 batch.setColor(b.color);
-                batch.draw(DialogPic, b.pos.x, b.pos.y, b.size.x, b.size.y);
+                batch.draw(DialogPic, b.pos.x + pos.x, b.pos.y + pos.y, b.size.x, b.size.y);
                 //Single touch capabilities for now...
                 if(b.isClicked(touchData)) { batch.end(); return b; }
             }
@@ -108,12 +113,12 @@ public class CustomGUIBox {
     //This set of pwidth and pheight is regarding the local size.x and size.y values
     private float pwidth(float percent)
     {
-        return (percent / 100) * size.x;
+        return ((percent / 100f) * size.x);
     }
 
     private float pheight(float percent)
     {
-        return (percent / 100) * size.y;
+        return ((percent / 100f) * size.y);
     }
 
     private Color invert(Color c){

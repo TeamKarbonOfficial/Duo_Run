@@ -556,8 +556,8 @@ public class derptest extends ApplicationAdapter {
                         lerp = 0f;
                         lerpFlag = true;
                         //TODO: Make this work :P
-                        customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(110, -25), descalepercent(60, 60),
-                                dialogBoxTexture, tempOptions, new Color(0.2f, 0.2f, 0.6f, 1), CustomGUIBox.BoxType.MODESELECT);
+                        customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(160, 30), descalepercent(60, 60),
+                                dialogBoxTexture, tempOptions, new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.MODESELECT);
                     }
                 }
             }
@@ -619,14 +619,15 @@ public class derptest extends ApplicationAdapter {
                 //play button
                 if (o.isClicked) {
                     //Pulsating alpha from 30% to 80%
-                    o.color.set(0.8f, 0.8f, 0.8f, (float) Math.sin((double) lerp * 4) / 2f + 0.4f);
+                    o.color.set(0.8f, 0.8f, 0.8f, (float) Math.sin((double) lerp * 4) / 4f + 0.4f);
                 }
             }
 
             customGUIBox.Translate(new Vector2(descalepercent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f)));
             CustomButton tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);//As this function returns button clicked
             batch.begin();
-            bigfont.draw(batch, "GUI pos: " + customGUIBox.pos.x + ", " + customGUIBox.pos.y, 60, 200);
+            bigfont.draw(batch, "GUI pos: " + customGUIBox.pos.x + ", " + customGUIBox.pos.y + ", A: " +
+                    ((float) Math.sin((double) lerp * 4) / 2f + 0.4f), 60, 200);
             batch.end();
             if(tempButton != null)
             {
