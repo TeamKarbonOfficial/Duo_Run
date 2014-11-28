@@ -31,12 +31,12 @@ public class GoogleServices implements derptest.IGoogleServices {
     }
 
     @Override
-    public void submitScore(long score) {
+    public void submitScore(long score, String id) {
 
     }
 
     @Override
-    public void showScores() {
+    public void showScores(String id) {
 
     }
 

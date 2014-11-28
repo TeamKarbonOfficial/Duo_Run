@@ -1,10 +1,13 @@
 package com.teamkarbon.android.duo_run.android;
 
+import com.badlogic.gdx.Gdx;
 import com.teamkarbon.android.duo_run.derptest;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -20,6 +23,9 @@ public class AndroidLauncher extends AndroidApplication implements derptest.IGoo
 
     //GameHelper
     private GameHelper _gameHelper;
+
+    private final static int REQUEST_CODE_UNUSED = 9002;
+    private final String ERROR = "ERROR: ";
 
     // Client used to interact with Google APIs
     private GoogleApiClient mGoogleApiClient;
@@ -144,32 +150,64 @@ public class AndroidLauncher extends AndroidApplication implements derptest.IGoo
     //Arghhh, I don't think we need the code above, going to keep it for now
     @Override
     public void signIn() {
-
+        try {
+            runOnUiThread(new Runnable() {
+                //@Override
+                public void run() {
+                    _gameHelper.beginUserInitiatedSignIn();
+                }
+            });
+        }
+        catch (Exception e) {
+            Gdx.app.log("MainActivity", "Log in failed: " + e.getMessage() + ".");
+        }
     }
 
     @Override
     public void signOut() {
-
+        try {
+            runOnUiThread(new Runnable() {
+                //@Override
+                public void run()
+                {
+                    _gameHelper.signOut();
+                }
+            });
+        }
+        catch (Exception e) {
+            Gdx.app.log("MainActivity", "Log out failed: " + e.getMessage() + ".");
+        }
     }
 
     @Override
     public void rateGame() {
-
+        String str ="https://play.google.com/store/apps/details?id=come.teamkarbon.android.duo_run";
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(str)));
     }
 
     @Override
-    public void submitScore(long score) {
-
+    public void submitScore(long score, String id) {
+        if (isSignedIn()) {
+            Games.Leaderboards.submitScore(_gameHelper.getApiClient(), id, score);
+            Toast.makeText(getApplicationContext(), "Score of " + String.valueOf(score) + " have been submitted!", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
-    public void showScores() {
-
+    public void showScores(String id) {
+        if (isSignedIn()) {
+            startActivityForResult(Games.Leaderboards.getLeaderboardIntent(_gameHelper.getApiClient(), id), REQUEST_CODE_UNUSED);
+        } else {
+            Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public boolean isSignedIn() {
-        return false;
+        return _gameHelper.isSignedIn();
     }
 
     @Override

@@ -129,7 +129,7 @@ public class derptest extends ApplicationAdapter {
     Texture dialogBoxTexture;
     TouchData touchData;
 
-    //Constructor
+    //Constructor for game services interface
     public derptest(IGoogleServices googleServices) {
         super();
         derptest.googleServices = googleServices;
@@ -918,8 +918,8 @@ public class derptest extends ApplicationAdapter {
         public void signIn();
         public void signOut();
         public void rateGame();
-        public void submitScore(long score);
-        public void showScores();
+        public void submitScore(long score, String id);
+        public void showScores(String id);
         public boolean isSignedIn();
     }
 }
