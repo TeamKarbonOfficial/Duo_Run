@@ -86,7 +86,12 @@ import static com.badlogic.gdx.graphics.Texture.*;
      */
 public class derptest extends ApplicationAdapter {
 
+    //Everything Game Services
     public static IGoogleServices googleServices;
+    private final String APP_ID = "444744436262";
+    private final String ACHIEVEMENT_GETTING_STARTED = "CgkIppTW5vgMEAIQAA";
+    private final String LEADERBOARD_NORMAL = "CgkIppTW5vgMEAIQAQ";
+    private final String LEADERBOARD_INSTADEATH = "CgkIppTW5vgMEAIQAg";
 
     gameMode mode; //A custom enum to manage multiple screens. (Game, main menu etc)
 
@@ -138,6 +143,11 @@ public class derptest extends ApplicationAdapter {
 
     @Override
     public void create() {
+
+        //GameServices
+        //if (!googleServices.isSignedIn()) {
+        //    googleServices.signIn();
+        //}
 
         //Load in ball's texture
         //Download textures from "http://teamkarbon.com/cloud/public.php?service=files&t=69d7aca788e27f04971fad1bd79a314c"
@@ -777,10 +787,18 @@ public class derptest extends ApplicationAdapter {
 
     @Override
     public void pause() {
+        //Sign out when app pauses
+        if (googleServices.isSignedIn()){
+            googleServices.signOut();
+        }
     }
 
     @Override
     public void resume() {
+        //Sign in when app resumes
+        if (!googleServices.isSignedIn()) {
+            googleServices.signIn();
+        }
     }
 
     //#process input
@@ -914,6 +932,9 @@ public class derptest extends ApplicationAdapter {
     }
 
     //Game Services Interface
+    /* Usage: googleServies.<Method Below>;
+    * Eg. googleServices.submitScore(score, LEADERBOARD_NORMAL);
+    */
     public interface IGoogleServices {
         public void signIn();
         public void signOut();

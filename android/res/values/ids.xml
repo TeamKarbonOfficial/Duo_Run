@@ -7,10 +7,8 @@ Place anything Game Services related strings here
 -->
 
 <resources>
-    <!-- TODO: Replace App ID -->
     <string name="app_id">444744436262</string>
 
-    <!-- TODO: Replace achievement/leader board IDs! -->
     <string name="achievement_getting_started">CgkIppTW5vgMEAIQAA</string>
     <string name="achievement_really_bored">ReplaceMe</string>
     <string name="achievement_bored">ReplaceMe</string>
