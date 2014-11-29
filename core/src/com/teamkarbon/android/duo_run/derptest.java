@@ -145,9 +145,9 @@ public class derptest extends ApplicationAdapter {
     public void create() {
 
         //GameServices
-        //if (!googleServices.isSignedIn()) {
-        //    googleServices.signIn();
-        //}
+        if (!googleServices.isSignedIn()) {
+            googleServices.signIn();
+        }
 
         //Load in ball's texture
         //Download textures from "http://teamkarbon.com/cloud/public.php?service=files&t=69d7aca788e27f04971fad1bd79a314c"
