@@ -321,6 +321,8 @@ import static com.badlogic.gdx.graphics.Texture.*;
             Obstacle o = new Obstacle(temp, world, pwidth(60), pheight(48), false, "play");
             obstacles.add(o);
 
+            temp.dispose();
+
             mode = gameMode.MAIN_MENU;
         }
 
@@ -593,10 +595,10 @@ import static com.badlogic.gdx.graphics.Texture.*;
             ProcessInput();
 
             if(lerp < 12f && lerpFlag)
-                lerp += Gdx.graphics.getDeltaTime() * 2;//Increase speed of obstacles to make a "zooming" effect
+                lerp += Gdx.graphics.getDeltaTime() * 4f;//Increase speed of obstacles to make a "zooming" effect
             else {
                 lerpFlag = false;
-                if(lerp > -8) lerp -= Gdx.graphics.getDeltaTime() * 4;//Decelerate...
+                if(lerp > -8) lerp -= Gdx.graphics.getDeltaTime() * 7;//Decelerate...
                 else lerp = -8;//Stop...
             }
             //Accel: 2% width/s^2
@@ -651,7 +653,16 @@ import static com.badlogic.gdx.graphics.Texture.*;
                 }
                 else if(tempButton.text.equals("Back"))
                 {
-                    //TODO: Fill up
+                    ClearAllObstacles(obstacles, world);
+                    PolygonShape temp = new PolygonShape();
+                    temp.setAsBox(pwidth(20), pheight(20));
+
+                    //Create a new obstacle with id "play"
+                    Obstacle o = new Obstacle(temp, world, pwidth(60), pheight(48), false, "play");
+                    obstacles.add(o);
+
+                    temp.dispose();
+                    mode = gameMode.MAIN_MENU;
                 }
             }
 
