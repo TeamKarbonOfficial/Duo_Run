@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
  * Created by Matthew on 25/11/2014.
  */
 public class CustomButton {
-    Vector2 pos, size;
+    Vector2 pos, size;//Note: pos value is relative to the host CustomGUIBox..
     String text;
     Color color;
 
@@ -19,13 +19,18 @@ public class CustomButton {
         color = _color;
     }
 
-    public boolean isClicked(TouchData touchData)
+    public boolean isClicked(TouchData touchData, Vector2 hostPos)
     {
-        if(touchData.active && touchData.x >= pos.x && touchData.x <= pos.x + size.x
-                && touchData.y >= pos.y && touchData.y <= pos.y + size.y)
+        if(touchData.active && touchData.x >= getGlobalPos(hostPos).x && touchData.x <= getGlobalPos(hostPos).x + size.x
+                && touchData.y >= getGlobalPos(hostPos).y && touchData.y <= getGlobalPos(hostPos).y + size.y)
         {
             return true;
         }
         return false;
+    }
+
+    public Vector2 getGlobalPos(Vector2 hostPos)
+    {
+        return new Vector2(pos.x + hostPos.x, pos.y + hostPos.y);
     }
 }

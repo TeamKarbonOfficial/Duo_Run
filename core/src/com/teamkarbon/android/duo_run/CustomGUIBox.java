@@ -83,13 +83,13 @@ public class CustomGUIBox {
             for(CustomButton b : buttons)
             {
                 batch.setColor(b.color);
-                batch.draw(DialogPic, b.pos.x + pos.x, b.pos.y + pos.y, b.size.x, b.size.y);
+                batch.draw(DialogPic, b.getGlobalPos(this.pos).x, b.getGlobalPos(this.pos).y, b.size.x, b.size.y);
                 //draws the text at the centre
-                font.setScale(1f);
-                font.draw(batch, b.text, b.pos.x + (b.size.x / 2f) - (font.getBounds(b.text).width / 2f),
-                        b.pos.y + (b.size.y / 2f) - (font.getBounds(b.text).height / 2f));
+                font.setScale(1.4f);
+                font.draw(batch, b.text, b.getGlobalPos(this.pos).x + (b.size.x / 2f) - (font.getBounds(b.text).width / 2f),
+                        b.getGlobalPos(this.pos).y + (b.size.y / 2f) - (font.getBounds(b.text).height / 2f));
                 //Single touch capabilities for now...
-                if(b.isClicked(touchData)) { batch.end(); return b; }
+                if(b.isClicked(touchData, this.pos)) { batch.end(); return b; }
             }
         }
 
