@@ -31,6 +31,8 @@ public class CustomGUIBox {
     Vector2 MessagePosition;
     ArrayList<CustomButton> buttons;
 
+    private CustomButton tempButton;
+
     public CustomGUIBox(SpriteBatch _batch, String _DialogMessage, Vector2 _pos, Vector2 _size, Texture _DialogPic,
                         String[] _options, Color _color, BoxType _boxType)
     {
@@ -42,6 +44,7 @@ public class CustomGUIBox {
         color = _color;
         DialogMessage = _DialogMessage;
         boxType = _boxType;
+        tempButton = null;
 
         if(boxType == BoxType.MODESELECT)
         {
@@ -89,12 +92,13 @@ public class CustomGUIBox {
                 font.draw(batch, b.text, b.getGlobalPos(this.pos).x + (b.size.x / 2f) - (font.getBounds(b.text).width / 2f),
                         b.getGlobalPos(this.pos).y + (b.size.y / 2f) - (font.getBounds(b.text).height / 2f));
                 //Single touch capabilities for now...
-                if(b.isClicked(touchData, this.pos)) { batch.end(); return b; }
+                if(b.isClicked(touchData, this.pos)) tempButton = b;
+                                                else tempButton = null;
             }
         }
 
         batch.end();
-        return null;
+        return tempButton;
     }
 
     public void CheckOptionClicked(TouchData touchData)
