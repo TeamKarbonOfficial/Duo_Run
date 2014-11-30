@@ -593,15 +593,14 @@ import static com.badlogic.gdx.graphics.Texture.*;
         else if (mode == gameMode.GAME_INIT) {
             ProcessInput();
 
-            if(lerp < 12f && lerpFlag)
-                lerp += Gdx.graphics.getDeltaTime() * 4f;//Increase speed of obstacles to make a "zooming" effect
+            if(lerp < 18f && lerpFlag)
+                lerp += Gdx.graphics.getDeltaTime() * 3.5f;//Increase speed of obstacles to make a "zooming" effect
             else {
                 lerpFlag = false;
 
                 if(backFlag && lerp < -1f)//Reaches same speed as obs moving in main menu, 7 pwidth / s leftwards
                 {
                     mode = gameMode.MAIN_MENU;//Transit to main menu!
-
                 }
 
                 if(lerp > -8) lerp -= Gdx.graphics.getDeltaTime() * 7;//Decelerate until
@@ -637,11 +636,19 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
                 CreateRenderTriangles(o, triangles);
 
+                if(o.id.equals("play")) {
+                    batch.begin();
+                    bigfont.setColor(new Color(1, 1, 1, 1));
+                    bigfont.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - 40f,
+                            descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) - 20f);
+                    batch.end();
+                }
+
                 //#render button
                 //play button
                 if (o.isClicked) {
                     //Pulsating alpha from 30% to 80%
-                    o.color.set(0.8f, 0.8f, 0.8f, (float) Math.sin((double) lerp * 4) / 4f + 0.4f);
+                    o.color.a = (float) Math.sin((double) lerp * 4) / 4f + 0.4f;
                 }
             }
 
@@ -677,10 +684,8 @@ import static com.badlogic.gdx.graphics.Texture.*;
                     temp.setAsBox(pwidth(20), pheight(20));
 
                     //Create a new obstacle with id "play"
-                    Obstacle o = new Obstacle(temp, world, pwidth(70), pheight(48), false, "play");
+                    Obstacle o = new Obstacle(temp, world, pwidth(130), pheight(48), false, "play");
                     obstacles.add(o);
-
-                    temp.dispose();
 
                     backFlag = true;
                     lerpFlag = true;//Continue lerping again...
