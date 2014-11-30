@@ -1,6 +1,7 @@
 package com.teamkarbon.android.duo_run.android;
 
 import com.badlogic.gdx.Gdx;
+import com.google.android.gms.drive.Drive;
 import com.teamkarbon.android.duo_run.derptest;
 
 import android.content.Context;
@@ -75,6 +76,7 @@ public class AndroidLauncher extends AndroidApplication implements derptest.IGoo
                 .addOnConnectionFailedListener(this)
                 .addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN)
                 .addApi(Games.API).addScope(Games.SCOPE_GAMES)
+                .addApi(Drive.API).addScope(Drive.SCOPE_APPFOLDER) //Saves
                 .build();
     }
 
