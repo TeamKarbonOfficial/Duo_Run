@@ -64,3 +64,6 @@ build/
 ## Prevent tracking images (I think)
 *.jpeg
 *.png
+
+KeyStore_DuoRun.jks
+android/build.gradle

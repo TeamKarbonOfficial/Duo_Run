@@ -75,7 +75,7 @@ public class CustomGUIBox {
                 options list are used as game modes in this BoxType
              */
 
-            font.setScale(1.2f);
+            font.setScale(1.5f / (DialogMessage.length() / 10f));
             font.setColor(new Color(1f, 1f, 1f, 0.6f));//Just set it to white first :P
             font.draw(batch, DialogMessage, pos.x + pwidth(50f) - (font.getBounds(DialogMessage).width / 2f),
                     pos.y + size.y - pheight(10f));
@@ -84,6 +84,10 @@ public class CustomGUIBox {
             {
                 batch.setColor(b.color);
                 batch.draw(DialogPic, b.pos.x + pos.x, b.pos.y + pos.y, b.size.x, b.size.y);
+                //draws the text at the centre
+                font.setScale(1f);
+                font.draw(batch, b.text, b.pos.x + (b.size.x / 2f) - (font.getBounds(b.text).width / 2f),
+                        b.pos.y + (b.size.y / 2f) - (font.getBounds(b.text).height / 2f));
                 //Single touch capabilities for now...
                 if(b.isClicked(touchData)) { batch.end(); return b; }
             }
