@@ -584,6 +584,8 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
                 if(backFlag && lerp < -1f)//Reaches same speed as obs moving in main menu, 7 pwidth / s leftwards
                 {
+                    backFlag = false;//Reset dem flags.
+                    lerpFlag = true;
                     mode = gameMode.MAIN_MENU;//Transit to main menu!
                 }
 
