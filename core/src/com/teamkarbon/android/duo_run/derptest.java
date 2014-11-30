@@ -947,8 +947,13 @@ import static com.badlogic.gdx.graphics.Texture.*;
         public void signIn();
         public void signOut();
         public void rateGame();
-        public void submitScore(long score, String id);
+        public void submitScore(String id, long score);
         public void showScores(String id);
+        public void showAchievements();
+        //NOTE! This is for NORMAL Achievements
+        public void submitNorAchievements(String id);
+        //NOTE! This is for Incremental Achievements
+        public void submitInAchievements(String id, int number);
         public boolean isSignedIn();
     }
 }

@@ -24,7 +24,8 @@ public class AndroidLauncher extends AndroidApplication implements derptest.IGoo
     //GameHelper
     private GameHelper _gameHelper;
 
-    private final static int REQUEST_CODE_UNUSED = 9002;
+    private final static int REQUEST_SCORE = 9002;
+    private final static int REQUEST_ACHIEVEMENTS = 9002;
     private final String ERROR = "ERROR: ";
 
     // Client used to interact with Google APIs
@@ -181,17 +182,17 @@ public class AndroidLauncher extends AndroidApplication implements derptest.IGoo
 
     @Override
     public void rateGame() {
-        String str ="https://play.google.com/store/apps/details?id=come.teamkarbon.android.duo_run";
+        //Just for fun lol
+        String str ="https://play.google.com/store/apps/details?id=come.teamkarbon.android.duo_run.android";
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(str)));
     }
 
     @Override
-    public void submitScore(long score, String id) {
+    public void submitScore(String id, long score) {
         if (isSignedIn()) {
             Games.Leaderboards.submitScore(_gameHelper.getApiClient(), id, score);
             Toast.makeText(getApplicationContext(), "Score of " + String.valueOf(score) + " have been submitted!", Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else {
             Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
         }
     }
@@ -199,7 +200,36 @@ public class AndroidLauncher extends AndroidApplication implements derptest.IGoo
     @Override
     public void showScores(String id) {
         if (isSignedIn()) {
-            startActivityForResult(Games.Leaderboards.getLeaderboardIntent(_gameHelper.getApiClient(), id), REQUEST_CODE_UNUSED);
+            startActivityForResult(Games.Leaderboards.getLeaderboardIntent(_gameHelper.getApiClient(), id), REQUEST_SCORE);
+        } else {
+            Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //NOTE! This is for NORMAL Achievements
+    @Override
+    public void submitNorAchievements(String id) {
+        if (isSignedIn()) {
+            Games.Achievements.unlock(mGoogleApiClient, id);
+        } else {
+            Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //NOTE! This is for Incremental Achievements
+    @Override
+    public void submitInAchievements(String id, int number) {
+        if (isSignedIn()) {
+            Games.Achievements.increment(mGoogleApiClient, id, number);
+        } else {
+            Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void showAchievements() {
+        if (isSignedIn()) {
+            startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), REQUEST_ACHIEVEMENTS);
         } else {
             Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
         }
@@ -213,7 +243,6 @@ public class AndroidLauncher extends AndroidApplication implements derptest.IGoo
     @Override
     protected void onStart() {
         super.onStart();
-        //TODO: App wouldn't run with this because of signing stuff
         _gameHelper.onStart(this);
     }
 
