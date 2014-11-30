@@ -121,7 +121,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
     float lerp;//Linear interpolation (Cool animation when shifting between main menu -> game init -> game ;)
     boolean lerpFlag;
     float rawscore = 0;
-    boolean instaDeathMode = true;
+    boolean instaDeathMode;
     boolean gameOver = false;
     //final String ballfile;
     //final String ball2file;
@@ -135,6 +135,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
     CustomGUIBox customGUIBox;
     Texture dialogBoxTexture;
     TouchData touchData;
+    boolean backFlag = false;//A flag where set true within gameMode.GAME_INIT when the back button is clicked...
 
     Texture splashScreen;//TODO: Make a logo/splash screen to display on init and perhaps other places when needed...
 
@@ -517,7 +518,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
                 Obstacle o = obstacles.get(x);
 
-                o.translate(percent(-(7) * Gdx.graphics.getDeltaTime(), 0f));//Move left (6 + level) % of screen per second..
+                o.translate(percent(-(7) * Gdx.graphics.getDeltaTime(), 0f));
 
                 if (o.getPos().x < pwidth(-50f - 24f)) {
                     o.setPos(pwidth(50f + 24f), pheight(48));
@@ -598,8 +599,15 @@ import static com.badlogic.gdx.graphics.Texture.*;
                 lerp += Gdx.graphics.getDeltaTime() * 4f;//Increase speed of obstacles to make a "zooming" effect
             else {
                 lerpFlag = false;
-                if(lerp > -8) lerp -= Gdx.graphics.getDeltaTime() * 7;//Decelerate...
-                else lerp = -8;//Stop...
+
+                if(backFlag && lerp < -1f)//Reaches same speed as obs moving in main menu, 7 pwidth / s leftwards
+                {
+                    mode = gameMode.MAIN_MENU;//Transit to main menu!
+
+                }
+
+                if(lerp > -8) lerp -= Gdx.graphics.getDeltaTime() * 7;//Decelerate until
+                else          lerp = -8;//Stop...
             }
             //Accel: 2% width/s^2
 
@@ -613,14 +621,14 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
             DrawFloorsAndCeiling();
 
-
             ArrayList<RenderTriangle> triangles = new ArrayList<RenderTriangle>();
 
             for (int x = 0; x < obstacles.size(); x++) {
 
                 Obstacle o = obstacles.get(x);
 
-                if(lerpFlag) o.translate(percent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
+                //either lerping or clicked on the back button
+                if(lerpFlag || backFlag) o.translate(percent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
 
                 else {
                     ClearAllObstacles(obstacles, world);
@@ -640,12 +648,22 @@ import static com.badlogic.gdx.graphics.Texture.*;
             }
 
             customGUIBox.Translate(new Vector2(descalepercent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f)));
-            CustomButton tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);//As this function returns button clicked
+            CustomButton tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);//This function returns button clicked
             batch.begin();
-            bigfont.draw(batch, "GUI pos: " + customGUIBox.pos.x + ", " + customGUIBox.pos.y + ", A: " +
-                    ((float) Math.sin((double) lerp * 4) / 2f + 0.4f), 60, 200);
+            bigfont.draw(batch, "GUI pos: " + customGUIBox.pos.x + ", " + customGUIBox.pos.y, 60, 200);
             batch.end();
-            if(tempButton != null)
+            if(backFlag)
+            {
+                for(CustomButton c : customGUIBox.buttons)
+                {
+                    if(c.text.equals("Back"))
+                    {
+                        //Do that pulsating alpha thingy XD
+                        c.color.a = (float) Math.sin((double) lerp * 4) / 4f + 0.4f;
+                    }
+                }
+            }
+            if(tempButton != null && !backFlag)
             {
                 if(tempButton.text.equals("Continue"))
                 {
@@ -654,15 +672,20 @@ import static com.badlogic.gdx.graphics.Texture.*;
                 else if(tempButton.text.equals("Back"))
                 {
                     ClearAllObstacles(obstacles, world);
+                    obstacles.clear();
+
+                    lerp = 0;//Reset lerp to 0 so that it will move gui out of screen and move obstacle into screen
                     PolygonShape temp = new PolygonShape();
                     temp.setAsBox(pwidth(20), pheight(20));
 
                     //Create a new obstacle with id "play"
-                    Obstacle o = new Obstacle(temp, world, pwidth(60), pheight(48), false, "play");
+                    Obstacle o = new Obstacle(temp, world, pwidth(70), pheight(48), false, "play");
                     obstacles.add(o);
 
                     temp.dispose();
-                    mode = gameMode.MAIN_MENU;
+
+                    backFlag = true;
+                    lerpFlag = true;//Continue lerping again...
                 }
             }
 
