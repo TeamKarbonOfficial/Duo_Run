@@ -166,7 +166,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
         camera.update();//Make sure everything's ok :P
 
         //Create world
-        world = new World(new Vector2(0, -9.8f), true);//Set gravity to 9.8 m/s^2 downwards
+        world = new World(new Vector2(0, -11f), true);//Set gravity to 11 m/s^2 downwards
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
 
