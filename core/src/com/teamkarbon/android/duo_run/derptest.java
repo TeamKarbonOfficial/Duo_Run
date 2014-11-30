@@ -84,7 +84,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
             make obstacles, score, main menu, render menu, buttons, options, about
 
      */
-public class derptest extends ApplicationAdapter {
+    public class derptest extends ApplicationAdapter {
 
     //Everything Game Services
     public static IGoogleServices googleServices;
@@ -92,6 +92,8 @@ public class derptest extends ApplicationAdapter {
     private final String ACHIEVEMENT_GETTING_STARTED = "CgkIppTW5vgMEAIQAA";
     private final String LEADERBOARD_NORMAL = "CgkIppTW5vgMEAIQAQ";
     private final String LEADERBOARD_INSTADEATH = "CgkIppTW5vgMEAIQAg";
+
+    int signInRetryCount;
 
     gameMode mode; //A custom enum to manage multiple screens. (Game, main menu etc)
 
@@ -134,6 +136,8 @@ public class derptest extends ApplicationAdapter {
     Texture dialogBoxTexture;
     TouchData touchData;
 
+    Texture splashScreen;//TODO: Make a logo/splash screen to display on init and perhaps other places when needed...
+
     //Constructor for game services interface
     public derptest(IGoogleServices googleServices) {
         super();
@@ -144,10 +148,7 @@ public class derptest extends ApplicationAdapter {
     @Override
     public void create() {
 
-        //GameServices
-        if (!googleServices.isSignedIn()) {
-            googleServices.signIn();
-        }
+        signInRetryCount = 0;
 
         //Load in ball's texture
         //Download textures from "http://teamkarbon.com/cloud/public.php?service=files&t=69d7aca788e27f04971fad1bd79a314c"
@@ -302,6 +303,17 @@ public class derptest extends ApplicationAdapter {
         //Hashtags are for easier code jumping
         //#init
         if (mode == gameMode.MAIN_MENU_INIT) {
+            /*batch.begin();
+            batch.draw(splashScreen, 0f, Gdx.graphics.getHeight());
+            batch.end();*/
+
+
+            //GameServices sign in.
+            if (!googleServices.isSignedIn() && signInRetryCount == 0) {
+                signInRetryCount ++;//Sign in once only.
+                googleServices.signIn();
+            }
+
             PolygonShape temp = new PolygonShape();
             temp.setAsBox(pwidth(20), pheight(20));
 
@@ -315,8 +327,6 @@ public class derptest extends ApplicationAdapter {
         //#game
         else if (mode == gameMode.GAME) {
             ProcessInput();
-
-            camera.update();//Duh
 
             debugRenderer.render(world, camera.combined);//View all colliders and stuff
 
@@ -592,8 +602,6 @@ public class derptest extends ApplicationAdapter {
                 else lerp = -8;//Stop...
             }
             //Accel: 2% width/s^2
-
-            camera.update();//Duh
 
             debugRenderer.render(world, camera.combined);//View all colliders and stuff
 
