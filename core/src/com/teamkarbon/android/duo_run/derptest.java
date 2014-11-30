@@ -519,8 +519,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
                 o.translate(percent(-(7) * Gdx.graphics.getDeltaTime(), 0f));
 
                 if (o.getPos().x < pwidth(-50f - 24f)) {
-                    o.setPos(pwidth(50f + 24f), pheight(48));
-                    continue;
+                    o.setPos(pwidth(50f + 24f), o.getPos().y);
                 }
 
                 CreateRenderTriangles(o, triangles);
@@ -548,21 +547,6 @@ import static com.badlogic.gdx.graphics.Texture.*;
                     smallfont.draw(batch, "leftint: " + Intersector.overlapConvexPolygons(obs, playerleft), 100, 400);
                     smallfont.draw(batch, "rightint: " + Intersector.overlapConvexPolygons(obs, playerright), 100, 300);
                     batch.end();
-
-                    /*//Random debug to draw polygons to be checked
-                    shapeRenderer.setAutoShapeType(true);
-                    shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-                    shapeRenderer.setColor(new Color(0.8f, 0.1f, 0.1f, 0.6f));
-                    shapeRenderer.polygon(o.getVerticesAsFloatArray());
-                    shapeRenderer.setColor(new Color(0.8f, 0.8f, 0.5f, 0.2f));
-                    shapeRenderer.polygon(ball.getVerticesAsFloatArray());
-                    shapeRenderer.setColor(new Color(0.5f, 0.5f, 0.9f, 0.2f));
-                    shapeRenderer.polygon(ball2.getVerticesAsFloatArray()); */
-
-                    //Gdx.app.debug("intersect problem", "left: " + floatArrayToString(ball.getVerticesAsFloatArray()));
-
-                    shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-                    shapeRenderer.setAutoShapeType(false);
 
                     if ((Intersector.overlapConvexPolygons(obs, playerleft) && !o.type) ||
                             (Intersector.overlapConvexPolygons(obs, playerright) && o.type)) {
@@ -638,6 +622,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
                 if(o.id.equals("play")) {
                     batch.begin();
+                    bigfont.setScale(3f);
                     bigfont.setColor(new Color(1, 1, 1, 1));
                     bigfont.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - 40f,
                             descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) - 20f);
@@ -988,5 +973,6 @@ import static com.badlogic.gdx.graphics.Texture.*;
         //NOTE! This is for Incremental Achievements
         public void submitInAchievements(String id, int number);
         public boolean isSignedIn();
+        public void onSignInSucceeded();
     }
 }

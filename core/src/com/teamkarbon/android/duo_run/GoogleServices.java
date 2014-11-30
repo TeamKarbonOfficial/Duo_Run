@@ -59,4 +59,9 @@ public class GoogleServices implements derptest.IGoogleServices {
     public boolean isSignedIn() {
         return false;
     }
+
+    @Override
+    public void onSignInSucceeded() {
+
+    }
 }

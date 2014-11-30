@@ -1,24 +1,21 @@
 package com.teamkarbon.android.duo_run.android;
 
-import com.badlogic.gdx.Gdx;
-import com.google.android.gms.drive.Drive;
-import com.teamkarbon.android.duo_run.derptest;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.drive.Drive;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.plus.Plus;
-
 import com.google.example.games.basegameutils.GameHelper;
+import com.teamkarbon.android.duo_run.derptest;
 
 public class AndroidLauncher extends AndroidApplication implements derptest.IGoogleServices, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -240,6 +237,11 @@ public class AndroidLauncher extends AndroidApplication implements derptest.IGoo
     @Override
     public boolean isSignedIn() {
         return _gameHelper.isSignedIn();
+    }
+
+    @Override
+    public void onSignInSucceeded() {
+
     }
 
     @Override
