@@ -30,22 +30,22 @@ TODO
 - Make an endgame situation function
 - Create levels *suggestions?*
 - Create a level select screen
-    - Make proper GUI **In progress**
+    - Make proper GUI **DONE**
 - Create a main menu screen
     - Create an interface. **done**
-        - The user collides with the buttons using the respectively coloured balls to "click" the buttons.
+        - The user collides with the buttons using the respectively coloured balls to "click" the buttons.**done**
         - Make the interface work **done**
-    - GO! button **done. TODO: Move to level select screen of some sort :P**
+    - GO! button **DONE**
     - Options button
     - About button
     - Exit button *?*
-    - Gamer Services button _**??**_
+    - Gamer Services button **lol gotta learn more**
     - Help button
-        - Note: This button is a tapped button... Use helpbutton.png for this one.
+        - Note: This button is a... button... Use helpbutton.png for this one.
 - Have some options/whatever
 - Add Game Service **In progress**
     - Get necessary libraries **Done**
-    - Figure it out **In progress**
+    - Figure it out **Almost done**
     - Add at least 5 achievements (Required by Playstore) **suggestions?**
     - Add Events??
     - Add leaderboards for all the gamemodes
