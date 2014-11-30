@@ -328,8 +328,6 @@ import static com.badlogic.gdx.graphics.Texture.*;
         else if (mode == gameMode.GAME) {
             ProcessInput();
 
-            debugRenderer.render(world, camera.combined);//View all colliders and stuff
-
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             Gdx.gl.glEnable(GL20.GL_BLEND);
             //#render main
@@ -602,8 +600,6 @@ import static com.badlogic.gdx.graphics.Texture.*;
                 else lerp = -8;//Stop...
             }
             //Accel: 2% width/s^2
-
-            debugRenderer.render(world, camera.combined);//View all colliders and stuff
 
             //Epic rendering
 
