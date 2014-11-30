@@ -555,11 +555,11 @@ import static com.badlogic.gdx.graphics.Texture.*;
                         c.set(0.8f, 0.8f, 0.8f, 0.9f);
                         o.setColor(c);
                         o.isClicked = true;
-                        String[] tempOptions = new String[]{"Continue", "Back"};
+                        String[] tempOptions = new String[]{"Normal", "Insta-Death", "Back"};
                         lerp = 0f;
                         lerpFlag = true;
                         //TODO: Make this work :P
-                        customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(160, 30), descalepercent(60, 60),
+                        customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(150, 30), descalepercent(80, 60),
                                 dialogBoxTexture, tempOptions, new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.MODESELECT);
                     }
                 }
@@ -657,7 +657,11 @@ import static com.badlogic.gdx.graphics.Texture.*;
             }
             if(tempButton != null && !backFlag)
             {
-                if(tempButton.text.equals("Continue"))
+                if(tempButton.text.equals("Normal"))
+                {
+                    //TODO: Fill up
+                }
+                else if(tempButton.text.equals("Insta-Death"))
                 {
                     //TODO: Fill up
                 }
@@ -671,7 +675,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
                     temp.setAsBox(pwidth(20), pheight(20));
 
                     //Create a new obstacle with id "play"
-                    Obstacle o = new Obstacle(temp, world, pwidth(130), pheight(48), false, "play");
+                    Obstacle o = new Obstacle(temp, world, pwidth(150), pheight(48), false, "play");
                     obstacles.add(o);
 
                     backFlag = true;
