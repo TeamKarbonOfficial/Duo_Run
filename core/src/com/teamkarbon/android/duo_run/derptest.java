@@ -322,8 +322,6 @@ import static com.badlogic.gdx.graphics.Texture.*;
             Obstacle o = new Obstacle(temp, world, pwidth(60), pheight(48), false, "play");
             obstacles.add(o);
 
-            temp.dispose();
-
             mode = gameMode.MAIN_MENU;
         }
 
