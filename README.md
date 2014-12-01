@@ -29,7 +29,7 @@ TODO
 - Actually check for collisions **done**
 - Make an endgame situation function
 - Create levels *suggestions?*
-- Create a level select screen
+- Create a level select screen **DONE**
     - Make proper GUI **DONE**
 - Create a main menu screen
     - Create an interface. **done**
@@ -39,7 +39,7 @@ TODO
     - Options button
     - About button
     - Exit button *?*
-    - Gamer Services button **lol gotta learn more**
+    - Gamer Services button **onSignInSucceeded()?**
     - Help button
         - Note: This button is a... button... Use helpbutton.png for this one.
 - Have some options/whatever
