@@ -67,6 +67,7 @@ public class CustomGUIBox {
 
     public CustomButton DrawAndUpdate(BitmapFont font, TouchData touchData)
     {
+        tempButton = null;//Set null to default.
         if(!batch.isDrawing()) batch.begin();
         Gdx.gl.glEnable(GL20.GL_BLEND);
         batch.setColor(color);
@@ -92,8 +93,7 @@ public class CustomGUIBox {
                 font.draw(batch, b.text, b.getGlobalPos(this.pos).x + (b.size.x / 2f) - (font.getBounds(b.text).width / 2f),
                         b.getGlobalPos(this.pos).y + (b.size.y / 2f) - (font.getBounds(b.text).height / 2f));
                 //Single touch capabilities for now...
-                if(b.isClicked(touchData, this.pos)) {tempButton = b; break;}
-                                                else tempButton = null;
+                if(b.isClicked(touchData, this.pos)) tempButton = b;
             }
         }
 

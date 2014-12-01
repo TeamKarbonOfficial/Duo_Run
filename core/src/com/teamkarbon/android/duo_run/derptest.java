@@ -345,7 +345,8 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
                 Obstacle o = obstacles.get(x);
 
-                o.translate(percent(-(7 + level) * Gdx.graphics.getDeltaTime(), 0f));//Move left (6 + level) % of screen per second..
+                if(!gameOver) o.translate(percent(-(7 + level) * Gdx.graphics.getDeltaTime(), 0f));//Move left (7 + level) % of screen per second..
+                else o.translate(percent(-(7 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
 
                 if (o.getPos().x < OUT_OF_BOUNDS_THRESHOLD) {
                     obstacles.remove(o);
@@ -377,7 +378,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
             //Make dem obstacles
 
             //#make obstacles
-            if (obstaclesTimer > 3.5f - (level / 2f) && Math.random() >= 0.5) {
+            if (!gameOver && obstaclesTimer > 3.5f - (level / 2f) && Math.random() >= 0.5) {
                 PolygonShape temp = new PolygonShape();
 
                 float tempfloat = (float) Math.random();
@@ -469,23 +470,23 @@ import static com.badlogic.gdx.graphics.Texture.*;
             score = (int) rawscore;
 
             //#Game over :P
-            if (instaDeathMode) {
-                //Collision detection (Cheap way around it :P)
-                //Checks if ball and ball2 x-axis is 0, if not, game over
-                //When an object hit the ball, the x value will change
-                if (!inRange(ball.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN) ||
-                        !inRange(ball2.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN)) {
-                    Gdx.app.debug("instaDeathMode", "Game Over!");
+            if(!gameOver) {
+                if (instaDeathMode) {
+                    //Collision detection (Cheap way around it :P)
+                    //Checks if ball and ball2 x-axis is 0, if not, game over
+                    //When an object hit the ball, the x value will change
+                    if (!inRange(ball.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN) ||
+                            !inRange(ball2.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN)) {
+                        Gdx.app.debug("instaDeathMode", "Game Over!");
+                        gameOver = true;
+                        lerp = 0;
+                    }
+                } else if (!inRange(ball.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN) ||
+                        !inRange(ball2.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN)) {
+                    Gdx.app.debug("Normal mode", "Game over!");
                     gameOver = true;
-                    ClearAllObstacles(obstacles, world);//Clearin' everythin'
-                    rawscore = 0;
+                    lerp = 0;
                 }
-            } else if (!inRange(ball.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN) ||
-                    !inRange(ball2.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN)) {
-                Gdx.app.debug("Normal mode", "Game over!");
-                ClearAllObstacles(obstacles, world);//Clearin' everythin'
-                gameOver = true;
-                rawscore = 0;
             }
 
             obstaclesTimer += Gdx.graphics.getDeltaTime();
