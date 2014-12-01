@@ -92,7 +92,7 @@ public class CustomGUIBox {
                 font.draw(batch, b.text, b.getGlobalPos(this.pos).x + (b.size.x / 2f) - (font.getBounds(b.text).width / 2f),
                         b.getGlobalPos(this.pos).y + (b.size.y / 2f) - (font.getBounds(b.text).height / 2f));
                 //Single touch capabilities for now...
-                if(b.isClicked(touchData, this.pos)) tempButton = b;
+                if(b.isClicked(touchData, this.pos)) {tempButton = b; break;}
                                                 else tempButton = null;
             }
         }

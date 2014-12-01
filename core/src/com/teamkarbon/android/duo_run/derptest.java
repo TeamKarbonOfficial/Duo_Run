@@ -660,26 +660,39 @@ import static com.badlogic.gdx.graphics.Texture.*;
                 }
                 else if(gameFlag && instaDeathMode && c.text.equals("Insta-Death"))
                 {
-
+                    c.color.a = (float) Math.sin((double) lerp * 4) / 4f + 0.4f;
                 }
                 else if(gameFlag && !instaDeathMode && c.text.equals("Normal"))
                 {
-
+                    c.color.a = (float) Math.sin((double) lerp * 4) / 4f + 0.4f;
                 }
             }
             if(tempButton != null && !backFlag && !gameFlag)
             {
+                Gdx.app.debug("gameModeSelect", tempButton.text);
                 if(tempButton.text.equals("Normal"))
                 {
                     //TODO: Fill up
                     gameFlag = true;
                     instaDeathMode = false;
+                    lerpFlag = true;
+
+                    ClearAllObstacles(obstacles, world);
+                    obstacles.clear();
+
+                    lerp = 0;
                 }
                 else if(tempButton.text.equals("Insta-Death"))
                 {
                     //TODO: Fill up
                     gameFlag = true;
                     instaDeathMode = true;
+                    lerpFlag = true;
+
+                    ClearAllObstacles(obstacles, world);
+                    obstacles.clear();
+
+                    lerp = 0;
                 }
                 else if(tempButton.text.equals("Back"))
                 {
