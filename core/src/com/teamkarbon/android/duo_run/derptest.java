@@ -136,6 +136,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
     Texture dialogBoxTexture;
     TouchData touchData;
     boolean backFlag = false;//A flag where set true within gameMode.GAME_INIT when the back button is clicked...
+    boolean gameFlag = false;//A flag where set true within gameMode.GAME_INIT when the selected game mode is clicked...
 
     Texture splashScreen;//TODO: Make a logo/splash screen to display on init and perhaps other places when needed...
 
@@ -588,6 +589,12 @@ import static com.badlogic.gdx.graphics.Texture.*;
                     lerpFlag = true;
                     mode = gameMode.MAIN_MENU;//Transit to main menu!
                 }
+                if(gameFlag && lerp < -2f)//Same speed as obs moving in game, 6 pwidth / s
+                {
+                    gameFlag = false;
+                    lerpFlag = true;
+                    mode = gameMode.GAME;//Go to game!
+                }
 
                 if(lerp > -8) lerp -= Gdx.graphics.getDeltaTime() * 7;//Decelerate until
                 else          lerp = -8;//Stop...
@@ -611,7 +618,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
                 Obstacle o = obstacles.get(x);
 
                 //either lerping or clicked on the back button
-                if(lerpFlag || backFlag) o.translate(percent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
+                if(lerpFlag || backFlag || gameFlag) o.translate(percent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
 
                 else {
                     ClearAllObstacles(obstacles, world);
@@ -644,26 +651,35 @@ import static com.badlogic.gdx.graphics.Texture.*;
             batch.begin();
             bigfont.draw(batch, "GUI pos: " + customGUIBox.pos.x + ", " + customGUIBox.pos.y, 60, 200);
             batch.end();
-            if(backFlag)
+            for(CustomButton c : customGUIBox.buttons)
             {
-                for(CustomButton c : customGUIBox.buttons)
+                if(backFlag && c.text.equals("Back"))
                 {
-                    if(c.text.equals("Back"))
-                    {
-                        //Do that pulsating alpha thingy XD
-                        c.color.a = (float) Math.sin((double) lerp * 4) / 4f + 0.4f;
-                    }
+                    //Do that pulsating alpha thingy XD
+                    c.color.a = (float) Math.sin((double) lerp * 4) / 4f + 0.4f;
+                }
+                else if(gameFlag && instaDeathMode && c.text.equals("Insta-Death"))
+                {
+
+                }
+                else if(gameFlag && !instaDeathMode && c.text.equals("Normal"))
+                {
+
                 }
             }
-            if(tempButton != null && !backFlag)
+            if(tempButton != null && !backFlag && !gameFlag)
             {
                 if(tempButton.text.equals("Normal"))
                 {
                     //TODO: Fill up
+                    gameFlag = true;
+                    instaDeathMode = false;
                 }
                 else if(tempButton.text.equals("Insta-Death"))
                 {
                     //TODO: Fill up
+                    gameFlag = true;
+                    instaDeathMode = true;
                 }
                 else if(tempButton.text.equals("Back"))
                 {
