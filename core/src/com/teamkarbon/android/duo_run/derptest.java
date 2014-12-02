@@ -330,6 +330,10 @@ import static com.badlogic.gdx.graphics.Texture.*;
         else if (mode == gameMode.GAME) {
             ProcessInput();
 
+            if(lerpFlag && gameOver)
+            {
+                lerp += Gdx.graphics.getDeltaTime() * 5f;
+            }
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
             Gdx.gl.glEnable(GL20.GL_BLEND);
             //#render main
