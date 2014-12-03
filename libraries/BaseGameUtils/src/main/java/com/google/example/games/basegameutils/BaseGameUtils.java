@@ -174,5 +174,4 @@ public class BaseGameUtils {
                 .setNeutralButton(android.R.string.ok, null)
                 .create();
     }
-
 }

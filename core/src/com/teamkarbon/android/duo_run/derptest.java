@@ -150,6 +150,8 @@ import static com.badlogic.gdx.graphics.Texture.*;
     @Override
     public void create() {
 
+        googleServices.signIn();
+
         signInRetryCount = 0;
 
         //Load in ball's texture
