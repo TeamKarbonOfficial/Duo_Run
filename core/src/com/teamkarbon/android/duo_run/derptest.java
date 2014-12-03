@@ -354,7 +354,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
                 if(!gameOver) o.translate(percent(-(7 + level) * Gdx.graphics.getDeltaTime(), 0f));//Move left (7 + level) % of screen per second..
                 else o.translate(percent(-(7 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
 
-                if (o.getPos().x < OUT_OF_BOUNDS_THRESHOLD) {
+                if (o.getPos().x < OUT_OF_BOUNDS_THRESHOLD) {//Works for game over situation as well.
                     obstacles.remove(o);
                     x--;
                     o.dispose(world);
@@ -379,7 +379,6 @@ import static com.badlogic.gdx.graphics.Texture.*;
             smallfont.setScale(4);
             smallfont.draw(batch, "Score: " + score, 100, 100);
             batch.end();
-
 
             //Make dem obstacles
 
@@ -495,9 +494,22 @@ import static com.badlogic.gdx.graphics.Texture.*;
                 }
             }
 
+            //Check if all obs are out of screen alr, then move to score display
+            if(gameOver && obstacles.size() == 0)
+            {
+                lerpFlag = true;
+                gameOver = false;
+                mode = gameMode.SCORE_DISPLAY;
+            }
+
             obstaclesTimer += Gdx.graphics.getDeltaTime();
         }
 
+        //#score display
+        else if (mode == gameMode.SCORE_DISPLAY)
+        {
+
+        }
 
         //#main menu
         else if (mode == gameMode.MAIN_MENU) {
@@ -796,7 +808,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
     //A selection of current active states.
     public enum gameMode {
-        MAIN_MENU, OPTIONS, ABOUT, GAME, MAIN_MENU_INIT, GAME_OVER, GAME_INIT
+        MAIN_MENU, OPTIONS, ABOUT, GAME, MAIN_MENU_INIT, GAME_OVER, GAME_INIT, SCORE_DISPLAY
     }
 
     //#class rendertriangle
