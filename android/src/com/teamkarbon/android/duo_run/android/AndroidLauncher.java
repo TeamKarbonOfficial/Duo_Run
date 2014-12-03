@@ -31,6 +31,8 @@ public class AndroidLauncher extends AndroidApplication implements
     private boolean mResolvingConnectionFailure = false;
     private boolean mAutoStartSignInFlow = true;
     private boolean mSignInClicked = false;
+    private boolean mExplicitSignOut = false;
+    private boolean mInSignInFlow = false;
 
     private final String TAG = "Game Services";
     private static int RC_SIGN_IN = 9001;
@@ -57,7 +59,11 @@ public class AndroidLauncher extends AndroidApplication implements
     @Override
     protected void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        if (!mInSignInFlow && !mExplicitSignOut) {
+            // auto sign in
+            mGoogleApiClient.connect();
+        }
+
     }
 
     @Override
@@ -98,6 +104,7 @@ public class AndroidLauncher extends AndroidApplication implements
             // error string in your strings.xml file, such as "There was
             // an issue with sign-in, please try again later."
 
+            //TODO: Fix this (I hope this pops up the sign in thingy)
             //if (!BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient, connectionResult, RC_SIGN_IN, R.string.signin_other_error)) {
             //    mResolvingConnectionFailure = false;
             //}
@@ -150,7 +157,14 @@ public class AndroidLauncher extends AndroidApplication implements
 
     @Override
     public boolean isSignedIn() {
-        return false;
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            // signed in
+            return true;
+        } else {
+            //Not signed in
+            return false;
+        }
+
     }
 
     @Override
