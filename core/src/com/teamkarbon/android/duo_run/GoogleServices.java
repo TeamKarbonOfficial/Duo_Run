@@ -5,15 +5,6 @@ package com.teamkarbon.android.duo_run;
  */
 
 public class GoogleServices implements derptest.IGoogleServices {
-    private static GoogleServices ourInstance = new GoogleServices();
-
-    public static GoogleServices getInstance() {
-        return ourInstance;
-    }
-
-    public GoogleServices() {
-
-    }
 
     @Override
     public void signIn() {
