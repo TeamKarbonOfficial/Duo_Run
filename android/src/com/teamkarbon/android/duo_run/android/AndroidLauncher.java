@@ -13,11 +13,9 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.drive.Drive;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
-import com.google.example.games.basegameutils.GameHelper;
 
 import com.teamkarbon.android.duo_run.derptest;
 
@@ -59,16 +57,17 @@ public class AndroidLauncher extends AndroidApplication implements
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d(TAG, "onStart()");
         if (!mInSignInFlow && !mExplicitSignOut) {
             // auto sign in
             mGoogleApiClient.connect();
         }
-
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        Log.d(TAG, "onStop()");
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
@@ -77,19 +76,21 @@ public class AndroidLauncher extends AndroidApplication implements
     //These are for Game Services
     @Override
     public void onConnected(Bundle bundle) {
-
+        Log.d(TAG, "onConnected() called. Sign in successful!");
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        //Reconnect
+        Log.d(TAG, "onConnectionSuspended() called. Trying to reconnect.");
         mGoogleApiClient.connect();
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.d(TAG, "onConnectionFailed() called, result: " + connectionResult);
         if (mResolvingConnectionFailure) {
             // already resolving
+            Log.d(TAG, "onConnectionFailed() ignoring connection failure; already resolving.");
             return;
         }
         // if the sign-in button was clicked or if auto sign-in is enabled,
@@ -117,6 +118,7 @@ public class AndroidLauncher extends AndroidApplication implements
     //These are for the Interface
     @Override
     public void signIn() {
+        Log.d(TAG, "(Interface) signIn() have been called!");
         mGoogleApiClient.connect();
     }
 
