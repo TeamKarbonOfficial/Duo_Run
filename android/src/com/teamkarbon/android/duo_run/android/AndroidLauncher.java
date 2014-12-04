@@ -2,6 +2,7 @@ package com.teamkarbon.android.duo_run.android;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -105,6 +106,17 @@ public class AndroidLauncher extends AndroidApplication implements
                 mResolvingConnectionFailure = BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient,
                         connectionResult, RC_SIGN_IN, getString(R.string.signin_other_error));
             }
+
+            // Attempt to resolve the connection failure using BaseGameUtils.
+            // The R.string.signin_other_error value should reference a generic
+            // error string in your strings.xml file, such as "There was
+            // an issue with sign-in, please try again later."
+            if (!BaseGameUtils.resolveConnectionFailure(this,
+                    mGoogleApiClient, connectionResult,
+                    RC_SIGN_IN, getString(R.string.signin_other_error))) {
+                mResolvingConnectionFailure = false;
+            }
+
             Log.v(TAG, "Auto Sign in is enabled but something went wrong .-.");
         }
         Log.v(TAG, "Auto Sign in is disabled!");
