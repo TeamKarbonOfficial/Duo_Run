@@ -5,7 +5,7 @@ Duo Run
 ```java
 Intersect.overlapConvexPolygons();//!!!!
 ```
-**Images for Balls: (Place images in \android\assets)**
+**Images for Balls & Icons: (Place images in \android\assets)**
 http://teamkarbon.com/cloud/public.php?service=files&t=69d7aca788e27f04971fad1bd79a314c
 **File of Shared Stuff** includes graphics, pics, etc.. :P
 http://teamkarbon.com/cloud/public.php?service=files&t=739066b6a6d5000a7b929fb72e55a859
@@ -45,7 +45,7 @@ TODO
 - Have some options/whatever
 - Add Game Service **In progress**
     - Get necessary libraries **Done**
-    - Figure it out **Almost done**
+    - Log in to Game Services :/
     - Add at least 5 achievements (Required by Playstore) **suggestions?**
     - Add Events??
     - Add leaderboards for all the gamemodes
