@@ -88,6 +88,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
     //Everything Game Services
     public static IGoogleServices googleServices;
+    private final String GAMESERVICE = "Game Services";
     private final String APP_ID = "444744436262";
     private final String ACHIEVEMENT_GETTING_STARTED = "CgkIppTW5vgMEAIQAA";
     private final String LEADERBOARD_NORMAL = "CgkIppTW5vgMEAIQAQ";
@@ -859,18 +860,12 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
     @Override
     public void pause() {
-        //Sign out when app pauses
-        if (googleServices.isSignedIn()){
-            googleServices.signOut();
-        }
+
     }
 
     @Override
     public void resume() {
-        //Sign in when app resumes
-        if (!googleServices.isSignedIn()) {
-            googleServices.signIn();
-        }
+
     }
 
     //#process input
