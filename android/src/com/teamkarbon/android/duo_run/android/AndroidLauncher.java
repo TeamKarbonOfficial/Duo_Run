@@ -41,7 +41,6 @@ public class AndroidLauncher extends AndroidApplication implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         initialize(new derptest(this), config);
 
@@ -100,19 +99,31 @@ public class AndroidLauncher extends AndroidApplication implements
             mSignInClicked = false;
             mResolvingConnectionFailure = true;
 
-            // Attempt to resolve the connection failure using BaseGameUtils.
-            // The R.string.signin_other_error value should reference a generic
-            // error string in your strings.xml file, such as "There was
-            // an issue with sign-in, please try again later."
-
-            //TODO: Fix this (I hope this pops up the sign in thingy)
-            //if (!BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient, connectionResult, RC_SIGN_IN, R.string.signin_other_error)) {
-            //    mResolvingConnectionFailure = false;
-            //}
+            if (mSignInClicked || mAutoStartSignInFlow) {
+                mAutoStartSignInFlow = false;
+                mSignInClicked = false;
+                mResolvingConnectionFailure = BaseGameUtils.resolveConnectionFailure(this, mGoogleApiClient,
+                        connectionResult, RC_SIGN_IN, getString(R.string.signin_other_error));
+            }
             Log.v(TAG, "Auto Sign in is enabled but something went wrong .-.");
         }
         Log.v(TAG, "Auto Sign in is disabled!");
         // Put code here to display the sign-in button
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int responseCode, Intent intent) {
+        if (requestCode == RC_SIGN_IN) {
+            Log.d(TAG, "onActivityResult with requestCode == RC_SIGN_IN, responseCode="
+                    + responseCode + ", intent=" + intent);
+            mSignInClicked = false;
+            mResolvingConnectionFailure = false;
+            if (responseCode == RESULT_OK) {
+                mGoogleApiClient.connect();
+            } else {
+                BaseGameUtils.showActivityResultError(this,requestCode,responseCode, R.string.signin_other_error);
+            }
+        }
     }
 
     //These are for the Interface
