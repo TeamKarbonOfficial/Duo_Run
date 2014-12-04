@@ -155,26 +155,52 @@ public class AndroidLauncher extends AndroidApplication implements
     @Override
     public void submitScore(String id, long score) {
         Log.d(TAG, "(Interface) submitScore() have been called!");
+        if (isSignedIn()) {
+            Games.Leaderboards.submitScore(mGoogleApiClient, id, score);
+            Toast.makeText(getApplicationContext(), "Score of " + String.valueOf(score) + " have been submitted!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void showScores(String id) {
         Log.d(TAG, "(Interface) showScores() have been called!");
+        if (isSignedIn()) {
+            startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient, id), REQUEST_SCORE);
+        } else {
+            Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void showAchievements() {
         Log.d(TAG, "(Interface) showAchievements() have been called!");
+        if (isSignedIn()) {
+            startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), REQUEST_ACHIEVEMENTS);
+        } else {
+            Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void submitNorAchievements(String id) {
         Log.d(TAG, "(Interface) submitNorAchievements() have been called!");
+        if (isSignedIn()) {
+            Games.Achievements.unlock(mGoogleApiClient, id);
+        } else {
+            Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void submitInAchievements(String id, int number) {
         Log.d(TAG, "(Interface) submitInAchievements() have been called!");
+        if (isSignedIn()) {
+            Games.Achievements.increment(mGoogleApiClient, id, number);
+        } else {
+            Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
