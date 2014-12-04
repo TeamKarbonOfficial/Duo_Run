@@ -150,7 +150,6 @@ import static com.badlogic.gdx.graphics.Texture.*;
     @Override
     public void create() {
 
-        googleServices.signIn();
 
         signInRetryCount = 0;
 
@@ -310,13 +309,6 @@ import static com.badlogic.gdx.graphics.Texture.*;
             /*batch.begin();
             batch.draw(splashScreen, 0f, Gdx.graphics.getHeight());
             batch.end();*/
-
-
-            //GameServices sign in.
-            if (!googleServices.isSignedIn() && signInRetryCount == 0) {
-                signInRetryCount ++;//Sign in once only.
-                googleServices.signIn();
-            }
 
             PolygonShape temp = new PolygonShape();
             temp.setAsBox(pwidth(20), pheight(20));
@@ -1018,7 +1010,6 @@ import static com.badlogic.gdx.graphics.Texture.*;
     public interface IGoogleServices {
         public void signIn();
         public void signOut();
-        public void rateGame();
         public void submitScore(String id, long score);
         public void showScores(String id);
         public void showAchievements();

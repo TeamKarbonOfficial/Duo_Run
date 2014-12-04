@@ -17,11 +17,6 @@ public class GoogleServices implements derptest.IGoogleServices {
     }
 
     @Override
-    public void rateGame() {
-
-    }
-
-    @Override
     public void submitScore(String id, long score) {
 
     }

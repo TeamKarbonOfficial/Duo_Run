@@ -113,6 +113,7 @@ public class AndroidLauncher extends AndroidApplication implements
 
     @Override
     protected void onActivityResult(int requestCode, int responseCode, Intent intent) {
+        super.onActivityResult(requestCode, responseCode, intent);
         if (requestCode == RC_SIGN_IN) {
             Log.d(TAG, "onActivityResult with requestCode == RC_SIGN_IN, responseCode="
                     + responseCode + ", intent=" + intent);
@@ -135,41 +136,38 @@ public class AndroidLauncher extends AndroidApplication implements
 
     @Override
     public void signOut() {
-
-    }
-
-    @Override
-    public void rateGame() {
-
+        Log.d(TAG, "(Interface) signOut() have been called!");
+        Games.signOut(mGoogleApiClient);
     }
 
     @Override
     public void submitScore(String id, long score) {
-
+        Log.d(TAG, "(Interface) submitScore() have been called!");
     }
 
     @Override
     public void showScores(String id) {
-
+        Log.d(TAG, "(Interface) showScores() have been called!");
     }
 
     @Override
     public void showAchievements() {
-
+        Log.d(TAG, "(Interface) showAchievements() have been called!");
     }
 
     @Override
     public void submitNorAchievements(String id) {
-
+        Log.d(TAG, "(Interface) submitNorAchievements() have been called!");
     }
 
     @Override
     public void submitInAchievements(String id, int number) {
-
+        Log.d(TAG, "(Interface) submitInAchievements() have been called!");
     }
 
     @Override
     public boolean isSignedIn() {
+        Log.d(TAG, "(Interface) isSignedIn() have been called!");
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             // signed in
             return true;
@@ -177,11 +175,10 @@ public class AndroidLauncher extends AndroidApplication implements
             //Not signed in
             return false;
         }
-
     }
 
     @Override
     public void onSignInSucceeded() {
-
+        Log.d(TAG, "(Interface) onSignInSucceeded() have been called!");
     }
 }
