@@ -129,6 +129,8 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
     ArrayList<Obstacle> obstacles;
     float obstaclesTimer;//in Seconds...
+    float obstaclesRemovalTimer;
+    boolean obstaclesRemoveFlag;
 
     public final float PixelsPerMeter = 50f;
     public float OUT_OF_BOUNDS_THRESHOLD;
@@ -347,10 +349,12 @@ import static com.badlogic.gdx.graphics.Texture.*;
                 if(!gameOver) o.translate(percent(-(7 + level) * Gdx.graphics.getDeltaTime(), 0f));//Move left (7 + level) % of screen per second..
                 else o.translate(percent(-(7 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
 
-                if (o.getPos().x < OUT_OF_BOUNDS_THRESHOLD) {//Works for game over situation as well.
+                //Remove at least 4 obstacles at a time
+                if (!gameOver && o.getPos().x < OUT_OF_BOUNDS_THRESHOLD && obstaclesRemovalTimer > 14) {
                     obstacles.remove(o);
                     x--;
                     o.dispose(world);
+                    obstaclesRemoveFlag = true;
                     continue;
                 }
 
@@ -365,6 +369,8 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
                 CreateRenderTriangles(o, triangles);
             }
+
+            if(obstaclesRemoveFlag) obstaclesRemovalTimer = 0;
 
             //#Score
             score = (int) rawscore;
@@ -504,6 +510,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
             }
 
             obstaclesTimer += Gdx.graphics.getDeltaTime();
+            obstaclesRemovalTimer += Gdx.graphics.getDeltaTime();
         }
 
         //#score display
