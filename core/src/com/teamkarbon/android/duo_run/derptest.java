@@ -354,8 +354,20 @@ import static com.badlogic.gdx.graphics.Texture.*;
                     continue;
                 }
 
+                if((!o.type && !o.passed && o.getPos().x < ball.getPos().x) ||
+                        (o.type && !o.passed && o.getPos().x < ball2.getPos().x))
+                {
+                    o.passed = true;
+                    Polygon temp = new Polygon();
+                    temp.setVertices(o.getVerticesAsFloatArray());
+                    rawscore += temp.area();
+                }
+
                 CreateRenderTriangles(o, triangles);
             }
+
+            //#Score
+            score = (int) rawscore;
 
             DrawAndUpdateRenderTriangles(triangles);
 
@@ -462,10 +474,6 @@ import static com.badlogic.gdx.graphics.Texture.*;
                 //Reset the obstacleTimer.
                 obstaclesTimer = 0;
             }
-
-            //#Score
-            rawscore = rawscore + Gdx.graphics.getDeltaTime();
-            score = (int) rawscore;
 
             //#Game over :P
             if(!gameOver) {

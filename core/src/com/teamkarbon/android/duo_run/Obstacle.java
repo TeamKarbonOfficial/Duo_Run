@@ -1,6 +1,5 @@
 package com.teamkarbon.android.duo_run;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -22,6 +21,7 @@ public class Obstacle {
     FixtureDef fixtureDef;
     Body body;
     Fixture fixture;
+    float [] localvertices;
 
     boolean type;
     float radius;
@@ -31,6 +31,8 @@ public class Obstacle {
     //Vars used when the obstacle is a button instead
     Color color;
     boolean isClicked = false;
+
+    boolean passed = false;//When the score for this obs has been counted, this value will be true.
 
     public Obstacle(PolygonShape _shape, World world, float x, float y, boolean _type)
     {
@@ -73,6 +75,9 @@ public class Obstacle {
         //The one in render triangle is deprecated
         if (!type) this.color = new Color(0.4f, 0.4f, 0.2f, 0.45f);
         else this.color = new Color(0, 0.3f, 1f, 0.45f);
+
+        //Set local (size-only) vertices so that polygonize function doens't need to be called so many times...
+        localvertices = this.getLocalVerticesAsFloatArray();
     }
     public Obstacle(PolygonShape _shape, World world, float x, float y, boolean _type, String _id)
     {
@@ -116,6 +121,9 @@ public class Obstacle {
         //The one in render triangle is deprecated
         if (!type) this.color = new Color(0.4f, 0.4f, 0.2f, 0.45f);
         else this.color = new Color(0, 0.3f, 1f, 0.45f);
+
+        //Set local (size-only) vertices so that polygonize function doens't need to be called so many times...
+        localvertices = this.getLocalVerticesAsFloatArray();
     }
     public Obstacle(CircleShape _shape, World world, float x, float y, boolean _type, float _radius, int _sides)
     {
@@ -161,6 +169,9 @@ public class Obstacle {
         //The one in render triangle is deprecated
         if (!type) this.color = new Color(0.4f, 0.4f, 0.2f, 0.45f);
         else this.color = new Color(0, 0.3f, 1f, 0.45f);
+
+        //Set local (size-only) vertices so that polygonize function doens't need to be called so many times...
+        localvertices = this.getLocalVerticesAsFloatArray();
     }
 
     public void setPos(float x, float y) { body.setTransform(x, y, 0); }
@@ -195,8 +206,18 @@ public class Obstacle {
         world.destroyBody(body);
     }
 
-    //EDIT: This function also works for circles now!!!
-    public float[] getVerticesAsFloatArray()
+    public float[] getVerticesAsFloatArray()//Simplified... Yay!
+    {
+        float[] temp = new float[localvertices.length];
+        for(int _sides = 0; _sides < sides; _sides ++)
+        {
+            temp[_sides * 2] = localvertices[_sides * 2] + this.getPos().x;
+            temp[_sides * 2 + 1] = localvertices[_sides * 2] + this.getPos().y;
+        }
+        return temp;
+    }
+
+    public float[] getLocalVerticesAsFloatArray()
     {
         Vector2 v = new Vector2();
         if(this.shape != null) {//If its a polygon shape
@@ -204,21 +225,20 @@ public class Obstacle {
 
             for (int i = 0; i < this.shape.getVertexCount(); i++) {
                 this.shape.getVertex(i, v);
-                temp[i * 2] = v.x + this.getPos().x;
-                temp[i * 2 + 1] = v.y + this.getPos().y;
+                temp[i * 2] = v.x;
+                temp[i * 2 + 1] = v.y;
             }
 
             return temp;
         }
 
         //If its a circle shape :D
-        Gdx.app.debug("circle shape", "sides: " + sides);
         float[] temp = new float[(int)sides * 2];
         for(int _sides = 0; _sides < sides; _sides ++)
         {
             v = polygonize((_sides / sides) * 360f, radius);
-            temp[_sides * 2] = v.x + this.getPos().x;
-            temp[_sides * 2 + 1] = v.y + this.getPos().y;
+            temp[_sides * 2] = v.x;
+            temp[_sides * 2 + 1] = v.y;
         }
         return temp;
     }
