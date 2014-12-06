@@ -291,12 +291,6 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
     @Override
     public void render() {
-
-        if (googleServices.isSignedIn())
-            Gdx.app.log(GAMESERVICE, "You are signed in!");
-        else
-            Gdx.app.log(GAMESERVICE, "You are logged out!");
-
         //#prerender
         Gdx.gl.glClearColor(0, 0.06f, 0.13f, 0.8f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
