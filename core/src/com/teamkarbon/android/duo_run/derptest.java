@@ -357,6 +357,12 @@ import static com.badlogic.gdx.graphics.Texture.*;
                     obstaclesRemoveFlag = true;
                     continue;
                 }
+                else if (o.getPos().x < OUT_OF_BOUNDS_THRESHOLD) {
+                    obstacles.remove(o);
+                    x--;
+                    o.dispose(world);
+                    continue;
+                }
 
                 if((!o.type && !o.passed && o.getPos().x < ball.getPos().x) ||
                         (o.type && !o.passed && o.getPos().x < ball2.getPos().x))
@@ -370,7 +376,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
                 CreateRenderTriangles(o, triangles);
             }
 
-            if(obstaclesRemoveFlag) obstaclesRemovalTimer = 0;
+            if(!gameOver && obstaclesRemoveFlag) obstaclesRemovalTimer = 0;
 
             //#Score
             score = (int) rawscore;
@@ -509,8 +515,10 @@ import static com.badlogic.gdx.graphics.Texture.*;
                 mode = gameMode.SCORE_DISPLAY;
             }
 
-            obstaclesTimer += Gdx.graphics.getDeltaTime();
-            obstaclesRemovalTimer += Gdx.graphics.getDeltaTime();
+            if(!gameOver) {
+                obstaclesTimer += Gdx.graphics.getDeltaTime();
+                obstaclesRemovalTimer += Gdx.graphics.getDeltaTime();
+            }
         }
 
         //#score display
