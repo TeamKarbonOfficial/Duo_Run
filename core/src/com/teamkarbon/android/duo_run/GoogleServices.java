@@ -7,6 +7,11 @@ package com.teamkarbon.android.duo_run;
 public class GoogleServices implements derptest.IGoogleServices {
 
     @Override
+    public void startsignIn() {
+
+    }
+
+    @Override
     public void signIn() {
 
     }

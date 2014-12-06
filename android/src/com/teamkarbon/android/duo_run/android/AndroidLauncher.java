@@ -58,10 +58,6 @@ public class AndroidLauncher extends AndroidApplication implements
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart()");
-        if (!mInSignInFlow && !mExplicitSignOut) {
-            // auto sign in
-            mGoogleApiClient.connect();
-        }
     }
 
     @Override
@@ -140,6 +136,16 @@ public class AndroidLauncher extends AndroidApplication implements
     }
 
     //These are for the Interface
+
+    @Override
+    public void startsignIn() {
+        Log.d(TAG, "(Interface) signIn() have been called!");
+        if (!mInSignInFlow && !mExplicitSignOut) {
+            // auto sign in
+            mGoogleApiClient.connect();
+        }
+    }
+
     @Override
     public void signIn() {
         Log.d(TAG, "(Interface) signIn() have been called!");

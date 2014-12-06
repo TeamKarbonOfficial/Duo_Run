@@ -151,6 +151,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
     @Override
     public void create() {
 
+        googleServices.startsignIn();
 
         signInRetryCount = 0;
 
@@ -290,6 +291,11 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
     @Override
     public void render() {
+
+        if (googleServices.isSignedIn())
+            Gdx.app.log(GAMESERVICE, "You are signed in!");
+        else
+            Gdx.app.log(GAMESERVICE, "You are logged out!");
 
         //#prerender
         Gdx.gl.glClearColor(0, 0.06f, 0.13f, 0.8f);
@@ -1003,6 +1009,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
     * Eg. googleServices.submitScore(score, LEADERBOARD_NORMAL);
     */
     public interface IGoogleServices {
+        public void startsignIn();
         public void signIn();
         public void signOut();
         public void submitScore(String id, long score);
