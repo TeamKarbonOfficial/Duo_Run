@@ -20,18 +20,20 @@ That's all folks...
 TODO
 =======
 - Replace Ball with sprites
-- Make the obstacles.  **done**
-- Make them work. **done**
+- Make the obstacles.  **DONE**
+- Make them work. **DONE**
     - Get polygons done **done**
     - Get them to render via filled triangles **done**
     - Get them to have the proper colours and collision checks **done**
     - Make them bigger **done**
     - Make them spawn properly **done**
     - Make them less laggy...  **done**
+    - Make a proper scoring system based on area of obstacles covered **done**
 - Find out a way to check for collisions **done**
 - Actually check for collisions **done**
 - Make an endgame situation function
-- Create levels *suggestions?*
+    - Find out what to display
+- Create levels **done**
 - Create a level select screen **DONE**
     - Make proper GUI **DONE**
 - Create a main menu screen
@@ -48,7 +50,7 @@ TODO
 - Have some options/whatever
 - Add Game Service **In progress**
     - Get necessary libraries **Done**
-    - Log in to Game Services :/
+    - Log in to Game Services **Done**
     - Add at least 5 achievements (Required by Playstore) **suggestions?**
     - Add Events??
     - Add leaderboards for all the gamemodes
