@@ -212,7 +212,7 @@ public class Obstacle {
         for(int _sides = 0; _sides < sides; _sides ++)
         {
             temp[_sides * 2] = localvertices[_sides * 2] + this.getPos().x;
-            temp[_sides * 2 + 1] = localvertices[_sides * 2] + this.getPos().y;
+            temp[_sides * 2 + 1] = localvertices[_sides * 2 + 1] + this.getPos().y;
         }
         return temp;
     }

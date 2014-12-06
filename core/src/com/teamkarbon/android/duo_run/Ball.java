@@ -19,6 +19,7 @@ public class Ball {
     Body body;
     Fixture fixture;
     final float sides = 45;
+    float [] localvertices;
 
     public Ball(float _x, float _y, World _world, float _radius){
         //Initialise classes
@@ -60,13 +61,24 @@ public class Ball {
 
     public float[] getVerticesAsFloatArray()
     {
+        float[] temp = new float[localvertices.length];
+        for(int _sides = 0; _sides < sides; _sides ++)
+        {
+            temp[_sides * 2] = localvertices[_sides * 2] + this.getPos().x;
+            temp[_sides * 2 + 1] = localvertices[_sides * 2 + 1] + this.getPos().y;
+        }
+        return temp;
+    }
+
+    public float[] getLocalVerticesAsFloatArray()
+    {
         Vector2 v = new Vector2();
         float[] temp = new float[(int)sides * 2];
         for(int _sides = 0; _sides < sides; _sides ++)
         {
             v = polygonize((_sides / sides) * 360f, radius);
-            temp[_sides * 2] = v.x + this.getPos().x;
-            temp[_sides * 2 + 1] = v.y + this.getPos().y;
+            temp[_sides * 2] = v.x;
+            temp[_sides * 2 + 1] = v.y;
         }
         return temp;
     }
