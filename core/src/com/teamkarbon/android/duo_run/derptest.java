@@ -317,9 +317,10 @@ import static com.badlogic.gdx.graphics.Texture.*;
             temp.setAsBox(pwidth(20), pheight(20));
 
             //Create a new obstacle with id "play"
-            Obstacle o = new Obstacle(temp, world, pwidth(60), pheight(48), false, "play");
-            obstacles.add(o);
-
+            obstacles.add(new Obstacle(temp, world, pwidth(60), pheight(48), false, "play"));//Play the game
+            obstacles.add(new Obstacle(temp, world, pwidth(90), pheight(48), true, "options"));//Go to options
+            obstacles.add(new Obstacle(temp, world, pwidth(120), pheight(48), false, "stats"));//See all game service - related stuff
+            obstacles.add(new Obstacle(temp, world, pwidth(84), pheight(73), false, "customize"));//Just an idea...
             mode = gameMode.MAIN_MENU;
         }
 
