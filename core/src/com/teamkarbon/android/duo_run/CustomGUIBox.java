@@ -33,6 +33,12 @@ public class CustomGUIBox {
 
     private CustomButton tempButton;
 
+    ArrayList<CheckBox> checkBoxes;
+
+    private float count;
+    private Vector2 tempPos;
+    private Vector2 tempSize;
+
     public CustomGUIBox(SpriteBatch _batch, String _DialogMessage, Vector2 _pos, Vector2 _size, Texture _DialogPic,
                         String[] _options, Color _color, BoxType _boxType)
     {
@@ -46,17 +52,20 @@ public class CustomGUIBox {
         boxType = _boxType;
         tempButton = null;
 
+        count = 0;
+        tempPos = new Vector2();
+        tempSize = new Vector2();
+
         if(boxType == BoxType.MODESELECT)
         {
             buttons = new ArrayList<CustomButton>();
-            float count = 0;
+            count = 0;
             if(options.length <= 3) {//Single line for all buttons
                 for (String s : options) {
-                    Vector2 tempPos = new Vector2();
                     //tempPos is position of buttons where (0, 0) is the bottom left of the gui box
                     tempPos.x = pwidth(10f + (count / (float) options.length) * 80f);
                     tempPos.y = pheight(10f);
-                    Vector2 tempSize = new Vector2(pwidth(70f / (float) options.length), pheight(45f));
+                    tempSize.set(pwidth(70f / (float) options.length), pheight(45f));
 
                     buttons.add(new CustomButton(tempPos, tempSize, options[(int) count], invert(color).sub(0.1f, 0.1f, 0.1f, 0f)));
                     Gdx.app.debug("Button Pos", buttons.get((int) count).pos.x + ", " + buttons.get((int) count).pos.y);
@@ -69,19 +78,32 @@ public class CustomGUIBox {
                     Vector2 tempPos = new Vector2();
                     if(count < 2) { // first and second boxes above
                         tempPos.x = pwidth(10f + (count / 2) * 80f);
-                        tempPos.y = pheight(10f);
+                        tempPos.y = pheight(50f);
                     }
                     else // The third and fourth below
                     {
                         tempPos.x = pwidth(10f + (count / 2f) * 80f);
-                        tempPos.y = pheight(50f);
+                        tempPos.y = pheight(10f);
                     }
-                    Vector2 tempSize = new Vector2(pwidth(70f / 2), pheight(35f));
+                    tempSize.set(pwidth(70f / 2), pheight(35f));
 
                     buttons.add(new CustomButton(tempPos, tempSize, options[(int) count], invert(color).sub(0.1f, 0.1f, 0.1f, 0f)));
                     Gdx.app.debug("Button Pos", buttons.get((int) count).pos.x + ", " + buttons.get((int) count).pos.y);
                     count++;
                 }
+            }
+        }
+        if(boxType == BoxType.CHECKBOX)
+        {
+            checkBoxes = new ArrayList<CheckBox>();
+            count = 0;
+            for(String s : options)
+            {
+                tempPos.x = pwidth(10f);
+                tempPos.y = pheight(85f - (count * 15f));
+                tempSize.set(pwidth(10f), pheight(10f));
+
+                checkBoxes.add(new CheckBox(tempPos, tempSize, s, new Color(0.2f + (count * 0.1f), 0.2f + (count * 0.1f), 0.2f, 0.4f)));
             }
         }
     }
@@ -144,12 +166,12 @@ public class CustomGUIBox {
     }
 
     //This set of pwidth and pheight is regarding the local size.x and size.y values
-    private float pwidth(float percent)
+    public float pwidth(float percent)
     {
         return ((percent / 100f) * size.x);
     }
 
-    private float pheight(float percent)
+    public float pheight(float percent)
     {
         return ((percent / 100f) * size.y);
     }
