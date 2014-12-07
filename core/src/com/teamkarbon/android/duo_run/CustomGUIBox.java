@@ -50,17 +50,38 @@ public class CustomGUIBox {
         {
             buttons = new ArrayList<CustomButton>();
             float count = 0;
-            for(String s : options)
-            {
-                Vector2 tempPos = new Vector2();
-                //tempPos is position of buttons where (0, 0) is the bottom left of the gui box
-                tempPos.x = pwidth(10f + (count / (float)options.length) * 80f);
-                tempPos.y = pheight(10f);
-                Vector2 tempSize = new Vector2(pwidth(70f / (float)options.length), pheight(45f));
+            if(options.length <= 3) {//Single line for all buttons
+                for (String s : options) {
+                    Vector2 tempPos = new Vector2();
+                    //tempPos is position of buttons where (0, 0) is the bottom left of the gui box
+                    tempPos.x = pwidth(10f + (count / (float) options.length) * 80f);
+                    tempPos.y = pheight(10f);
+                    Vector2 tempSize = new Vector2(pwidth(70f / (float) options.length), pheight(45f));
 
-                buttons.add(new CustomButton(tempPos, tempSize, options[(int)count], invert(color).sub(0.1f, 0.1f, 0.1f, 0f)));
-                Gdx.app.debug("Button Pos", buttons.get((int)count).pos.x + ", " + buttons.get((int)count).pos.y);
-                count++;
+                    buttons.add(new CustomButton(tempPos, tempSize, options[(int) count], invert(color).sub(0.1f, 0.1f, 0.1f, 0f)));
+                    Gdx.app.debug("Button Pos", buttons.get((int) count).pos.x + ", " + buttons.get((int) count).pos.y);
+                    count++;
+                }
+            }
+            else if(options.length == 4)//2 x 2
+            {
+                for(String s : options) {
+                    Vector2 tempPos = new Vector2();
+                    if(count < 2) { // first and second boxes above
+                        tempPos.x = pwidth(10f + (count / 2) * 80f);
+                        tempPos.y = pheight(10f);
+                    }
+                    else // The third and fourth below
+                    {
+                        tempPos.x = pwidth(10f + (count / 2f) * 80f);
+                        tempPos.y = pheight(50f);
+                    }
+                    Vector2 tempSize = new Vector2(pwidth(70f / 2), pheight(35f));
+
+                    buttons.add(new CustomButton(tempPos, tempSize, options[(int) count], invert(color).sub(0.1f, 0.1f, 0.1f, 0f)));
+                    Gdx.app.debug("Button Pos", buttons.get((int) count).pos.x + ", " + buttons.get((int) count).pos.y);
+                    count++;
+                }
             }
         }
     }
