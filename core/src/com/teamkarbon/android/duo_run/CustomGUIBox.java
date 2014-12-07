@@ -117,6 +117,10 @@ public class CustomGUIBox {
                 if(b.isClicked(touchData, this.pos)) tempButton = b;
             }
         }
+        else if (boxType == BoxType.CHECKBOX)
+        {
+
+        }
 
         batch.end();
         return tempButton;

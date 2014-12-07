@@ -572,21 +572,24 @@ import static com.badlogic.gdx.graphics.Texture.*;
                 CreateRenderTriangles(o, triangles);
 
                 //#buttons
+
+                //Get those Polygons ready..
+                obs.setVertices(o.getVerticesAsFloatArray());
+                obs.translate(0f, -pheight(2f));//Move it down a bit to ensure expected collision.
+                playerLeft.setVertices(ball.getVerticesAsFloatArray());
+                playerRight.setVertices(ball2.getVerticesAsFloatArray());
+
                 //play button
                 if (o.id.equals("play")) {
-
-                    obs.setVertices(o.getVerticesAsFloatArray());
-                    obs.translate(0f, -pheight(2f));//Move it down a bit to ensure expected collision.
-                    playerLeft.setVertices(ball.getVerticesAsFloatArray());
-                    playerRight.setVertices(ball2.getVerticesAsFloatArray());
 
                     bigfont.setScale(3f);
                     batch.begin();
                     bigfont.setColor(new Color(1, 1, 1, 1));
                     bigfont.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - 40f,
                             descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) - 20f);
+
                     smallfont.setScale(1.5f);
-                    smallfont.setColor(new Color(1, 1, 1, 1));
+                    smallfont.setColor(new Color(1, 1, 1, 1));//TODO: Remove this debug in the near future :P
                     smallfont.draw(batch, "leftint: " + Intersector.overlapConvexPolygons(obs, playerLeft), 100, 400);
                     smallfont.draw(batch, "rightint: " + Intersector.overlapConvexPolygons(obs, playerRight), 100, 300);
                     batch.end();
@@ -608,7 +611,27 @@ import static com.badlogic.gdx.graphics.Texture.*;
                 }
                 else if(o.id == "options")
                 {
+                    bigfont.setScale(3f);
+                    batch.begin();
+                    bigfont.setColor(new Color(1, 1, 1, 1));
+                    bigfont.draw(batch, "Options", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - 40f,
+                            descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) - 20f);
+                    batch.end();
 
+                    if ((Intersector.overlapConvexPolygons(obs, playerLeft) && !o.type) ||
+                            (Intersector.overlapConvexPolygons(obs, playerRight) && o.type)) {
+                        mode = gameMode.OPTIONS;
+                        Color c = new Color();
+                        c.set(0.8f, 0.8f, 0.8f, 0.9f);
+                        o.setColor(c);
+                        o.isClicked = true;
+                        lerp = 0f;
+                        lerpFlag = true;
+                        //TODO: Make a proper options GUIBox
+                        String[] tempOptions = new String[]{"Vibrate"};
+                        customGUIBox = new CustomGUIBox(batch, "Options", descalepercent(150, 30), descalepercent(80, 60),
+                                dialogBoxTexture, tempOptions, new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.CHECKBOX);
+                    }
                 }
                 else if(o.id == "stats")
                 {
