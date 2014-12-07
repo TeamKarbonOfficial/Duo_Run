@@ -143,6 +143,12 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
     Texture splashScreen;//TODO: Make a logo/splash screen to display on init and perhaps other places when needed...
 
+    //And here are all the psuedorandom variables concerning performance improvements so the new keyword doesn't have to be
+    //called so many times..
+    Polygon obs;
+    Polygon playerLeft;
+    Polygon playerRight;
+
     //Constructor for game services interface
     public derptest(IGoogleServices googleServices) {
         super();
@@ -282,6 +288,10 @@ import static com.badlogic.gdx.graphics.Texture.*;
         obstaclesTimer = 0;//This makes sure that the obstacles are not too close to other obstacles
 
         OUT_OF_BOUNDS_THRESHOLD = pwidth(-120f);
+
+        obs = new Polygon();
+        playerLeft = new Polygon();
+        playerRight = new Polygon();
 
         //TODO: INFO: Debug!!! Remove when game functionality complete!
         //#debug init
@@ -564,15 +574,11 @@ import static com.badlogic.gdx.graphics.Texture.*;
                 //#buttons
                 //play button
                 if (o.id.equals("play")) {
-                    Polygon obs = new Polygon();
-                    Polygon playerleft = new Polygon();
-                    Polygon playerright = new Polygon();
 
-                    //TODO: Test!
                     obs.setVertices(o.getVerticesAsFloatArray());
-                    obs.translate(0f, -pheight(3f));//Move it down a bit to ensure expected collision.
-                    playerleft.setVertices(ball.getVerticesAsFloatArray());
-                    playerright.setVertices(ball2.getVerticesAsFloatArray());
+                    obs.translate(0f, -pheight(2f));//Move it down a bit to ensure expected collision.
+                    playerLeft.setVertices(ball.getVerticesAsFloatArray());
+                    playerRight.setVertices(ball2.getVerticesAsFloatArray());
 
                     bigfont.setScale(3f);
                     batch.begin();
@@ -581,12 +587,12 @@ import static com.badlogic.gdx.graphics.Texture.*;
                             descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) - 20f);
                     smallfont.setScale(1.5f);
                     smallfont.setColor(new Color(1, 1, 1, 1));
-                    smallfont.draw(batch, "leftint: " + Intersector.overlapConvexPolygons(obs, playerleft), 100, 400);
-                    smallfont.draw(batch, "rightint: " + Intersector.overlapConvexPolygons(obs, playerright), 100, 300);
+                    smallfont.draw(batch, "leftint: " + Intersector.overlapConvexPolygons(obs, playerLeft), 100, 400);
+                    smallfont.draw(batch, "rightint: " + Intersector.overlapConvexPolygons(obs, playerRight), 100, 300);
                     batch.end();
 
-                    if ((Intersector.overlapConvexPolygons(obs, playerleft) && !o.type) ||
-                            (Intersector.overlapConvexPolygons(obs, playerright) && o.type)) {
+                    if ((Intersector.overlapConvexPolygons(obs, playerLeft) && !o.type) ||
+                            (Intersector.overlapConvexPolygons(obs, playerRight) && o.type)) {
                         mode = gameMode.GAME_INIT;
                         Color c = new Color();
                         c.set(0.8f, 0.8f, 0.8f, 0.9f);
@@ -599,6 +605,18 @@ import static com.badlogic.gdx.graphics.Texture.*;
                         customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(150, 30), descalepercent(80, 60),
                                 dialogBoxTexture, tempOptions, new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.MODESELECT);
                     }
+                }
+                else if(o.id == "options")
+                {
+
+                }
+                else if(o.id == "stats")
+                {
+
+                }
+                else if(o.id == "customize")
+                {
+
                 }
             }
             DrawAndUpdateRenderTriangles(triangles);
