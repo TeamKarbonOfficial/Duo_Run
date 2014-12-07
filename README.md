@@ -32,13 +32,15 @@ TODO
 - Find out a way to check for collisions **done**
 - Actually check for collisions **done**
 - Make an endgame situation function
-    - Find out what to display
+    - Extend the CustomGUIBox to fit 4 buttons in a 2 x 2 button matrix. **DONE**
+    - Display a 2 x 2 button matrix consisting of "Leaderboard", "Menu", "Play Again" and "Achievements (erm...)" **In progress**
+    - Figure out if that Achievements button should be in the main menu instead... :P
 - Create levels **done**
 - Create a level select screen **DONE**
     - Make proper GUI **DONE**
 - Create a main menu screen
     - Create an interface. **done**
-        - The user collides with the buttons using the respectively coloured balls to "click" the buttons.**done**
+        - The user collides with the buttons using the respectively coloured balls to "click" the buttons. **done**
         - Make the interface work **done**
     - GO! button **DONE**
     - Options button
