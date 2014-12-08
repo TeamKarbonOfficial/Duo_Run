@@ -32,19 +32,22 @@ TODO
 - Find out a way to check for collisions **done**
 - Actually check for collisions **done**
 - Make an endgame situation function
-    - Find out what to display
+    - Extend the CustomGUIBox to fit 4 buttons in a 2 x 2 button matrix. **DONE**
+    - Display a proper integer score in a rather convincing font. **In progress**
+    - Display a 2 x 2 button matrix consisting of "Leaderboard", "Menu", "Play Again" and "Achievements" **In progress*
+    - Figure out if that Achievements button should be in the main menu instead... :P
 - Create levels **done**
 - Create a level select screen **DONE**
     - Make proper GUI **DONE**
 - Create a main menu screen
     - Create an interface. **done**
-        - The user collides with the buttons using the respectively coloured balls to "click" the buttons.**done**
+        - The user collides with the buttons using the respectively coloured balls to "click" the buttons. **done**
         - Make the interface work **done**
     - GO! button **DONE**
     - Options button
     - About button
     - Exit button *?*
-    - Gamer Services button **onSignInSucceeded()?**
+    - Gamer Services button
     - Help button
         - Note: This button is a... button... Use helpbutton.png for this one.
 - Have some options/whatever
@@ -53,5 +56,5 @@ TODO
     - Log in to Game Services **Done**
     - Add at least 5 achievements (Required by Playstore) **suggestions?**
     - Add Events??
-    - Add leaderboards for all the gamemodes
+    - Add leaderboards for all the gamemodes **Done**
 - Test it on other devices too (to make sure the resolutions work and that the graphics aren't off-screen)

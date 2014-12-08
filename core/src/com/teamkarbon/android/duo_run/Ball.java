@@ -43,6 +43,8 @@ public class Ball {
         //Init fixture
         fixtureDef.shape = shape;
         fixture = body.createFixture(fixtureDef);
+
+        localvertices = this.getLocalVerticesAsFloatArray();
     }
 
     public void setFixture(float _d, float _r, float _f)//density, restitution, friction

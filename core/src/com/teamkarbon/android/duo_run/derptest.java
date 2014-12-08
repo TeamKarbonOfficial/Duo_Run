@@ -152,6 +152,12 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
     Texture splashScreen;//TODO: Make a logo/splash screen to display on init and perhaps other places when needed...
 
+    //And here are all the psuedorandom variables concerning performance improvements so the new keyword doesn't have to be
+    //called so many times..
+    Polygon obs;
+    Polygon playerLeft;
+    Polygon playerRight;
+
     //Constructor for game services interface
     public derptest(IGoogleServices googleServices) {
         super();
@@ -344,6 +350,10 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
         OUT_OF_BOUNDS_THRESHOLD = pwidth(-120f);
 
+        obs = new Polygon();
+        playerLeft = new Polygon();
+        playerRight = new Polygon();
+
         //TODO: INFO: Debug!!! Remove when game functionality complete!
         //#debug init
         mode = gameMode.MAIN_MENU_INIT;
@@ -379,9 +389,10 @@ import static com.badlogic.gdx.graphics.Texture.*;
             temp.setAsBox(pwidth(20), pheight(20));
 
             //Create a new obstacle with id "play"
-            Obstacle o = new Obstacle(temp, world, pwidth(60), pheight(48), false, "play");
-            obstacles.add(o);
-
+            obstacles.add(new Obstacle(temp, world, pwidth(60), pheight(48), false, "play"));//Play the game
+            obstacles.add(new Obstacle(temp, world, pwidth(90), pheight(48), true, "options"));//Go to options
+            obstacles.add(new Obstacle(temp, world, pwidth(120), pheight(48), false, "stats"));//See all game service - related stuff
+            obstacles.add(new Obstacle(temp, world, pwidth(84), pheight(73), false, "customize"));//Just an idea...
             mode = gameMode.MAIN_MENU;
         }
 
@@ -624,31 +635,30 @@ import static com.badlogic.gdx.graphics.Texture.*;
                 CreateRenderTriangles(o, triangles);
 
                 //#buttons
+
+                //Get those Polygons ready..
+                obs.setVertices(o.getVerticesAsFloatArray());
+                obs.translate(0f, -pheight(2f));//Move it down a bit to ensure expected collision.
+                playerLeft.setVertices(ball.getVerticesAsFloatArray());
+                playerRight.setVertices(ball2.getVerticesAsFloatArray());
+
                 //play button
                 if (o.id.equals("play")) {
-                    Polygon obs = new Polygon();
-                    Polygon playerleft = new Polygon();
-                    Polygon playerright = new Polygon();
-
-                    //TODO: Test!
-                    obs.setVertices(o.getVerticesAsFloatArray());
-                    obs.translate(0f, -pheight(3f));//Move it down a bit to ensure expected collision.
-                    playerleft.setVertices(ball.getVerticesAsFloatArray());
-                    playerright.setVertices(ball2.getVerticesAsFloatArray());
 
                     bigfont.setScale(3f);
                     batch.begin();
                     bigfont.setColor(new Color(1, 1, 1, 1));
                     bigfont.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - 40f,
                             descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) - 20f);
+
                     smallfont.setScale(1.5f);
-                    smallfont.setColor(new Color(1, 1, 1, 1));
-                    smallfont.draw(batch, "leftint: " + Intersector.overlapConvexPolygons(obs, playerleft), 100, 400);
-                    smallfont.draw(batch, "rightint: " + Intersector.overlapConvexPolygons(obs, playerright), 100, 300);
+                    smallfont.setColor(new Color(1, 1, 1, 1));//TODO: Remove this debug in the near future :P
+                    smallfont.draw(batch, "leftint: " + Intersector.overlapConvexPolygons(obs, playerLeft), 100, 400);
+                    smallfont.draw(batch, "rightint: " + Intersector.overlapConvexPolygons(obs, playerRight), 100, 300);
                     batch.end();
 
-                    if ((Intersector.overlapConvexPolygons(obs, playerleft) && !o.type) ||
-                            (Intersector.overlapConvexPolygons(obs, playerright) && o.type)) {
+                    if ((Intersector.overlapConvexPolygons(obs, playerLeft) && !o.type) ||
+                            (Intersector.overlapConvexPolygons(obs, playerRight) && o.type)) {
                         mode = gameMode.GAME_INIT;
                         Color c = new Color();
                         c.set(0.8f, 0.8f, 0.8f, 0.9f);
@@ -661,6 +671,38 @@ import static com.badlogic.gdx.graphics.Texture.*;
                         customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(150, 30), descalepercent(80, 60),
                                 dialogBoxTexture, tempOptions, new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.MODESELECT);
                     }
+                }
+                else if(o.id == "options")
+                {
+                    bigfont.setScale(3f);
+                    batch.begin();
+                    bigfont.setColor(new Color(1, 1, 1, 1));
+                    bigfont.draw(batch, "Options", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - 40f,
+                            descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) - 20f);
+                    batch.end();
+
+                    if ((Intersector.overlapConvexPolygons(obs, playerLeft) && !o.type) ||
+                            (Intersector.overlapConvexPolygons(obs, playerRight) && o.type)) {
+                        mode = gameMode.OPTIONS;
+                        Color c = new Color();
+                        c.set(0.8f, 0.8f, 0.8f, 0.9f);
+                        o.setColor(c);
+                        o.isClicked = true;
+                        lerp = 0f;
+                        lerpFlag = true;
+                        //TODO: Make a proper options GUIBox
+                        String[] tempOptions = new String[]{"Vibrate"};
+                        customGUIBox = new CustomGUIBox(batch, "Options", descalepercent(150, 30), descalepercent(80, 60),
+                                dialogBoxTexture, tempOptions, new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.CHECKBOX);
+                    }
+                }
+                else if(o.id == "stats")
+                {
+
+                }
+                else if(o.id == "customize")
+                {
+
                 }
             }
             DrawAndUpdateRenderTriangles(triangles);
