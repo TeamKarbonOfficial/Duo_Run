@@ -178,6 +178,8 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
         Table table = new Table();
 
+
+
         skin.getFont("default-font").setScale(4f, 4f);
 
         TextButton buttonAchievements = new TextButton("Achievements", skin);
