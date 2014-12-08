@@ -128,6 +128,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
     Boolean Force2 = false;
     int level;
     int score;
+    int pad;
     float lerp;//Linear interpolation (Cool animation when shifting between main menu -> game init -> game ;)
     boolean lerpFlag;
     float rawscore = 0;
@@ -170,10 +171,14 @@ import static com.badlogic.gdx.graphics.Texture.*;
         googleServices.startsignIn();
 
         //Show Score (Sorry if it screws up anything xD)
+        pad = ((Gdx.graphics.getWidth() + Gdx.graphics.getHeight())/285);
+
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         stage = new Stage(new ScreenViewport());
 
         Table table = new Table();
+
+        skin.getFont("default-font").setScale(4f, 4f);
 
         TextButton buttonAchievements = new TextButton("Achievements", skin);
         TextButton buttonLeaderboard = new TextButton("Leaderboard", skin);
@@ -181,41 +186,44 @@ import static com.badlogic.gdx.graphics.Texture.*;
         TextButton buttonAgain = new TextButton("Play Again", skin);
         labelScore = new Label("Score", skin);
 
+        //FIXME: Button Listeners doesn't work for some strange reason.
         buttonAchievements.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //TODO
-            }
+                Gdx.app.log("button", "clicked");
+                googleServices.showAchievements();
+            };
         });
 
         buttonLeaderboard.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //TODO
-            }
+                Gdx.app.log("button", "clicked");
+                googleServices.showScores(LEADERBOARD_NORMAL);
+            };
         });
 
         buttonMenu.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //TODO
-            }
+                Gdx.app.log("button", "clicked");
+            };
         });
 
         buttonAgain.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                //TODO
-            }
+                Gdx.app.log("button", "clicked");
+            };
         });
 
 
         table.row();
         table.add(labelScore).colspan(2);
-        table.row().height(Gdx.graphics.getHeight() / 4).width(Gdx.graphics.getWidth() / 3).pad(10);
+        table.row().height(Gdx.graphics.getHeight() / 4).width(Gdx.graphics.getWidth() / 3).pad(pad);
         table.add(buttonAchievements);
         table.add(buttonLeaderboard);
-        table.row().height(Gdx.graphics.getHeight() / 4).width(Gdx.graphics.getWidth() / 3).pad(10);
+        table.row().height(Gdx.graphics.getHeight() / 4).width(Gdx.graphics.getWidth() / 3).pad(pad);
         table.add(buttonMenu);
         table.add(buttonAgain);
 
@@ -356,8 +364,9 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
         //TODO: INFO: Debug!!! Remove when game functionality complete!
         //#debug init
-        mode = gameMode.MAIN_MENU_INIT;
-        //mode = gameMode.SCORE_DISPLAY;
+        //mode = gameMode.MAIN_MENU_INIT;
+        mode = gameMode.SCORE_DISPLAY;
+        //mode = gameMode.GAME;
         level = 1;
         instaDeathMode = true;
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
