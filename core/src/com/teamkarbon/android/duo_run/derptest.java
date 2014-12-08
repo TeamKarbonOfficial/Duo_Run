@@ -102,8 +102,6 @@ import static com.badlogic.gdx.graphics.Texture.*;
     private final String LEADERBOARD_NORMAL = "CgkIppTW5vgMEAIQAQ";
     private final String LEADERBOARD_INSTADEATH = "CgkIppTW5vgMEAIQAg";
 
-    int signInRetryCount;
-
     gameMode mode; //A custom enum to manage multiple screens. (Game, main menu etc)
 
     ShapeRenderer shapeRenderer;
@@ -219,8 +217,6 @@ import static com.badlogic.gdx.graphics.Texture.*;
         stage.addActor(table);
 
         Gdx.input.setInputProcessor(stage);
-
-        signInRetryCount = 0;
 
         //Load in ball's texture
         //Download textures from "http://teamkarbon.com/cloud/public.php?service=files&t=69d7aca788e27f04971fad1bd79a314c"
