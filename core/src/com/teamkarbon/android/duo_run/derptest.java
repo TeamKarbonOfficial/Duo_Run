@@ -23,6 +23,14 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
 
@@ -114,6 +122,9 @@ import static com.badlogic.gdx.graphics.Texture.*;
     BitmapFont bigfont;
     Texture smallfonttexture;//These textures allow alpha filtering, which will then make the text look smoother :P
     Texture bigfonttexture;
+    Skin skin;
+    Stage stage;
+    Label labelScore;
 
     Boolean Force = false;
     Boolean Force2 = false;
@@ -149,11 +160,65 @@ import static com.badlogic.gdx.graphics.Texture.*;
         derptest.googleServices = googleServices;
     }
 
-
     @Override
     public void create() {
 
         googleServices.startsignIn();
+
+        //Show Score (Sorry if it screws up anything xD)
+        skin = new Skin(Gdx.files.internal("uiskin.json"));
+        stage = new Stage(new ScreenViewport());
+
+        Table table = new Table();
+
+        TextButton buttonAchievements = new TextButton("Achievements", skin);
+        TextButton buttonLeaderboard = new TextButton("Leaderboard", skin);
+        TextButton buttonMenu = new TextButton("Main Menu", skin);
+        TextButton buttonAgain = new TextButton("Play Again", skin);
+        labelScore = new Label("Score", skin);
+
+        buttonAchievements.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                //TODO
+            }
+        });
+
+        buttonLeaderboard.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                //TODO
+            }
+        });
+
+        buttonMenu.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                //TODO
+            }
+        });
+
+        buttonAgain.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                //TODO
+            }
+        });
+
+
+        table.row();
+        table.add(labelScore).colspan(2);
+        table.row().height(Gdx.graphics.getHeight() / 4).width(Gdx.graphics.getWidth() / 3).pad(10);
+        table.add(buttonAchievements);
+        table.add(buttonLeaderboard);
+        table.row().height(Gdx.graphics.getHeight() / 4).width(Gdx.graphics.getWidth() / 3).pad(10);
+        table.add(buttonMenu);
+        table.add(buttonAgain);
+
+        table.setFillParent(true);
+        stage.addActor(table);
+
+        Gdx.input.setInputProcessor(stage);
 
         signInRetryCount = 0;
 
@@ -286,6 +351,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
         //TODO: INFO: Debug!!! Remove when game functionality complete!
         //#debug init
         mode = gameMode.MAIN_MENU_INIT;
+        //mode = gameMode.SCORE_DISPLAY;
         level = 1;
         instaDeathMode = true;
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
@@ -522,9 +588,10 @@ import static com.badlogic.gdx.graphics.Texture.*;
         }
 
         //#score display
-        else if (mode == gameMode.SCORE_DISPLAY)
-        {
-
+        else if (mode == gameMode.SCORE_DISPLAY) {
+            labelScore.setText(String.valueOf(score));
+            stage.act();
+            stage.draw();
         }
 
         //#main menu
@@ -878,6 +945,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
         // dispose of all the native resources
         //balltexture.dispose();
         //ball2texture.dispose();
+        stage.dispose();
         batch.dispose();
     }
 
