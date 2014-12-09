@@ -77,12 +77,12 @@ public class CustomGUIBox {
                 for(String s : options) {
                     Vector2 tempPos = new Vector2();
                     if(count < 2) { // first and second boxes above
-                        tempPos.x = pwidth(10f + (count / 2) * 80f);
+                        tempPos.x = pwidth(10f + (count / 2f) * 80f);
                         tempPos.y = pheight(50f);
                     }
                     else // The third and fourth below
                     {
-                        tempPos.x = pwidth(10f + (count / 2f) * 80f);
+                        tempPos.x = pwidth(10f + ((count - 2f) / 2f) * 80f);
                         tempPos.y = pheight(10f);
                     }
                     tempSize.set(pwidth(70f / 2), pheight(35f));

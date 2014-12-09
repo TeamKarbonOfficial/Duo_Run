@@ -127,7 +127,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
     Boolean Force = false;
     Boolean Force2 = false;
     int level;
-    int score;
+    int score = 0;
     int pad;
     float lerp;//Linear interpolation (Cool animation when shifting between main menu -> game init -> game ;)
     boolean lerpFlag;
@@ -171,78 +171,10 @@ import static com.badlogic.gdx.graphics.Texture.*;
         googleServices.startsignIn();
 
         Vector2 dialogvects = new Vector2();
-        dialogvects.add(0, 0);
+        dialogvects.add((float)(Gdx.graphics.getWidth() * 0.05), (float)(Gdx.graphics.getHeight() * 0.05));
 
         Vector2 size = new Vector2();
-        size.add(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-        new CustomGUIBox(batch, String.valueOf(score), dialogvects, size, dialogBoxTexture, new String[] {
-                "1","2","3","4"
-        }, Color.CYAN, CustomGUIBox.BoxType.MODESELECT);
-
-        //Show Score (Sorry if it screws up anything xD)
-        pad = ((Gdx.graphics.getWidth() + Gdx.graphics.getHeight())/285);
-
-        skin = new Skin(Gdx.files.internal("uiskin.json"));
-        stage = new Stage(new ScreenViewport());
-
-        Table table = new Table();
-
-        table.setDebug(true);
-
-        skin.getFont("default-font").setScale(4f, 4f);
-
-        TextButton buttonAchievements = new TextButton("Achievements", skin);
-        TextButton buttonLeaderboard = new TextButton("Leaderboard", skin);
-        TextButton buttonMenu = new TextButton("Main Menu", skin);
-        TextButton buttonAgain = new TextButton("Play Again", skin);
-        labelScore = new Label("Score", skin);
-
-        //FIXME: Button Listeners doesn't work for some strange reason.
-        buttonAchievements.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("button", "clicked");
-                googleServices.showAchievements();
-            }
-        });
-
-        buttonLeaderboard.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("button", "clicked");
-                googleServices.showScores(LEADERBOARD_NORMAL);
-            }
-        });
-
-        buttonMenu.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("button", "clicked");
-            }
-        });
-
-        buttonAgain.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("button", "clicked");
-            }
-        });
-
-
-        table.row();
-        table.add(labelScore).colspan(2);
-        table.row().height(Gdx.graphics.getHeight() / 4).width(Gdx.graphics.getWidth() / 3).pad(pad);
-        table.add(buttonAchievements);
-        table.add(buttonLeaderboard);
-        table.row().height(Gdx.graphics.getHeight() / 4).width(Gdx.graphics.getWidth() / 3).pad(pad);
-        table.add(buttonMenu);
-        table.add(buttonAgain);
-
-        table.setFillParent(true);
-        stage.addActor(table);
-
-        Gdx.input.setInputProcessor(stage);
+        size.add((float)(Gdx.graphics.getWidth() * 0.9), (float)(Gdx.graphics.getHeight() * 0.9));
 
         //Load in ball's texture
         //Download textures from "http://teamkarbon.com/cloud/public.php?service=files&t=69d7aca788e27f04971fad1bd79a314c"
@@ -373,6 +305,10 @@ import static com.badlogic.gdx.graphics.Texture.*;
         obs = new Polygon();
         playerLeft = new Polygon();
         playerRight = new Polygon();
+
+        customGUIBox = new CustomGUIBox(batch, String.valueOf(score), dialogvects, size, dialogBoxTexture, new String[]{
+                "Achievements", "Leaderboard", "Main Menu", "Play Again"
+        }, new Color(0.1f, 0.4f, 0.1f, 0.5f), CustomGUIBox.BoxType.MODESELECT);
 
         //TODO: INFO: Debug!!! Remove when game functionality complete!
         //#debug init
@@ -592,12 +528,20 @@ import static com.badlogic.gdx.graphics.Texture.*;
                         Gdx.app.debug("instaDeathMode", "Game Over!");
                         gameOver = true;
                         lerp = 0;
+                        if (googleServices.isSignedIn()) {
+                            googleServices.submitScore(LEADERBOARD_INSTADEATH, Long.valueOf(score));
+                        }
+                        mode = gameMode.SCORE_DISPLAY;
                     }
                 } else if (!inRange(ball.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN) ||
                         !inRange(ball2.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN)) {
                     Gdx.app.debug("Normal mode", "Game over!");
                     gameOver = true;
                     lerp = 0;
+                    if (googleServices.isSignedIn()) {
+                        googleServices.submitScore(LEADERBOARD_NORMAL, Long.valueOf(score));
+                    }
+                    mode = gameMode.SCORE_DISPLAY;
                 }
             }
 
@@ -617,10 +561,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
         //#score display
         else if (mode == gameMode.SCORE_DISPLAY) {
-            //labelScore.setText(String.valueOf(score));
             customGUIBox.DrawAndUpdate(smallfont, touchData);
-            //stage.act();
-            //stage.draw();
         }
 
         //#main menu
