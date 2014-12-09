@@ -15,7 +15,10 @@ http://teamkarbon.com/cloud/public.php?service=files&t=739066b6a6d5000a7b929fb72
 https://github.com/libgdx/libgdx/blob/master/tests/gdx-tests-android/assets/data/default.png
 
 **Music (still in progress)**
-https://soundcloud.com/euwbah/duo-run-game-music-preview
+https://soundcloud.com/euwbah/duo-run-unchillstep-yet-another-update-91214-wip
+
+**Get SHA-1 from KeyStore**
+https://gist.github.com/darkpolice/0e1f24ec490c7329cea5
 
 That's all folks...
 
