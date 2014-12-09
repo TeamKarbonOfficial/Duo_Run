@@ -170,6 +170,16 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
         googleServices.startsignIn();
 
+        Vector2 dialogvects = new Vector2();
+        dialogvects.add(0, 0);
+
+        Vector2 size = new Vector2();
+        size.add(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        new CustomGUIBox(batch, String.valueOf(score), dialogvects, size, dialogBoxTexture, new String[] {
+                "1","2","3","4"
+        }, Color.CYAN, CustomGUIBox.BoxType.MODESELECT);
+
         //Show Score (Sorry if it screws up anything xD)
         pad = ((Gdx.graphics.getWidth() + Gdx.graphics.getHeight())/285);
 
@@ -178,7 +188,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
         Table table = new Table();
 
-
+        table.setDebug(true);
 
         skin.getFont("default-font").setScale(4f, 4f);
 
@@ -194,7 +204,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("button", "clicked");
                 googleServices.showAchievements();
-            };
+            }
         });
 
         buttonLeaderboard.addListener(new ClickListener(){
@@ -202,21 +212,21 @@ import static com.badlogic.gdx.graphics.Texture.*;
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("button", "clicked");
                 googleServices.showScores(LEADERBOARD_NORMAL);
-            };
+            }
         });
 
         buttonMenu.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("button", "clicked");
-            };
+            }
         });
 
         buttonAgain.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("button", "clicked");
-            };
+            }
         });
 
 
@@ -607,9 +617,10 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
         //#score display
         else if (mode == gameMode.SCORE_DISPLAY) {
-            labelScore.setText(String.valueOf(score));
-            stage.act();
-            stage.draw();
+            //labelScore.setText(String.valueOf(score));
+            customGUIBox.DrawAndUpdate(smallfont, touchData);
+            //stage.act();
+            //stage.draw();
         }
 
         //#main menu
