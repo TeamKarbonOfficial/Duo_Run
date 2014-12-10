@@ -23,18 +23,13 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
 
-import static com.badlogic.gdx.graphics.Texture.*;
+import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
 //import com.badlogic.gdx.graphics.Texture;
 
@@ -170,12 +165,6 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
         googleServices.startsignIn();
 
-        Vector2 dialogvects = new Vector2();
-        dialogvects.add((float)(Gdx.graphics.getWidth() * 0.05), (float)(Gdx.graphics.getHeight() * 0.05));
-
-        Vector2 size = new Vector2();
-        size.add((float)(Gdx.graphics.getWidth() * 0.9), (float)(Gdx.graphics.getHeight() * 0.9));
-
         //Load in ball's texture
         //Download textures from "http://teamkarbon.com/cloud/public.php?service=files&t=69d7aca788e27f04971fad1bd79a314c"
         //ballfile = "ball.png";
@@ -299,16 +288,14 @@ import static com.badlogic.gdx.graphics.Texture.*;
         //Init the obstacles ArrayList
         obstacles = new ArrayList<Obstacle>();
         obstaclesTimer = 0;//This makes sure that the obstacles are not too close to other obstacles
+        obstaclesRemovalTimer = 0;
+        obstaclesRemoveFlag = false;
 
         OUT_OF_BOUNDS_THRESHOLD = pwidth(-120f);
 
         obs = new Polygon();
         playerLeft = new Polygon();
         playerRight = new Polygon();
-
-        customGUIBox = new CustomGUIBox(batch, String.valueOf(score), dialogvects, size, dialogBoxTexture, new String[]{
-                "Achievements", "Leaderboard", "Main Menu", "Play Again"
-        }, new Color(0.1f, 0.4f, 0.1f, 0.5f), CustomGUIBox.BoxType.MODESELECT);
 
         //TODO: INFO: Debug!!! Remove when game functionality complete!
         //#debug init
@@ -327,6 +314,8 @@ import static com.badlogic.gdx.graphics.Texture.*;
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();//Duh
+
+        ProcessInput();
 
         debugRenderer.render(world, camera.combined);//View all colliders and stuff
 
@@ -355,7 +344,6 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
         //#game
         else if (mode == gameMode.GAME) {
-            ProcessInput();
 
             if(lerpFlag && gameOver)
             {
@@ -380,11 +368,11 @@ import static com.badlogic.gdx.graphics.Texture.*;
                 else o.translate(percent(-(7 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
 
                 //Remove at least 4 obstacles at a time
-                if (!gameOver && o.getPos().x < OUT_OF_BOUNDS_THRESHOLD && obstaclesRemovalTimer > 14) {
+                if (!gameOver && o.getPos().x < OUT_OF_BOUNDS_THRESHOLD && obstaclesRemovalTimer > 13) {
                     obstacles.remove(o);
                     x--;
                     o.dispose(world);
-                    obstaclesRemoveFlag = true;
+                    obstaclesRemoveFlag = true;//This shows that a bulk removal has taken place.
                     continue;
                 }
                 else if (o.getPos().x < OUT_OF_BOUNDS_THRESHOLD) {
@@ -406,6 +394,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
                 CreateRenderTriangles(o, triangles);
             }
 
+            //Reset the timer knowing that a removal has taken place.
             if(!gameOver && obstaclesRemoveFlag) obstaclesRemovalTimer = 0;
 
             //#Score
@@ -518,11 +507,11 @@ import static com.badlogic.gdx.graphics.Texture.*;
             }
 
             //#Game over :P
+            //NOTE: This is not the last block of code in this gameMode. This is a flag setter to
+            //      cue in the lerping of the obstacles out of the screen, and for the obstacles to
+            //      stop spawning.
             if(!gameOver) {
                 if (instaDeathMode) {
-                    //Collision detection (Cheap way around it :P)
-                    //Checks if ball and ball2 x-axis is 0, if not, game over
-                    //When an object hit the ball, the x value will change
                     if (!inRange(ball.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN) ||
                             !inRange(ball2.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN)) {
                         Gdx.app.debug("instaDeathMode", "Game Over!");
@@ -531,7 +520,6 @@ import static com.badlogic.gdx.graphics.Texture.*;
                         if (googleServices.isSignedIn()) {
                             googleServices.submitScore(LEADERBOARD_INSTADEATH, Long.valueOf(score));
                         }
-                        mode = gameMode.SCORE_DISPLAY;
                     }
                 } else if (!inRange(ball.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN) ||
                         !inRange(ball2.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN)) {
@@ -541,15 +529,26 @@ import static com.badlogic.gdx.graphics.Texture.*;
                     if (googleServices.isSignedIn()) {
                         googleServices.submitScore(LEADERBOARD_NORMAL, Long.valueOf(score));
                     }
-                    mode = gameMode.SCORE_DISPLAY;
                 }
             }
 
             //Check if all obs are out of screen alr, then move to score display
+            //NOTE: This is the final block of code before switching to score display.
+            //      as this is when there are no more obstacles on screen and all have been disposed.
+
             if(gameOver && obstacles.size() == 0)
             {
                 lerpFlag = true;
                 gameOver = false;
+                obstaclesRemovalTimer = 0f;
+                obstaclesRemoveFlag = false;
+                obstaclesTimer = 0f;
+                mode = gameMode.SCORE_DISPLAY;
+
+                customGUIBox = new CustomGUIBox(batch, String.valueOf(score), descalepercent(120f, 10f), descalepercent(70f, 70f), dialogBoxTexture, new String[]{
+                        "Achievements", "Leaderboard", "Main Menu", "Play Again"
+                }, new Color(0.1f, 0.4f, 0.1f, 0.5f), CustomGUIBox.BoxType.MODESELECT);
+
                 mode = gameMode.SCORE_DISPLAY;
             }
 
@@ -566,11 +565,6 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
         //#main menu
         else if (mode == gameMode.MAIN_MENU) {
-            ProcessInput();
-
-
-            //Epic rendering
-
             //#render menu
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -679,7 +673,6 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
         //#game init
         else if (mode == gameMode.GAME_INIT) {
-            ProcessInput();
 
             if(lerp < 18f && lerpFlag)
                 lerp += Gdx.graphics.getDeltaTime() * 3.5f;//Increase speed of obstacles to make a "zooming" effect
