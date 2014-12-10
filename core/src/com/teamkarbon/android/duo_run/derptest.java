@@ -538,6 +538,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
             if(gameOver && obstacles.size() == 0)
             {
+                lerp = 0;
                 lerpFlag = true;
                 gameOver = false;
                 obstaclesRemovalTimer = 0f;
@@ -560,6 +561,24 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
         //#score display
         else if (mode == gameMode.SCORE_DISPLAY) {
+
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+            Gdx.gl.glEnable(GL20.GL_BLEND);
+            DrawBall();
+
+            DrawFloorsAndCeiling();
+
+            shapeRenderer.end();
+
+            if(lerpFlag){
+                customGUIBox.Translate(descalepercent((10 + lerp) * Gdx.graphics.getDeltaTime(), 0));//Animate while lerping
+                lerp ++;
+            }
+            if(lerp > 8)
+            {
+                lerp = 0;
+                lerpFlag = false;
+            }
             customGUIBox.DrawAndUpdate(bigfont, touchData);
         }
 
