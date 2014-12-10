@@ -145,6 +145,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
     TouchData touchData;
     boolean backFlag = false;//A flag where set true within gameMode.GAME_INIT when the back button is clicked...
     boolean gameFlag = false;//A flag where set true within gameMode.GAME_INIT when the selected game mode is clicked...
+    CustomButton tempButton;
 
     Texture splashScreen;//TODO: Make a logo/splash screen to display on init and perhaps other places when needed...
 
@@ -574,12 +575,17 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                 customGUIBox.Translate(descalepercent((10 + lerp) * Gdx.graphics.getDeltaTime(), 0));//Animate while lerping
                 lerp ++;
             }
-            if(lerp > 8)
+            if(lerp > 8)//Stop lerping
             {
                 lerp = 0;
                 lerpFlag = false;
             }
-            customGUIBox.DrawAndUpdate(bigfont, touchData);
+            tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);
+            if(tempButton != null) {
+                if (tempButton.text == "INSERT BUTTON TEXT HERE TO CHECK IF CLICKED") {
+
+                }
+            }
         }
 
         //#main menu
@@ -762,7 +768,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             }
 
             customGUIBox.Translate(new Vector2(descalepercent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f)));
-            CustomButton tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);//This function returns button clicked
+            tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);//This function returns button clicked
             batch.begin();
             bigfont.draw(batch, "GUI pos: " + customGUIBox.pos.x + ", " + customGUIBox.pos.y, 60, 200);
             batch.end();
