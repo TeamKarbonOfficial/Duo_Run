@@ -312,8 +312,8 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
         //TODO: INFO: Debug!!! Remove when game functionality complete!
         //#debug init
-        //mode = gameMode.MAIN_MENU_INIT;
-        mode = gameMode.SCORE_DISPLAY;
+        mode = gameMode.MAIN_MENU_INIT;
+        //mode = gameMode.SCORE_DISPLAY;
         //mode = gameMode.GAME;
         level = 1;
         instaDeathMode = true;
@@ -561,7 +561,7 @@ import static com.badlogic.gdx.graphics.Texture.*;
 
         //#score display
         else if (mode == gameMode.SCORE_DISPLAY) {
-            customGUIBox.DrawAndUpdate(smallfont, touchData);
+            customGUIBox.DrawAndUpdate(bigfont, touchData);
         }
 
         //#main menu
