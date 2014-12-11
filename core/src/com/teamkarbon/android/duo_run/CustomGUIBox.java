@@ -63,9 +63,9 @@ public class CustomGUIBox {
             if(options.length <= 3) {//Single line for all buttons
                 for (String s : options) {
                     //tempPos is position of buttons where (0, 0) is the bottom left of the gui box
-                    tempPos.x = pwidth(10f + (count / (float) options.length) * 80f);
+                    tempPos.x = pwidth(10f + (80 * (count / (float) options.length)));
                     tempPos.y = pheight(10f);
-                    tempSize.set(pwidth(70f / (float) options.length), pheight(45f));
+                    tempSize.set(pwidth(80f / (float) options.length), pheight(45f));
 
                     buttons.add(new CustomButton(tempPos, tempSize, options[(int) count], invert(color).sub(0.1f, 0.1f, 0.1f, 0f)));
                     Gdx.app.debug("Button Pos", buttons.get((int) count).pos.x + ", " + buttons.get((int) count).pos.y);

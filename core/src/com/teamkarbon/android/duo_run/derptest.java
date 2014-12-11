@@ -336,10 +336,10 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             obstacles.clear();//Makin' sure
 
             //Create a new obstacle with id "play"
-            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(60f), pheight(36f), false, "play"));//Play the game
-            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(90f), pheight(36f), true, "options"));//Go to options
-            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(120f), pheight(23f), false, "stats"));//See all game service - related stuff
-            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(84f), pheight(31f), true, "customize"));//Just an idea...
+            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(60f), pheight(33f), false, "play"));//Play the game
+            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(100f), pheight(39f), true, "options"));//Go to options
+            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(140f), pheight(30f), true, "stats"));//See all game service - related stuff
+            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(96f), pheight(23f), false, "customize"));//Just an idea...
             mode = gameMode.MAIN_MENU;
         }
 
@@ -669,7 +669,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                         o.isClicked = true;
                         lerp = 0f;
                         lerpFlag = true;
-                        customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(150, 30), descalepercent(80, 60),
+                        customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(180, 30), descalepercent(80, 60),
                                 dialogBoxTexture, new String[]{"Normal", "Insta-Death", "Back"},
                                 new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.MODESELECT);
 
@@ -680,8 +680,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                     bigfont.setScale(3f);
 
                     bigfont.setColor(new Color(1, 1, 1, 1));
-                    bigfont.draw(batch, "Options", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - (bigfont.getBounds("Options").width / 2f),
-                            descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) - (bigfont.getBounds("Options").height / 2f));
+                    bigfont.draw(batch, "Options", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - (bigfont.getBounds("Options ").width / 2f),
+                            descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) + (bigfont.getBounds("Options").height / 2f));
 
                     if ((Intersector.overlapConvexPolygons(obs, playerLeft) && !o.type) ||
                             (Intersector.overlapConvexPolygons(obs, playerRight) && o.type)) {
@@ -716,7 +716,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         //#game init
         else if (mode == gameMode.GAME_INIT) {
 
-            if(lerp < 30f && lerpFlag)
+            if(lerp < 23f && lerpFlag)
                 lerp += Gdx.graphics.getDeltaTime() * 3.5f;//Increase speed of obstacles to make a "zooming" effect
             else {
                 lerpFlag = false;
@@ -769,8 +769,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                     bigfont.setScale(3f);
                     bigfont.setColor(new Color(1, 1, 1, 1));
                     batch.begin();
-                    bigfont.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - 40f,
-                            descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) - 20f);
+                    bigfont.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - (bigfont.getBounds("GO!").width / 2f),
+                            descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) + (bigfont.getBounds("GO!").height / 2f));
                     batch.end();
                 }
 
