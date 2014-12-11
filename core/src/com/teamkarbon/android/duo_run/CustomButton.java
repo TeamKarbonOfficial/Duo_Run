@@ -10,6 +10,7 @@ public class CustomButton {
     Vector2 pos, size;//Note: pos value is relative to the host CustomGUIBox..
     String text;
     Color color;
+    boolean animateFlag;
 
     public CustomButton(Vector2 _pos, Vector2 _size, String _text, Color _color)
     {
@@ -17,6 +18,7 @@ public class CustomButton {
         size = _size;
         text = _text;
         color = _color;
+        animateFlag = false;
     }
 
     public boolean isClicked(TouchData touchData, Vector2 hostPos)
@@ -28,6 +30,8 @@ public class CustomButton {
         }
         return false;
     }
+
+    public void setColor(Color c) { color = c; }
 
     public Vector2 getGlobalPos(Vector2 hostPos)
     {

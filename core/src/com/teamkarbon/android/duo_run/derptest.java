@@ -575,14 +575,33 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
             if(lerpFlag){
                 customGUIBox.Translate(descalepercent((10 + lerp) * Gdx.graphics.getDeltaTime(), 0));//Animate while lerping
+                if(tempButton != null && tempButton.animateFlag)//If that button has been clicked.
+                    tempButton.color.a = (float) (0.2f + (Math.sin((double) lerp * 2f) * 0.7f));
                 lerp ++;
-            }
+        }
             if(lerp > 8)//Stop lerping
             {
                 lerp = 0;
                 lerpFlag = false;
+                if(tempButton != null && tempButton.animateFlag)//exit lerp; switch to game init.
+                {
+                    tempButton = null;//Clear this.
+
+                    //Prep the Game Mode Select box.
+                    customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(150, 30), descalepercent(80, 60),
+                            dialogBoxTexture, new String[]{"Normal", "Insta-Death", "Back"},
+                            new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.MODESELECT);
+
+                    //Switch~!
+                    mode = gameMode.GAME_INIT;
+                }
             }
-            tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);
+
+            if(tempButton == null) tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);
+            else customGUIBox.DrawAndUpdate(bigfont, touchData);
+
+            //Once a CustomButton has been clicked, it will be stored as tempButton so that color
+            //lerping can take place upon the clicked button
             if(tempButton != null) {
                 if (tempButton.text == "Achievements") {
 
@@ -591,10 +610,13 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
                 }
                 else if (tempButton.text == "Main Menu") {
-                    mode = gameMode.MAIN_MENU_INIT;//Ermmm....
+                    mode = gameMode.MAIN_MENU_INIT;//Ermmm.... I guess that's all?
                 }
                 else if (tempButton.text == "Play Again") {
-                    mode = gameMode.GAME_INIT;
+                    tempButton.setColor(new Color(0.8f, 0.8f, 0.8f, 0.9f));
+                    tempButton.animateFlag = true;
+                    lerp = 0f;
+                    lerpFlag = true;
                 }
             }
         }
@@ -655,12 +677,11 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                         mode = gameMode.GAME_INIT;
                         o.setColor(new Color(0.8f, 0.8f, 0.8f, 0.9f));
                         o.isClicked = true;
-                        String[] tempOptions = new String[]{"Normal", "Insta-Death", "Back"};
                         lerp = 0f;
                         lerpFlag = true;
-                        //TODO: Make this work :P
                         customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(150, 30), descalepercent(80, 60),
-                                dialogBoxTexture, tempOptions, new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.MODESELECT);
+                                dialogBoxTexture, new String[]{"Normal", "Insta-Death", "Back"},
+                                new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.MODESELECT);
                     }
                 }
                 else if(o.id == "options")
