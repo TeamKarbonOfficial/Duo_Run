@@ -335,6 +335,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             PolygonShape temp = new PolygonShape();
             temp.setAsBox(pwidth(20), pheight(20));
 
+            obstacles.clear();//Makin' sure
+
             //Create a new obstacle with id "play"
             obstacles.add(new Obstacle(temp, world, pwidth(60), pheight(48), false, "play"));//Play the game
             obstacles.add(new Obstacle(temp, world, pwidth(90), pheight(48), true, "options"));//Go to options
@@ -582,8 +584,17 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             }
             tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);
             if(tempButton != null) {
-                if (tempButton.text == "INSERT BUTTON TEXT HERE TO CHECK IF CLICKED") {
+                if (tempButton.text == "Achievements") {
 
+                }
+                else if (tempButton.text == "Leaderboard") {
+
+                }
+                else if (tempButton.text == "Main Menu") {
+                    mode = gameMode.MAIN_MENU_INIT;//Ermmm....
+                }
+                else if (tempButton.text == "Play Again") {
+                    mode = gameMode.GAME_INIT;
                 }
             }
         }
@@ -642,9 +653,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                     if ((Intersector.overlapConvexPolygons(obs, playerLeft) && !o.type) ||
                             (Intersector.overlapConvexPolygons(obs, playerRight) && o.type)) {
                         mode = gameMode.GAME_INIT;
-                        Color c = new Color();
-                        c.set(0.8f, 0.8f, 0.8f, 0.9f);
-                        o.setColor(c);
+                        o.setColor(new Color(0.8f, 0.8f, 0.8f, 0.9f));
                         o.isClicked = true;
                         String[] tempOptions = new String[]{"Normal", "Insta-Death", "Back"};
                         lerp = 0f;
