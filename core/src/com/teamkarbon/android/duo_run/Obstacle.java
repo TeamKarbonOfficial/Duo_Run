@@ -79,7 +79,7 @@ public class Obstacle {
 
         //Set local (size-only) vertices so that polygonize function doens't need to be called so many times...
         localvertices = this.getLocalVerticesAsFloatArray();
-        sides = localvertices.length;//MUST SET!!!
+        sides = localvertices.length / 2f;//MUST SET!!!
     }
     public Obstacle(PolygonShape _shape, World world, float x, float y, boolean _type, String _id)
     {
@@ -126,7 +126,7 @@ public class Obstacle {
 
         //Set local (size-only) vertices so that polygonize function doens't need to be called so many times...
         localvertices = this.getLocalVerticesAsFloatArray();
-        sides = localvertices.length;
+        sides = localvertices.length / 2f;
     }
     public Obstacle(CircleShape _shape, World world, float x, float y, boolean _type, float _radius, int _sides)
     {
