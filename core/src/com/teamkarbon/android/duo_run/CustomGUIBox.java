@@ -88,7 +88,7 @@ public class CustomGUIBox {
                     tempSize.set(pwidth(70f / 2), pheight(35f));
 
                     buttons.add(new CustomButton(tempPos, tempSize, options[(int) count], invert(color).sub(0.1f, 0.1f, 0.1f, 0f)));
-                    Gdx.app.debug("Button Pos", buttons.get((int) count).pos.x + ", " + buttons.get((int) count).pos.y);
+                    //Gdx.app.debug("Button Pos", buttons.get((int) count).pos.x + ", " + buttons.get((int) count).pos.y);
                     count++;
                 }
             }
@@ -111,7 +111,6 @@ public class CustomGUIBox {
     public CustomButton DrawAndUpdate(BitmapFont font, TouchData touchData)
     {
         tempButton = null;//Set null to default.
-        if(!batch.isDrawing()) batch.begin();
         Gdx.gl.glEnable(GL20.GL_BLEND);
         batch.setColor(color);
         batch.draw(DialogPic, pos.x, pos.y, size.x, size.y);
@@ -144,7 +143,6 @@ public class CustomGUIBox {
 
         }
 
-        batch.end();
         return tempButton;
     }
 

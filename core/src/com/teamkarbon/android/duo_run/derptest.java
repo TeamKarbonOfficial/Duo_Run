@@ -314,10 +314,11 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         Gdx.gl.glClearColor(0, 0.06f, 0.13f, 0.8f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         Gdx.gl.glEnable(GL20.GL_BLEND);
 
-        batch.begin();
         camera.update();//Duh
 
         ProcessInput();
@@ -325,7 +326,6 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         debugRenderer.render(world, camera.combined);//View all colliders and stuff
 
         //Random graphics init to allow alpha blending...
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         //This mode is for the init of "buttons" in the main menu.
 
@@ -333,16 +333,13 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         //#init
         if (mode == gameMode.MAIN_MENU_INIT) {
 
-            PolygonShape temp = new PolygonShape();
-            temp.setAsBox(pwidth(20), pheight(20));
-
             obstacles.clear();//Makin' sure
 
             //Create a new obstacle with id "play"
-            obstacles.add(new Obstacle(temp, world, pwidth(60f), pheight(48f), false, "play"));//Play the game
-            obstacles.add(new Obstacle(temp, world, pwidth(90f), pheight(48f), true, "options"));//Go to options
-            obstacles.add(new Obstacle(temp, world, pwidth(120f), pheight(48f), false, "stats"));//See all game service - related stuff
-            obstacles.add(new Obstacle(temp, world, pwidth(84f), pheight(73f), false, "customize"));//Just an idea...
+            obstacles.add(new Obstacle(asBox(percent(20, 20)), world, pwidth(60f), pheight(48f), false, "play"));//Play the game
+            obstacles.add(new Obstacle(asBox(percent(20, 20)), world, pwidth(90f), pheight(48f), true, "options"));//Go to options
+            obstacles.add(new Obstacle(asBox(percent(20, 20)), world, pwidth(120f), pheight(48f), false, "stats"));//See all game service - related stuff
+            obstacles.add(new Obstacle(asBox(percent(20, 20)), world, pwidth(84f), pheight(36f), true, "customize"));//Just an idea...
             mode = gameMode.MAIN_MENU;
         }
 
@@ -408,10 +405,12 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             smallfont.setColor(Color.LIGHT_GRAY);
             smallfont.setScale(3);
             //debug!!!!
+            batch.begin();
             smallfont.draw(batch, "dLevel: " + level, 300, 200);
             smallfont.setColor(Color.MAGENTA);
             smallfont.setScale(4);
             smallfont.draw(batch, "Score: " + score, 100, 100);
+            batch.end();
 
             //Make dem obstacles
 
@@ -588,8 +587,10 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                 }
             }
 
+            batch.begin();
             if(tempButton == null) tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);
             else customGUIBox.DrawAndUpdate(bigfont, touchData);
+            batch.end();
 
             //Once a CustomButton has been clicked, it will be stored as tempButton so that color
             //lerping can take place upon the clicked button
@@ -646,6 +647,9 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
                 //play button
 
+
+                batch.begin();
+
                 if (o.id.equals("play")) {
 
                     bigfont.setScale(3f);
@@ -653,10 +657,10 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                     bigfont.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - 40f,
                             descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) - 20f);
 
-                    smallfont.setScale(1.5f);
+                    /*smallfont.setScale(1.5f);
                     smallfont.setColor(new Color(1, 1, 1, 1));//TODO: Remove this debug in the near future :P
                     smallfont.draw(batch, obs.getVertices()[0] + ", " + obs.getVertices()[1], 100, 400);
-                    smallfont.draw(batch, playerLeft.getVertices()[0] + ", " + playerLeft.getVertices()[1], 100, 300);
+                    smallfont.draw(batch, playerLeft.getVertices()[0] + ", " + playerLeft.getVertices()[1], 100, 300);*/
 
                     if ((Intersector.overlapConvexPolygons(obs, playerLeft) && !o.type) ||
                             (Intersector.overlapConvexPolygons(obs, playerRight) && o.type)) {
@@ -702,6 +706,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                 {
 
                 }
+                batch.end();
             }
             DrawAndUpdateRenderTriangles(triangles);
 
@@ -711,7 +716,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         //#game init
         else if (mode == gameMode.GAME_INIT) {
 
-            if(lerp < 18f && lerpFlag)
+            if(lerp < 30f && lerpFlag)
                 lerp += Gdx.graphics.getDeltaTime() * 3.5f;//Increase speed of obstacles to make a "zooming" effect
             else {
                 lerpFlag = false;
@@ -763,8 +768,10 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                 if(o.id.equals("play")) {
                     bigfont.setScale(3f);
                     bigfont.setColor(new Color(1, 1, 1, 1));
+                    batch.begin();
                     bigfont.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - 40f,
                             descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) - 20f);
+                    batch.end();
                 }
 
                 //#render button
@@ -776,8 +783,13 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             }
 
             customGUIBox.Translate(new Vector2(descalepercent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f)));
+
+            batch.begin();
+
             tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);//This function returns button clicked
             bigfont.draw(batch, "GUI pos: " + customGUIBox.pos.x + ", " + customGUIBox.pos.y, 60, 200);
+
+            batch.end();
             for(CustomButton c : customGUIBox.buttons)
             {
                 if(backFlag && c.text.equals("Back"))
@@ -851,11 +863,16 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
         }
         //#postrender
-        batch.end();
 
         Gdx.gl.glEnable(GL20.GL_BLEND);
         shapeRenderer.end();
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
+    }
+
+    public PolygonShape asBox(Vector2 size) {
+        PolygonShape temp = new PolygonShape();
+        temp.setAsBox(size.x, size.y);
+        return temp;
     }
 
     //So that "1" =  1 px
