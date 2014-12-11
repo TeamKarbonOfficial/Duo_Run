@@ -314,6 +314,10 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         Gdx.gl.glClearColor(0, 0.06f, 0.13f, 0.8f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+
+        batch.begin();
         camera.update();//Duh
 
         ProcessInput();
@@ -328,9 +332,6 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         //Hashtags are for easier code jumping
         //#init
         if (mode == gameMode.MAIN_MENU_INIT) {
-            /*batch.begin();
-            batch.draw(splashScreen, 0f, Gdx.graphics.getHeight());
-            batch.end();*/
 
             PolygonShape temp = new PolygonShape();
             temp.setAsBox(pwidth(20), pheight(20));
@@ -352,8 +353,6 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             {
                 lerp += Gdx.graphics.getDeltaTime() * 5f;
             }
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            Gdx.gl.glEnable(GL20.GL_BLEND);
             //#render main
             DrawBall();
 
@@ -405,11 +404,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
             DrawAndUpdateRenderTriangles(triangles);
 
-            Gdx.gl.glEnable(GL20.GL_BLEND);
-            shapeRenderer.end();
-
             //#render text main
-            batch.begin();
             smallfont.setColor(Color.LIGHT_GRAY);
             smallfont.setScale(3);
             //debug!!!!
@@ -417,7 +412,6 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             smallfont.setColor(Color.MAGENTA);
             smallfont.setScale(4);
             smallfont.draw(batch, "Score: " + score, 100, 100);
-            batch.end();
 
             //Make dem obstacles
 
@@ -565,13 +559,10 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         //#score display
         else if (mode == gameMode.SCORE_DISPLAY) {
 
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            Gdx.gl.glEnable(GL20.GL_BLEND);
             DrawBall();
 
             DrawFloorsAndCeiling();
 
-            shapeRenderer.end();
 
             if(lerpFlag){
                 customGUIBox.Translate(descalepercent((10 + lerp) * Gdx.graphics.getDeltaTime(), 0));//Animate while lerping
@@ -624,9 +615,6 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         //#main menu
         else if (mode == gameMode.MAIN_MENU) {
             //#render menu
-
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            Gdx.gl.glEnable(GL20.GL_BLEND);
             DrawBall();
 
             DrawFloorsAndCeiling();
@@ -653,13 +641,11 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
                 //Get those Polygons ready..
                 obs.setVertices(o.getVerticesAsFloatArray());
-                obs.translate(0f, -pheight(3f));//Move it down a bit to ensure expected collision.
                 playerLeft.setVertices(ball.getVerticesAsFloatArray());
                 playerRight.setVertices(ball2.getVerticesAsFloatArray());
 
                 //play button
 
-                batch.begin();
                 if (o.id.equals("play")) {
 
                     bigfont.setScale(3f);
@@ -669,8 +655,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
                     smallfont.setScale(1.5f);
                     smallfont.setColor(new Color(1, 1, 1, 1));//TODO: Remove this debug in the near future :P
-                    smallfont.draw(batch, "leftint: " + Intersector.overlapConvexPolygons(obs, playerLeft), 100, 400);
-                    smallfont.draw(batch, "rightint: " + Intersector.overlapConvexPolygons(obs, playerRight), 100, 300);
+                    smallfont.draw(batch, obs.getVertices()[0] + ", " + obs.getVertices()[1], 100, 400);
+                    smallfont.draw(batch, playerLeft.getVertices()[0] + ", " + playerLeft.getVertices()[1], 100, 300);
 
                     if ((Intersector.overlapConvexPolygons(obs, playerLeft) && !o.type) ||
                             (Intersector.overlapConvexPolygons(obs, playerRight) && o.type)) {
@@ -682,6 +668,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                         customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(150, 30), descalepercent(80, 60),
                                 dialogBoxTexture, new String[]{"Normal", "Insta-Death", "Back"},
                                 new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.MODESELECT);
+
                     }
                 }
                 else if(o.id == "options")
@@ -715,14 +702,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                 {
 
                 }
-
-                batch.end();
             }
             DrawAndUpdateRenderTriangles(triangles);
-
-            Gdx.gl.glEnable(GL20.GL_BLEND);
-            shapeRenderer.end();
-
 
             triangles.clear();
         }
@@ -757,8 +738,6 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
             //#render game init
 
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            Gdx.gl.glEnable(GL20.GL_BLEND);
             DrawBall();
 
             DrawFloorsAndCeiling();
@@ -782,12 +761,10 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                 CreateRenderTriangles(o, triangles);
 
                 if(o.id.equals("play")) {
-                    batch.begin();
                     bigfont.setScale(3f);
                     bigfont.setColor(new Color(1, 1, 1, 1));
                     bigfont.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - 40f,
                             descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) - 20f);
-                    batch.end();
                 }
 
                 //#render button
@@ -800,9 +777,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
             customGUIBox.Translate(new Vector2(descalepercent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f)));
             tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);//This function returns button clicked
-            batch.begin();
             bigfont.draw(batch, "GUI pos: " + customGUIBox.pos.x + ", " + customGUIBox.pos.y, 60, 200);
-            batch.end();
             for(CustomButton c : customGUIBox.buttons)
             {
                 if(backFlag && c.text.equals("Back"))
@@ -866,8 +841,6 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
             DrawAndUpdateRenderTriangles(triangles);
 
-            Gdx.gl.glEnable(GL20.GL_BLEND);
-            shapeRenderer.end();
         }
         //#options
         else if (mode == gameMode.OPTIONS) {
@@ -877,8 +850,11 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         else if (mode == gameMode.ABOUT) {
 
         }
-
         //#postrender
+        batch.end();
+
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        shapeRenderer.end();
         world.step(Gdx.graphics.getDeltaTime(), 6, 2);
     }
 

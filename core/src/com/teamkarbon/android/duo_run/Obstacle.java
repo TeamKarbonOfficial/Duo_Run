@@ -1,6 +1,5 @@
 package com.teamkarbon.android.duo_run;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -217,7 +216,6 @@ public class Obstacle {
             temp[_sides * 2] = localvertices[_sides * 2] + this.getPos().x;
             temp[_sides * 2 + 1] = localvertices[_sides * 2 + 1] + this.getPos().y;
         }
-        Gdx.app.debug("POS", temp[0] + ", " + temp[1]);
         return temp;
     }
 
@@ -233,7 +231,6 @@ public class Obstacle {
                 temp[i * 2 + 1] = v.y;
             }
 
-            Gdx.app.debug("LOCALPOS", temp[0] + ", " + temp[1]);
             return temp;
         }
 
