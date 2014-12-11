@@ -654,8 +654,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
                     bigfont.setScale(3f);
                     bigfont.setColor(new Color(1, 1, 1, 1));
-                    bigfont.draw(batch, "GO!", descale(o.getPos().x - (bigfont.getBounds("GO!").width / 2f)) + (Gdx.graphics.getWidth() / 2f),
-                            descale(o.getPos().y - (bigfont.getBounds("GO!").height / 2f)) + (Gdx.graphics.getHeight() / 2f));
+                    bigfont.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - (bigfont.getBounds("GO!").width / 2f),
+                            descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) + (bigfont.getBounds("GO!").height / 2f));
 
                     /*smallfont.setScale(1.5f);
                     smallfont.setColor(new Color(1, 1, 1, 1));//TODO: Remove this debug in the near future :P
@@ -680,8 +680,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                     bigfont.setScale(3f);
 
                     bigfont.setColor(new Color(1, 1, 1, 1));
-                    bigfont.draw(batch, "Options", descale(o.getPos().x - (bigfont.getBounds("Options").width / 2f)) + (Gdx.graphics.getWidth() / 2f),
-                            descale(o.getPos().y  - (bigfont.getBounds("Options").height / 2f)) + (Gdx.graphics.getHeight() / 2f));
+                    bigfont.draw(batch, "Options", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - (bigfont.getBounds("Options").width / 2f),
+                            descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) - (bigfont.getBounds("Options").height / 2f));
 
                     if ((Intersector.overlapConvexPolygons(obs, playerLeft) && !o.type) ||
                             (Intersector.overlapConvexPolygons(obs, playerRight) && o.type)) {
