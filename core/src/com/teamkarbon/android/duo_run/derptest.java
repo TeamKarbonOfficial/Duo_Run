@@ -653,15 +653,16 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
                 //Get those Polygons ready..
                 obs.setVertices(o.getVerticesAsFloatArray());
-                obs.translate(0f, -pheight(2f));//Move it down a bit to ensure expected collision.
+                obs.translate(0f, -pheight(3f));//Move it down a bit to ensure expected collision.
                 playerLeft.setVertices(ball.getVerticesAsFloatArray());
                 playerRight.setVertices(ball2.getVerticesAsFloatArray());
 
                 //play button
+
+                batch.begin();
                 if (o.id.equals("play")) {
 
                     bigfont.setScale(3f);
-                    batch.begin();
                     bigfont.setColor(new Color(1, 1, 1, 1));
                     bigfont.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - 40f,
                             descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) - 20f);
@@ -670,7 +671,6 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                     smallfont.setColor(new Color(1, 1, 1, 1));//TODO: Remove this debug in the near future :P
                     smallfont.draw(batch, "leftint: " + Intersector.overlapConvexPolygons(obs, playerLeft), 100, 400);
                     smallfont.draw(batch, "rightint: " + Intersector.overlapConvexPolygons(obs, playerRight), 100, 300);
-                    batch.end();
 
                     if ((Intersector.overlapConvexPolygons(obs, playerLeft) && !o.type) ||
                             (Intersector.overlapConvexPolygons(obs, playerRight) && o.type)) {
@@ -687,11 +687,10 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                 else if(o.id == "options")
                 {
                     bigfont.setScale(3f);
-                    batch.begin();
+
                     bigfont.setColor(new Color(1, 1, 1, 1));
                     bigfont.draw(batch, "Options", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - 40f,
                             descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) - 20f);
-                    batch.end();
 
                     if ((Intersector.overlapConvexPolygons(obs, playerLeft) && !o.type) ||
                             (Intersector.overlapConvexPolygons(obs, playerRight) && o.type)) {
@@ -716,6 +715,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                 {
 
                 }
+
+                batch.end();
             }
             DrawAndUpdateRenderTriangles(triangles);
 
