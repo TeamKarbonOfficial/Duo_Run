@@ -1,5 +1,6 @@
 package com.teamkarbon.android.duo_run;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -69,6 +70,7 @@ public class Ball {
             temp[_sides * 2] = localvertices[_sides * 2] + this.getPos().x;
             temp[_sides * 2 + 1] = localvertices[_sides * 2 + 1] + this.getPos().y;
         }
+        Gdx.app.debug("BPOS", temp[0] + ", " + temp[1]);
         return temp;
     }
 

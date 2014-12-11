@@ -1,5 +1,6 @@
 package com.teamkarbon.android.duo_run;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -78,6 +79,7 @@ public class Obstacle {
 
         //Set local (size-only) vertices so that polygonize function doens't need to be called so many times...
         localvertices = this.getLocalVerticesAsFloatArray();
+        sides = localvertices.length;//MUST SET!!!
     }
     public Obstacle(PolygonShape _shape, World world, float x, float y, boolean _type, String _id)
     {
@@ -124,6 +126,7 @@ public class Obstacle {
 
         //Set local (size-only) vertices so that polygonize function doens't need to be called so many times...
         localvertices = this.getLocalVerticesAsFloatArray();
+        sides = localvertices.length;
     }
     public Obstacle(CircleShape _shape, World world, float x, float y, boolean _type, float _radius, int _sides)
     {
@@ -209,11 +212,12 @@ public class Obstacle {
     public float[] getVerticesAsFloatArray()//Simplified... Yay!
     {
         float[] temp = new float[localvertices.length];
-        for(int _sides = 0; _sides < sides; _sides ++)
+        for(int _sides = 0; _sides < sides; _sides ++)//FIXME: sides variable is 0!
         {
             temp[_sides * 2] = localvertices[_sides * 2] + this.getPos().x;
             temp[_sides * 2 + 1] = localvertices[_sides * 2 + 1] + this.getPos().y;
         }
+        Gdx.app.debug("POS", temp[0] + ", " + temp[1]);
         return temp;
     }
 
@@ -229,6 +233,7 @@ public class Obstacle {
                 temp[i * 2 + 1] = v.y;
             }
 
+            Gdx.app.debug("LOCALPOS", temp[0] + ", " + temp[1]);
             return temp;
         }
 

@@ -338,10 +338,10 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             obstacles.clear();//Makin' sure
 
             //Create a new obstacle with id "play"
-            obstacles.add(new Obstacle(temp, world, pwidth(60), pheight(48), false, "play"));//Play the game
-            obstacles.add(new Obstacle(temp, world, pwidth(90), pheight(48), true, "options"));//Go to options
-            obstacles.add(new Obstacle(temp, world, pwidth(120), pheight(48), false, "stats"));//See all game service - related stuff
-            obstacles.add(new Obstacle(temp, world, pwidth(84), pheight(73), false, "customize"));//Just an idea...
+            obstacles.add(new Obstacle(temp, world, pwidth(60f), pheight(48f), false, "play"));//Play the game
+            obstacles.add(new Obstacle(temp, world, pwidth(90f), pheight(48f), true, "options"));//Go to options
+            obstacles.add(new Obstacle(temp, world, pwidth(120f), pheight(48f), false, "stats"));//See all game service - related stuff
+            obstacles.add(new Obstacle(temp, world, pwidth(84f), pheight(73f), false, "customize"));//Just an idea...
             mode = gameMode.MAIN_MENU;
         }
 
