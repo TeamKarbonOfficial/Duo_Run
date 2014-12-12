@@ -36,6 +36,9 @@ project(":android") {
     dependencies {
         compile project(":core")
         compile project(':libraries:BaseGameUtils')
+        compile files('C:/Users/Joe/Desktop/Development/Android/Duo_Run/libraries/AdBuddiz-2.3.4.jar')
+        //Change the directory below (Note: there's no need to comment any lines out)
+        compile files('C:/<insert directory here>/Duo_Run/libraries/AdBuddiz-2.3.4.jar')
         compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
@@ -82,7 +85,6 @@ project(":html") {
 
 project(":core") {
     apply plugin: "java"
-
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"

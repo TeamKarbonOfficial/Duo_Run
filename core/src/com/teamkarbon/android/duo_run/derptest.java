@@ -1137,6 +1137,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
     * Eg. googleServices.submitScore(score, LEADERBOARD_NORMAL);
     */
     public interface AndroidMethods {
+        //Game Services
         public void startsignIn();
         public void signIn();
         public void signOut();
@@ -1149,5 +1150,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         public void submitInAchievements(String id, int number);
         public boolean isSignedIn();
         public void onSignInSucceeded();
+
+        //Ads
+        public void showflAds();
     }
 }

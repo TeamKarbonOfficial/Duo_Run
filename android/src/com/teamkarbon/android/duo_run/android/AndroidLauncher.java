@@ -18,6 +18,7 @@ import com.google.android.gms.games.Games;
 import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
 
+import com.purplebrain.adbuddiz.sdk.AdBuddiz;
 import com.teamkarbon.android.duo_run.derptest;
 
 public class AndroidLauncher extends AndroidApplication implements
@@ -44,6 +45,9 @@ public class AndroidLauncher extends AndroidApplication implements
         super.onCreate(savedInstanceState);
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         initialize(new derptest(this), config);
+
+        AdBuddiz.setPublisherKey("4227bd68-dfa3-4c9f-a5fc-df45c2a2b372");
+        AdBuddiz.cacheAds(this);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -136,7 +140,7 @@ public class AndroidLauncher extends AndroidApplication implements
     }
 
     //These are for the Interface
-
+    //Game Services
     @Override
     public void startsignIn() {
         Log.d(TAG, "(Interface) signIn() have been called!");
@@ -224,5 +228,11 @@ public class AndroidLauncher extends AndroidApplication implements
     @Override
     public void onSignInSucceeded() {
         Log.d(TAG, "(Interface) onSignInSucceeded() have been called!");
+    }
+
+    // Ads
+    @Override
+    public void showflAds() {
+        AdBuddiz.showAd(this);
     }
 }

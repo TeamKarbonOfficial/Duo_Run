@@ -6,6 +6,7 @@ package com.teamkarbon.android.duo_run;
 
 public class AndroidMethods implements derptest.AndroidMethods {
 
+    //Game Services
     @Override
     public void startsignIn() {
 
@@ -53,6 +54,12 @@ public class AndroidMethods implements derptest.AndroidMethods {
 
     @Override
     public void onSignInSucceeded() {
+
+    }
+
+    //Ads
+    @Override
+    public void showflAds() {
 
     }
 }
