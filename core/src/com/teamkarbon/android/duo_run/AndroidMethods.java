@@ -4,7 +4,7 @@ package com.teamkarbon.android.duo_run;
  * Created by Joe on 25/11/2014.
  */
 
-public class GoogleServices implements derptest.IGoogleServices {
+public class AndroidMethods implements derptest.AndroidMethods {
 
     @Override
     public void startsignIn() {

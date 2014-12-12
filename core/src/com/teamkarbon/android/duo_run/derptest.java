@@ -90,7 +90,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
     public class derptest extends ApplicationAdapter {
 
     //Everything Game Services
-    public static IGoogleServices googleServices;
+    public static AndroidMethods androidMethods;
     private final String GAMESERVICE = "Game Services";
     private final String APP_ID = "444744436262";
     private final String ACHIEVEMENT_GETTING_STARTED = "CgkIppTW5vgMEAIQAA";
@@ -156,15 +156,15 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
     Polygon playerRight;
 
     //Constructor for game services interface
-    public derptest(IGoogleServices googleServices) {
+    public derptest(AndroidMethods androidMethods) {
         super();
-        derptest.googleServices = googleServices;
+        derptest.androidMethods = androidMethods;
     }
 
     @Override
     public void create() {
 
-        googleServices.startsignIn();
+        androidMethods.startsignIn();
 
         //Load in ball's texture
         //Download textures from "http://teamkarbon.com/cloud/public.php?service=files&t=69d7aca788e27f04971fad1bd79a314c"
@@ -513,8 +513,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                         Gdx.app.debug("instaDeathMode", "Game Over!");
                         gameOver = true;
                         lerp = 0;
-                        if (googleServices.isSignedIn()) {
-                            googleServices.submitScore(LEADERBOARD_INSTADEATH, Long.valueOf(score));
+                        if (androidMethods.isSignedIn()) {
+                            androidMethods.submitScore(LEADERBOARD_INSTADEATH, Long.valueOf(score));
                         }
                     }
                 } else if (!inRange(ball.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN) ||
@@ -522,8 +522,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                     Gdx.app.debug("Normal mode", "Game over!");
                     gameOver = true;
                     lerp = 0;
-                    if (googleServices.isSignedIn()) {
-                        googleServices.submitScore(LEADERBOARD_NORMAL, Long.valueOf(score));
+                    if (androidMethods.isSignedIn()) {
+                        androidMethods.submitScore(LEADERBOARD_NORMAL, Long.valueOf(score));
                     }
                 }
             }
@@ -1136,7 +1136,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
     /* Usage: googleServies.<Method Below>;
     * Eg. googleServices.submitScore(score, LEADERBOARD_NORMAL);
     */
-    public interface IGoogleServices {
+    public interface AndroidMethods {
         public void startsignIn();
         public void signIn();
         public void signOut();

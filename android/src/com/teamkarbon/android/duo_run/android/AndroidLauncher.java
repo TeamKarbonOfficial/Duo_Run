@@ -21,7 +21,7 @@ import com.google.example.games.basegameutils.BaseGameUtils;
 import com.teamkarbon.android.duo_run.derptest;
 
 public class AndroidLauncher extends AndroidApplication implements
-        derptest.IGoogleServices,
+        derptest.AndroidMethods,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener{
 
