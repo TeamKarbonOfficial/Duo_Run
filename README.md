@@ -5,6 +5,10 @@ Duo Run
 ```java
 Intersect.overlapConvexPolygons();//!!!!
 ```
+
+**Ad SDK**
+http://teamkarbon.com/cloud/public.php?service=files&t=9075431d4857542adedfc9410c994a29
+
 **Images for Balls & Icons: (Place images in \android\assets)**
 http://teamkarbon.com/cloud/public.php?service=files&t=69d7aca788e27f04971fad1bd79a314c
 
