@@ -1,23 +1,17 @@
 package com.teamkarbon.android.duo_run.android;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 import com.google.android.gms.plus.Plus;
 import com.google.example.games.basegameutils.BaseGameUtils;
-
 import com.purplebrain.adbuddiz.sdk.AdBuddiz;
 import com.teamkarbon.android.duo_run.derptest;
 
@@ -167,9 +161,19 @@ public class AndroidLauncher extends AndroidApplication implements
         Log.d(TAG, "(Interface) submitScore() have been called!");
         if (isSignedIn()) {
             Games.Leaderboards.submitScore(mGoogleApiClient, id, score);
-            Toast.makeText(getApplicationContext(), "Score of " + String.valueOf(score) + " have been submitted!", Toast.LENGTH_SHORT).show();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "Score submitted!", Toast.LENGTH_SHORT).show();
+                }
+            });
         } else {
-            Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "Score submitted!", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 

@@ -669,7 +669,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                         o.isClicked = true;
                         lerp = 0f;
                         lerpFlag = true;
-                        customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(180, 30), descalepercent(80, 60),
+                        customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(260, 30), descalepercent(80, 60),
                                 dialogBoxTexture, new String[]{"Normal", "Insta-Death", "Back"},
                                 new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.MODESELECT);
 
@@ -716,8 +716,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         //#game init
         else if (mode == gameMode.GAME_INIT) {
 
-            if(lerp < 23f && lerpFlag)
-                lerp += Gdx.graphics.getDeltaTime() * 3.5f;//Increase speed of obstacles to make a "zooming" effect
+            if(lerp < 40.5f && lerpFlag)
+                lerp += Gdx.graphics.getDeltaTime() * 7f;//Increase speed of obstacles to make a "zooming" effect
             else {
                 lerpFlag = false;
 
@@ -734,7 +734,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                     mode = gameMode.GAME;//Go to game!
                 }
 
-                if(lerp > -8) lerp -= Gdx.graphics.getDeltaTime() * 7;//Decelerate until
+                if(lerp > -8) lerp -= Gdx.graphics.getDeltaTime() * 14f;//Decelerate until
                 else          lerp = -8;//Stop...
             }
             //Accel: 2% width/s^2
