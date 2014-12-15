@@ -578,6 +578,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             {
                 lerp = 0;
                 lerpFlag = false;
+                androidMethods.showToastMessage("Score submitted!");//Show the score submitted notif here.
                 if(tempButton != null && tempButton.animateFlag)//exit lerp; switch to game init.
                 {
                     tempButton = null;//Clear this.
