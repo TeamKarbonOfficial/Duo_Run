@@ -161,19 +161,8 @@ public class AndroidLauncher extends AndroidApplication implements
         Log.d(TAG, "(Interface) submitScore() have been called!");
         if (isSignedIn()) {
             Games.Leaderboards.submitScore(mGoogleApiClient, id, score);
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), "Score submitted!", Toast.LENGTH_SHORT).show();
-                }
-            });
+            debug("erm", "Score Submitted");
         } else {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), "Score submitted!", Toast.LENGTH_SHORT).show();
-                }
-            });
         }
     }
 
@@ -238,5 +227,15 @@ public class AndroidLauncher extends AndroidApplication implements
     @Override
     public void showflAds() {
         AdBuddiz.showAd(this);
+    }
+
+    @Override
+    public void showToastMessage(String text) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

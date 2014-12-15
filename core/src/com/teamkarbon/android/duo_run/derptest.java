@@ -1158,5 +1158,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
         //Ads
         public void showflAds();
+
+        //Toast notifs
+        public void showToastMessage(String text);
     }
 }
