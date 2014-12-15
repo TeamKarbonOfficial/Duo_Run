@@ -4,7 +4,7 @@ android {
             keyAlias 'KeyStore_DuoRun'
             keyPassword 'karboncarbon'
             storeFile file('C:/Users/Joe/Desktop/Development/Android/KeyStores/KeyStore_DuoRun.jks')
-            //storeFile file('C:/Users/Matthew/AndroidStudiosProjects/Duo_Run/KeyStore_DuoRun.jks')
+            storeFile file('C:/Users/Matthew/AndroidStudiosProjects/Duo_Run/KeyStore_DuoRun.jks')
             storePassword 'karboncarbon'
         }
     }
@@ -129,4 +129,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:20.0.+'
     compile 'com.android.support:support-v4:20.0.+'
     compile 'com.google.android.gms:play-services:+'
+    compile files('C:/Users/Matthew/AndroidStudiosProjects/Duo_Run/libraries/AdBuddiz-2.3.4.jar')
 }
