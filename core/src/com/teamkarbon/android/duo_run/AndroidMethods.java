@@ -62,4 +62,9 @@ public class AndroidMethods implements derptest.AndroidMethods {
     public void showflAds() {
 
     }
+
+    @Override
+    public void showToastMessage(String text) {
+
+    }
 }
