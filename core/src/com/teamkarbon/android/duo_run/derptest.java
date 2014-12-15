@@ -298,6 +298,9 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         playerLeft = new Polygon();
         playerRight = new Polygon();
 
+
+        Gdx.gl.glClearColor(0, 0.06f, 0.13f, 0.8f);
+
         //TODO: INFO: Debug!!! Remove when game functionality complete!
         //#debug init
         mode = gameMode.MAIN_MENU_INIT;
@@ -311,7 +314,6 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
     @Override
     public void render() {
         //#prerender
-        Gdx.gl.glClearColor(0, 0.06f, 0.13f, 0.8f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -349,6 +351,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             if(lerpFlag && gameOver)
             {
                 lerp += Gdx.graphics.getDeltaTime() * 5f;
+                Gdx.gl.glClearColor((float) Math.sin(lerp * Math.PI) / 2f, 0.06f, 0.13f, 0.8f);
             }
             //#render main
             DrawBall();
@@ -547,6 +550,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                 }, new Color(0.1f, 0.4f, 0.1f, 0.5f), CustomGUIBox.BoxType.MODESELECT);
 
                 mode = gameMode.SCORE_DISPLAY;
+
+                Gdx.gl.glClearColor(0, 0.06f, 0.13f, 0.8f);//Set back to normal clear color...
             }
 
             if(!gameOver) {
