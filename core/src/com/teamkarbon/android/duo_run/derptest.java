@@ -569,7 +569,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
 
             if(lerpFlag){
-                customGUIBox.Translate(descalepercent((10 + lerp) * Gdx.graphics.getDeltaTime(), 0));//Animate while lerping
+                customGUIBox.Translate(descalepercent( -(10 + lerp) * Gdx.graphics.getDeltaTime(), 0));//Animate while lerping
                 if(tempButton != null && tempButton.animateFlag)//If that button has been clicked.
                     tempButton.color.a = (float) (0.2f + (Math.sin((double) lerp * 2f) * 0.7f));
                 lerp ++;
