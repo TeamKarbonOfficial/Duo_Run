@@ -63,6 +63,7 @@ public class CustomGUIBox {
             if(options.length <= 3) {//Single line for all buttons
                 for (String s : options) {
                     //tempPos is position of buttons where (0, 0) is the bottom left of the gui box
+                    tempPos = new Vector2();
                     tempPos.x = pwidth(10f + (80 * (count / (float) options.length)));
                     tempPos.y = pheight(10f);
                     tempSize.set(pwidth(80f / (float) options.length), pheight(45f));
