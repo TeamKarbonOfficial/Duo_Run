@@ -6,6 +6,13 @@ Duo Run
 Intersect.overlapConvexPolygons();//!!!!
 ```
 
+**FLOOBIT!!!! WOAW!!**
+www.floobit.com
+Download the IntelliJ Plugin in Android Studios File -> Setting -> IDE Settings -> Plugins -> Search "Floobit" -> Browse -> Download
+Make a new Floobit account on the website using ur existing GitHub account...
+How to join: Ctrl + Shift + A -> Join workspace by URL -> "https://floobits.com/euwbah/Duo_Run (If euwbah be online)
+          or Ctrl + Shift + A -> share publicly -> Share ur url here.
+
 **Ad SDK**
 http://teamkarbon.com/cloud/public.php?service=files&t=9075431d4857542adedfc9410c994a29
 
