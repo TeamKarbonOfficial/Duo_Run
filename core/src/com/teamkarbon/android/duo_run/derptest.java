@@ -385,7 +385,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                 }
 
                 if((!o.type && !o.passed && o.getPos().x < ball.getPos().x) ||
-                        (o.type && !o.passed && o.getPos().x < ball2.getPos().x))
+                        (o.type && !o.passed && o.getPos().x < ball2.getPos().x) && !gameOver)
                 {
                     o.passed = true;
                     Polygon temp = new Polygon();
@@ -572,14 +572,9 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                 customGUIBox.Translate(descalepercent( -(10 + lerp) * Gdx.graphics.getDeltaTime(), 0));//Animate while lerping
                 if(tempButton != null && tempButton.animateFlag)//If that button has been clicked.
                     tempButton.color.a = (float) (0.2f + (Math.sin((double) lerp * 2f) * 0.7f));
-                lerp ++;
-        }
-            if(lerp > 8)//Stop lerping
-            {
-                lerp = 0;
-                lerpFlag = false;
-                androidMethods.showToastMessage("Score submitted!");//Show the score submitted notif here.
-                if(tempButton != null && tempButton.animateFlag)//exit lerp; switch to game init.
+                lerp += Gdx.graphics.getDeltaTime() * 14f;
+
+                if (tempButton != null && lerp > 14 && tempButton.animateFlag)//exit lerp; switch to game init.
                 {
                     tempButton = null;//Clear this.
 
@@ -592,10 +587,27 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                     mode = gameMode.GAME_INIT;
                 }
             }
+            if(lerp > 31f || !lerpFlag)//Stop lerping
+            {
+                if(lerpFlag) {
+                    androidMethods.showToastMessage("Score submitted!");//Show the score submitted notif here.
+                }
+
+                lerpFlag = false;
+
+                if(lerp > -10)
+                {
+                    lerp -= Gdx.graphics.getDeltaTime() * 19f;
+                    customGUIBox.Translate(descalepercent( -(10 + lerp) * Gdx.graphics.getDeltaTime(), 0));//Animate while lerping
+                }
+                else lerp = -10;
+            }
 
             batch.begin();
             if(tempButton == null) tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);
             else customGUIBox.DrawAndUpdate(bigfont, touchData);
+
+            bigfont.draw(batch, "pos: " + customGUIBox.pos.x + ", " + customGUIBox.pos.y + " lerp: " + lerp, 190, 190);
             batch.end();
 
             //Once a CustomButton has been clicked, it will be stored as tempButton so that color
@@ -1162,6 +1174,6 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         public void showflAds();
 
         //Toast notifs
-        public void showToastMessage(String text);
+        public void showToastMessage(String txt);
     }
 }

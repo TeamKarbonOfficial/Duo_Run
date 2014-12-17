@@ -230,11 +230,11 @@ public class AndroidLauncher extends AndroidApplication implements
     }
 
     @Override
-    public void showToastMessage(String text) {
+    public void showToastMessage(final String txt) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), txt, Toast.LENGTH_SHORT).show();
             }
         });
     }

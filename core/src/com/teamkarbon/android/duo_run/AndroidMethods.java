@@ -4,9 +4,13 @@ package com.teamkarbon.android.duo_run;
  * Created by Joe on 25/11/2014.
  */
 
+/*
 public class AndroidMethods implements derptest.AndroidMethods {
 
     //Game Services
+    //PS this class is not necessary
+
+
     @Override
     public void startsignIn() {
 
@@ -68,3 +72,4 @@ public class AndroidMethods implements derptest.AndroidMethods {
 
     }
 }
+*/
