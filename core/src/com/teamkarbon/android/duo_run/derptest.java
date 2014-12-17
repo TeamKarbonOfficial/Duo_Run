@@ -602,10 +602,11 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             //lerping can take place upon the clicked button
             if(tempButton != null) {
                 if (tempButton.text == "Achievements") {
-
+                    androidMethods.showAchievements();//???
                 }
                 else if (tempButton.text == "Leaderboard") {
-
+                    if(instaDeathMode) androidMethods.showScores(LEADERBOARD_INSTADEATH);
+                    else androidMethods.showScores(LEADERBOARD_NORMAL);//???
                 }
                 else if (tempButton.text == "Main Menu") {
                     mode = gameMode.MAIN_MENU_INIT;//Ermmm.... I guess that's all?
