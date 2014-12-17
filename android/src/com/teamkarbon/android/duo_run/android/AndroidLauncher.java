@@ -1,6 +1,7 @@
 package com.teamkarbon.android.duo_run.android;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -34,6 +35,9 @@ public class AndroidLauncher extends AndroidApplication implements
     private final static int REQUEST_ACHIEVEMENTS = 9002;
     private final String ERROR = "ERROR: ";
 
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +53,9 @@ public class AndroidLauncher extends AndroidApplication implements
                 .addApi(Plus.API).addScope(Plus.SCOPE_PLUS_LOGIN)
                 .addApi(Games.API).addScope(Games.SCOPE_GAMES)
                 .build();
+
+        pref = getApplicationContext().getSharedPreferences("MyPref", 0);
+        editor = pref.edit();
     }
 
     //Basic android stuff
@@ -229,6 +236,7 @@ public class AndroidLauncher extends AndroidApplication implements
         AdBuddiz.showAd(this);
     }
 
+    //Toast notifs
     @Override
     public void showToastMessage(final String txt) {
         runOnUiThread(new Runnable() {
@@ -237,5 +245,66 @@ public class AndroidLauncher extends AndroidApplication implements
                 Toast.makeText(getApplicationContext(), txt, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    // Shared Preferences
+    @Override
+    public void prefputBoolean(String KeyName, boolean value) {
+        editor.putBoolean(KeyName, value);
+    }
+
+    @Override
+    public void prefputString(String KeyName, String value) {
+        editor.putString(KeyName, value);
+    }
+
+    @Override
+    public void prefputInt(String KeyName, int value) {
+        editor.putInt(KeyName, value);
+    }
+
+    @Override
+    public void prefputFloat(String KeyName, float value) {
+        editor.putFloat(KeyName, value);
+    }
+
+    @Override
+    public void prefputLong(String KeyName, long value) {
+        editor.putLong(KeyName, value);
+    }
+
+    @Override
+    public boolean prefgetBoolean(String KeyName) {
+        return pref.getBoolean(KeyName, Boolean.parseBoolean(null));
+    }
+
+    @Override
+    public String prefgetString(String KeyName) {
+        return pref.getString(KeyName, null);
+    }
+
+    @Override
+    public int prefgetInt(String KeyName) {
+        return pref.getInt(KeyName, Integer.parseInt(null));
+    }
+
+    @Override
+    public float prefgetFloat(String KeyName) {
+        return pref.getFloat(KeyName, Float.parseFloat(null));
+    }
+
+    @Override
+    public long prefgetLong(String KeyName) {
+        return pref.getLong(KeyName, Long.parseLong(null));
+    }
+
+    @Override
+    public void prefClear() {
+        editor.clear();
+    }
+
+    @Override
+    public void prefCommit() {
+        editor.clear();
     }
 }

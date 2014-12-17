@@ -1176,5 +1176,31 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
         //Toast notifs
         public void showToastMessage(String txt);
+
+        // Shared Preferences
+        /**
+         * Directions:
+         * Once you have made changes to the values from prefputxxx,
+         * Make sure you prefCommit(); or else it wouldn't save
+         *
+         * KeyName is the value you want to use to be recalled at prefgetxxx
+         *
+         * Also, you might want to preset some of the settings in AndroidLauncher,
+         * because if nothing is set, it will return null, which might cause errors :P
+         *
+         * prefClear(); is for a setting reset.
+         */
+        public void prefputBoolean(String KeyName, boolean value);
+        public void prefputString(String KeyName, String value);
+        public void prefputInt(String KeyName, int value);
+        public void prefputFloat(String KeyName, float value);
+        public void prefputLong(String KeyName, long value);
+        public boolean prefgetBoolean(String KeyName);
+        public String prefgetString(String KeyName);
+        public int prefgetInt(String KeyName);
+        public float prefgetFloat(String KeyName);
+        public long prefgetLong(String KeyName);
+        public void prefClear();
+        public void prefCommit();
     }
 }

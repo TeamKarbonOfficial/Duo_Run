@@ -4,7 +4,7 @@ android {
             keyAlias 'KeyStore_DuoRun'
             keyPassword 'karboncarbon'
             storeFile file('C:/Users/Joe/Desktop/Development/Android/KeyStores/KeyStore_DuoRun.jks')
-            storeFile file('C:/Users/Matthew/AndroidStudiosProjects/Duo_Run/KeyStore_DuoRun.jks')
+            //storeFile file('C:/Users/Matthew/AndroidStudiosProjects/Duo_Run/KeyStore_DuoRun.jks')
             storePassword 'karboncarbon'
         }
     }
