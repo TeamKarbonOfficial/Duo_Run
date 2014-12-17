@@ -613,17 +613,18 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             //Once a CustomButton has been clicked, it will be stored as tempButton so that color
             //lerping can take place upon the clicked button
             if(tempButton != null) {
-                if (tempButton.text == "Achievements") {
+                if (tempButton.text.equals("Achievements")) {
                     androidMethods.showAchievements();//???
+                    tempButton = null;
                 }
-                else if (tempButton.text == "Leaderboard") {
+                else if (tempButton.text.equals("Leaderboard")) {
                     if(instaDeathMode) androidMethods.showScores(LEADERBOARD_INSTADEATH);
                     else androidMethods.showScores(LEADERBOARD_NORMAL);//???
                 }
-                else if (tempButton.text == "Main Menu") {
+                else if (tempButton.text.equals("Main Menu")) {
                     mode = gameMode.MAIN_MENU_INIT;//Ermmm.... I guess that's all?
                 }
-                else if (tempButton.text == "Play Again") {
+                else if (tempButton.text.equals("Play Again")) {
                     tempButton.setColor(new Color(0.8f, 0.8f, 0.8f, 0.9f));
                     tempButton.animateFlag = true;
                     lerp = 0f;
