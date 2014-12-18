@@ -99,6 +99,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
     gameMode mode; //A custom enum to manage multiple screens. (Game, main menu etc)
 
+    private final String BACK_BUTTON = "onBackPressed";
+
     ShapeRenderer shapeRenderer;
     SpriteBatch batch;
     Box2DDebugRenderer debugRenderer;
@@ -1003,27 +1005,27 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
     public void onBackPressed() {
         //TODO
-
+        Gdx.app.debug(BACK_BUTTON, "onBackPressed have been called!");
         if(mode == gameMode.MAIN_MENU) {
 
         } else if (mode == gameMode.OPTIONS) {
-
+            mode = gameMode.MAIN_MENU_INIT;
         } else if (mode == gameMode.ABOUT) {
-
+            mode = gameMode.MAIN_MENU_INIT;
         } else if (mode == gameMode.GAME) {
-
-        } else if (mode == gameMode.MAIN_MENU) {
-
+            mode = gameMode.GAME_INIT;
         } else if (mode == gameMode.MAIN_MENU_INIT) {
-
+            //Exit Game?
+            Gdx.app.exit();
         } else if (mode == gameMode.GAME_OVER) {
-
+            //Do nothing?
         } else if (mode == gameMode.GAME_INIT) {
-
+            mode = gameMode.MAIN_MENU_INIT;
         } else if (mode == gameMode.SCORE_DISPLAY) {
-
+            //I guess Main Menu?
+            mode = gameMode.MAIN_MENU_INIT;
         } else {
-
+            //App should be in either Leaderboard or Achievements
         }
     }
 
