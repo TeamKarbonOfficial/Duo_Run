@@ -161,6 +161,10 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         derptest.androidMethods = androidMethods;
     }
 
+    public derptest() {
+
+    }
+
     @Override
     public void create() {
 
@@ -607,7 +611,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             if(tempButton == null) tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);
             else customGUIBox.DrawAndUpdate(bigfont, touchData);
 
-            bigfont.draw(batch, "pos: " + customGUIBox.pos.x + ", " + customGUIBox.pos.y + " lerp: " + lerp, 190, 190);
+            bigfont.draw(batch, "touchpos: " + touchData.x + ", " + touchData.y, 190, 190);
             batch.end();
 
             //Once a CustomButton has been clicked, it will be stored as tempButton so that color
@@ -736,8 +740,29 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         //#game init
         else if (mode == gameMode.GAME_INIT) {
 
-            if(lerp < 40.5f && lerpFlag)
+            if(lerp < 40.5f && lerpFlag) {
                 lerp += Gdx.graphics.getDeltaTime() * 7f;//Increase speed of obstacles to make a "zooming" effect
+                if(gameFlag && instaDeathMode) {//Make sure balls go back to the original spot
+                    if(inRange(ball.getPos().x, pwidth(-3), pwidth(3), rangeMode.WITHIN_OR_EQUIVALENT))
+                    {
+                        /*F = ma
+                        * F = 1/2mv^2
+                        * D = 1/2at^2
+                        * T = 1s
+                        * Given T, m and D and V, Find F such that when ball.x = 0, ball.velocity.x = 0. [5 marks]
+                        * V = D/T
+                        * D = 1/2a * 1
+                        * F = 2d * m ~~ (1)
+                        * F = 1/2mv^2 ~ (2)
+                        * F = 2d * m - 1/2mv^2 (YAY!)
+                       *                              2 *       d               *       m            -   1/2    m*/
+                        ball.body.applyForceToCenter(2 * (0 - ball.getPos().x) * ball.body.getMass() - (1/2 * ball.body.getMass() *
+                                //                         v                ^      2
+                                ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
+
+                    }
+                }
+            }
             else {
                 lerpFlag = false;
 
@@ -843,7 +868,6 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                 }
                 else if(tempButton.text.equals("Insta-Death"))
                 {
-                    //TODO: Fill up
                     gameFlag = true;
                     instaDeathMode = true;
                     lerpFlag = true;
@@ -1137,6 +1161,28 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             o.dispose(world);
         }
         obs.clear();
+    }
+
+    public void onBackPressed() {
+        if(mode == gameMode.GAME_INIT) {
+            
+        } else if (mode == gameMode.GAME) {
+            
+        } else if (mode == gameMode.ABOUT) {
+
+        } else if (mode == gameMode.GAME_OVER) {
+
+        } else if (mode == gameMode.MAIN_MENU) {
+
+        } else if (mode == gameMode.MAIN_MENU_INIT) {
+
+        } else if (mode == gameMode.OPTIONS) {
+
+        } else if (mode == gameMode.SCORE_DISPLAY) {
+
+        } else {
+
+        }
     }
 
     //For debug purposes.

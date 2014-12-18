@@ -137,6 +137,7 @@ public class CustomGUIBox {
                         b.getGlobalPos(this.pos).y + (b.size.y / 2f) - (font.getBounds(b.text).height / 2f));
                 //Single touch capabilities for now...
                 if(b.isClicked(touchData, this.pos)) tempButton = b;
+                Gdx.app.debug("BPOS", b.getGlobalPos(this.pos).x + ", " + b.getGlobalPos(this.pos).y + "::" + b.text);
             }
         }
         else if (boxType == BoxType.CHECKBOX)

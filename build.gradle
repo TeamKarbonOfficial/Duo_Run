@@ -37,7 +37,6 @@ project(":android") {
         compile project(":core")
         compile project(':libraries:BaseGameUtils')
         compile files('C:/Users/Joe/Desktop/Development/Android/Duo_Run/libraries/AdBuddiz-2.3.4.jar')
-        //Change the directory below (Note: there's no need to comment any lines out)
         compile files(file('libraries/AdBuddiz-2.3.4.jar'))
         compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"

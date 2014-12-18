@@ -74,6 +74,12 @@ public class AndroidLauncher extends AndroidApplication implements
         }
     }
 
+    //Override Back Button
+    @Override
+    public void onBackPressed() {
+
+    }
+
     //These are for Game Services
     @Override
     public void onConnected(Bundle bundle) {
