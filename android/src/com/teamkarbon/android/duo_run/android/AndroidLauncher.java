@@ -21,6 +21,8 @@ public class AndroidLauncher extends AndroidApplication implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener{
 
+    derptest derpTest;
+
     private GoogleApiClient mGoogleApiClient;
 
     private boolean mResolvingConnectionFailure = false;
@@ -56,6 +58,8 @@ public class AndroidLauncher extends AndroidApplication implements
 
         pref = getApplicationContext().getSharedPreferences("MyPref", 0);
         editor = pref.edit();
+
+        derpTest = new derptest();
     }
 
     //Basic android stuff
@@ -77,7 +81,7 @@ public class AndroidLauncher extends AndroidApplication implements
     //Override Back Button
     @Override
     public void onBackPressed() {
-
+        derpTest.onBackPressed();
     }
 
     //These are for Game Services

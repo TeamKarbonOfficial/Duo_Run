@@ -280,7 +280,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             }
 
             public boolean touchUp(int x, int y, int pointer, int button) {
-                /* This might not be the best way though...*/
+                /* This might note be the best way though...*/
                 if (x < descalepercent(50, 0).x)  Force = false;
                 if (x >= descalepercent(50, 0).x) Force2 = false;
 
@@ -1001,6 +1001,32 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         MAIN_MENU, OPTIONS, ABOUT, GAME, MAIN_MENU_INIT, GAME_OVER, GAME_INIT, SCORE_DISPLAY
     }
 
+    public void onBackPressed() {
+        //TODO
+
+        if(mode == gameMode.MAIN_MENU) {
+
+        } else if (mode == gameMode.OPTIONS) {
+
+        } else if (mode == gameMode.ABOUT) {
+
+        } else if (mode == gameMode.GAME) {
+
+        } else if (mode == gameMode.MAIN_MENU) {
+
+        } else if (mode == gameMode.MAIN_MENU_INIT) {
+
+        } else if (mode == gameMode.GAME_OVER) {
+
+        } else if (mode == gameMode.GAME_INIT) {
+
+        } else if (mode == gameMode.SCORE_DISPLAY) {
+
+        } else {
+
+        }
+    }
+
     //#class rendertriangle
     public class RenderTriangle {
         float x1, y1, x2, y2, x3, y3;
@@ -1182,28 +1208,6 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             o.dispose(world);
         }
         obs.clear();
-    }
-
-    public void onBackPressed() {
-        if(mode == gameMode.GAME_INIT) {
-            
-        } else if (mode == gameMode.GAME) {
-            
-        } else if (mode == gameMode.ABOUT) {
-
-        } else if (mode == gameMode.GAME_OVER) {
-
-        } else if (mode == gameMode.MAIN_MENU) {
-
-        } else if (mode == gameMode.MAIN_MENU_INIT) {
-
-        } else if (mode == gameMode.OPTIONS) {
-
-        } else if (mode == gameMode.SCORE_DISPLAY) {
-
-        } else {
-
-        }
     }
 
     //For debug purposes.
