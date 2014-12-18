@@ -108,6 +108,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
     Body theCeiling;
     Ball ball;
     Ball ball2;
+    boolean overrideBallAutoPos, overrideBall2AutoPos;
     //Texture balltexture;
     //Texture ball2texture;
     Texture helpbuttontexture;
@@ -302,6 +303,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         playerLeft = new Polygon();
         playerRight = new Polygon();
 
+        overrideBallAutoPos = false;
+        overrideBall2AutoPos = false;
 
         Gdx.gl.glClearColor(0, 0.06f, 0.13f, 0.8f);
 
@@ -553,6 +556,11 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                         "Achievements", "Leaderboard", "Main Menu", "Play Again"
                 }, new Color(0.1f, 0.4f, 0.1f, 0.5f), CustomGUIBox.BoxType.MODESELECT);
 
+                if(!inRange(ball.getPos().x, pwidth(-60), pwidth(60), rangeMode.WITHIN_OR_EQUIVALENT))
+                {
+                    ball.setPos(pwidth(-60), pheight(0));
+                }
+
                 mode = gameMode.SCORE_DISPLAY;
 
                 Gdx.gl.glClearColor(0, 0.06f, 0.13f, 0.8f);//Set back to normal clear color...
@@ -760,12 +768,18 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                                 //                         v                ^      2
                                 ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
 
+                        overrideBallAutoPos = true;
                     }
+                    else overrideBallAutoPos = false;
+
                     if(!inRange(ball2.getPos().x, pwidth(-3), pwidth(3), rangeMode.WITHIN_OR_EQUIVALENT))
                     {
                         ball2.body.applyForceToCenter(2 * (0 - ball.getPos().x) * ball.body.getMass() - (1/2 * ball.body.getMass() *
                                 ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
+
+                        overrideBall2AutoPos = true;
                     }
+                    else overrideBall2AutoPos = false;
                 }
             }
             else {
@@ -1060,13 +1074,14 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             ball2.body.applyForceToCenter(0, 50, true);
 
         //Constantly increase the balls' speed until a certain velocity
-        if (ball.body.getPosition().x < 0)
+        if (ball.body.getPosition().x < 0 && !overrideBallAutoPos)
             ball.body.applyForceToCenter(10, 0, true);
-        if (ball2.body.getPosition().x < 0)
+        if (ball2.body.getPosition().x < 0 && !overrideBall2AutoPos)
             ball2.body.applyForceToCenter(10, 0, true);
-        if (ball.body.getPosition().x > 0)
+
+        if (ball.body.getPosition().x > 0 && !overrideBallAutoPos)
             ball.body.applyForceToCenter(-10, 0, true);
-        if (ball2.body.getPosition().x > 0)
+        if (ball2.body.getPosition().x > 0 && !overrideBall2AutoPos)
             ball2.body.applyForceToCenter(-10, 0, true);
     }
 
