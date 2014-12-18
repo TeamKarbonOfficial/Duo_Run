@@ -280,7 +280,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             }
 
             public boolean touchUp(int x, int y, int pointer, int button) {
-                /* This might note be the best way though...*/
+                /* This might not be the best way though...*/
                 if (x < descalepercent(50, 0).x)  Force = false;
                 if (x >= descalepercent(50, 0).x) Force2 = false;
 
