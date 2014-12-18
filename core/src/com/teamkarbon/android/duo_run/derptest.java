@@ -883,7 +883,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                     ClearAllObstacles(obstacles, world);
                     obstacles.clear();
 
-                    lerp = 0;
+                    lerp += 10;
                 }
                 else if(tempButton.text.equals("Insta-Death"))
                 {
@@ -894,14 +894,14 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                     ClearAllObstacles(obstacles, world);
                     obstacles.clear();
 
-                    lerp = 0;
+                    lerp += 10;
                 }
                 else if(tempButton.text.equals("Back"))
                 {
                     ClearAllObstacles(obstacles, world);
                     obstacles.clear();
 
-                    lerp = 0;//Reset lerp to 0 so that it will move gui out of screen and move obstacle into screen
+                    lerp += 0;//Reset lerp to 0 so that it will move gui out of screen and move obstacle into screen
                     PolygonShape temp = new PolygonShape();
                     temp.setAsBox(pwidth(20), pheight(20));
 
