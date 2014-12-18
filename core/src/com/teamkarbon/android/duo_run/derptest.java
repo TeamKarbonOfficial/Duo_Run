@@ -743,7 +743,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             if(lerp < 40.5f && lerpFlag) {
                 lerp += Gdx.graphics.getDeltaTime() * 7f;//Increase speed of obstacles to make a "zooming" effect
                 if(gameFlag && instaDeathMode) {//Make sure balls go back to the original spot
-                    if(inRange(ball.getPos().x, pwidth(-3), pwidth(3), rangeMode.WITHIN_OR_EQUIVALENT))
+                    if(!inRange(ball.getPos().x, pwidth(-3), pwidth(3), rangeMode.WITHIN_OR_EQUIVALENT))
                     {
                         /*F = ma
                         * F = 1/2mv^2
@@ -760,6 +760,11 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                                 //                         v                ^      2
                                 ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
 
+                    }
+                    if(!inRange(ball2.getPos().x, pwidth(-3), pwidth(3), rangeMode.WITHIN_OR_EQUIVALENT))
+                    {
+                        ball2.body.applyForceToCenter(2 * (0 - ball.getPos().x) * ball.body.getMass() - (1/2 * ball.body.getMass() *
+                                ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
                     }
                 }
             }
