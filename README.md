@@ -12,7 +12,7 @@ Download the IntelliJ Plugin in Android Studios File -> Setting -> IDE Settings 
 Make a new Floobit account on the website using ur existing GitHub account...
 Floobit URL: https://floobits.com/euwbah/Duo_Run
           
-[![Floobits Status]()]()
+[![Floobits Status](https://floobits.com/TeamKarbon/Duo_Run.png)](https://floobits.com/TeamKarbon/Duo_Run/redirect)
 
 **Ad SDK**
 http://teamkarbon.com/cloud/public.php?service=files&t=9075431d4857542adedfc9410c994a29
