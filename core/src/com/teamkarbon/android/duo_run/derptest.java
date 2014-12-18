@@ -270,11 +270,12 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         touchData = new TouchData();
 
         Gdx.input.setInputProcessor(new InputAdapter() {
+            //IMPORTANT: The Y - axis is 0 at the TOP by default.
             public boolean touchDown(int x, int y, int pointer, int button) {
                 if (x < descalepercent(50, 0).x)  Force = true;
                 if (x >= descalepercent(50, 0).x) Force2 = true;
 
-                touchData.set(x, y);
+                touchData.set(x, Gdx.graphics.getHeight() - y);
                 return true;
             }
 
