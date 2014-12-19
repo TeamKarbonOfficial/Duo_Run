@@ -192,7 +192,8 @@ public class AndroidLauncher extends AndroidApplication implements
         if (isSignedIn() && derptest.allowGameServices()) {
             startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient, id), REQUEST_SCORE);
         } else {
-            Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
+            //Toast crashes app D:
+            //FIXME: Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
         }
     }
 
