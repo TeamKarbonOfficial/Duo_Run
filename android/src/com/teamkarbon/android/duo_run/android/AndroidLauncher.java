@@ -180,6 +180,7 @@ public class AndroidLauncher extends AndroidApplication implements
             Games.Leaderboards.submitScore(mGoogleApiClient, id, score);
             debug("erm", "Score Submitted");
         } else {
+
         }
     }
 
