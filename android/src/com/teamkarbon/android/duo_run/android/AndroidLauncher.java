@@ -62,6 +62,17 @@ public class AndroidLauncher extends AndroidApplication implements
         derpTest = new derptest();
     }
 
+    protected void onFailed() {
+        if (!isSignedIn()) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
     //Basic android stuff
     @Override
     protected void onStart() {
@@ -180,9 +191,7 @@ public class AndroidLauncher extends AndroidApplication implements
             Games.Leaderboards.submitScore(mGoogleApiClient, id, score);
             debug("erm", "Score Submitted");
         } else {
-            signIn();
-            if(!isSignedIn())
-                Toast.makeText(getApplicationContext(), "Y U NO SIGN IN!", Toast.LENGTH_SHORT).show();
+            onFailed();
         }
     }
 
@@ -192,8 +201,7 @@ public class AndroidLauncher extends AndroidApplication implements
         if (isSignedIn() && derptest.allowGameServices()) {
             startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient, id), REQUEST_SCORE);
         } else {
-            //Toast crashes app D:
-            //FIXME: Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
+            onFailed();
         }
     }
 
@@ -203,8 +211,7 @@ public class AndroidLauncher extends AndroidApplication implements
         if (isSignedIn() && derptest.allowGameServices()) {
             startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), REQUEST_ACHIEVEMENTS);
         } else {
-            //Not too sure why, but android doesn't like toasts
-            //FIXME: Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
+            onFailed();
         }
     }
 
@@ -214,8 +221,8 @@ public class AndroidLauncher extends AndroidApplication implements
         if (isSignedIn()) {
             Games.Achievements.unlock(mGoogleApiClient, id);
         } else {
+            onFailed();
         }
-            Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -224,7 +231,7 @@ public class AndroidLauncher extends AndroidApplication implements
         if (isSignedIn()) {
             Games.Achievements.increment(mGoogleApiClient, id, number);
         } else {
-            Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
+            onFailed();
         }
     }
 

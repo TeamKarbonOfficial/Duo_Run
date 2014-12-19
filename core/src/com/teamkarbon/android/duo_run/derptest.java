@@ -643,8 +643,11 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                     gsCount = 0;
                 }
                 else if (tempButton.text.equals("Leaderboard")) {
-                    if(instaDeathMode) androidMethods.showScores(LEADERBOARD_INSTADEATH);
-                    else androidMethods.showScores(LEADERBOARD_NORMAL);//???
+                    if(instaDeathMode) {
+                        androidMethods.showScores(LEADERBOARD_INSTADEATH);
+                    } else {
+                        androidMethods.showScores(LEADERBOARD_NORMAL);
+                    }
 
                     //Reset Work Around
                     allowgameservices = false;
