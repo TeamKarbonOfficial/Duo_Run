@@ -94,6 +94,10 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
     private final String GAMESERVICE = "Game Services";
     private final String APP_ID = "444744436262";
     private final String ACHIEVEMENT_GETTING_STARTED = "CgkIppTW5vgMEAIQAA";
+    private final String ACHIEVEMENT_ADDICTED = "CgkIppTW5vgMEAIQBA";
+    private final String ACHIEVEMENT_OH_YOURE_A_CAT = "CgkIppTW5vgMEAIQBQ";
+    private final String ACHIEVEMENT_NOT_AFRAID_OF_DEATH = "CgkIppTW5vgMEAIQBg";
+    private final String ACHIEVEMENT_AVERAGE_JOE = "CgkIppTW5vgMEAIQBw";
     private final String LEADERBOARD_NORMAL = "CgkIppTW5vgMEAIQAQ";
     private final String LEADERBOARD_INSTADEATH = "CgkIppTW5vgMEAIQAg";
 
@@ -569,6 +573,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
                 mode = gameMode.SCORE_DISPLAY;
 
+                gsCount = 0;
+
                 Gdx.gl.glClearColor(0, 0.06f, 0.13f, 0.8f);//Set back to normal clear color...
             }
 
@@ -581,8 +587,9 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         //#score display
         else if (mode == gameMode.SCORE_DISPLAY) {
 
-            if (gsCount < 10) gsCount++;
+            if (gsCount < 51) gsCount++;
             if (gsCount > 5) allowgameservices = true;
+            if (gsCount == 50) androidMethods.showflAds();
 
             DrawBall();
 
