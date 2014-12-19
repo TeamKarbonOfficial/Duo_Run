@@ -99,6 +99,9 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
     gameMode mode; //A custom enum to manage multiple screens. (Game, main menu etc)
 
+    static boolean allowgameservices = true;
+    int gsCount = 0;
+
     private final String BACK_BUTTON = "onBackPressed";
 
     ShapeRenderer shapeRenderer;
@@ -578,6 +581,9 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         //#score display
         else if (mode == gameMode.SCORE_DISPLAY) {
 
+            if (gsCount < 10) gsCount++;
+            if (gsCount > 5) allowgameservices = true;
+
             DrawBall();
 
             DrawFloorsAndCeiling();
@@ -631,10 +637,18 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                 if (tempButton.text.equals("Achievements")) {
                     androidMethods.showAchievements();//???
                     tempButton = null;
+
+                    //Reset Work Around
+                    allowgameservices = false;
+                    gsCount = 0;
                 }
                 else if (tempButton.text.equals("Leaderboard")) {
                     if(instaDeathMode) androidMethods.showScores(LEADERBOARD_INSTADEATH);
                     else androidMethods.showScores(LEADERBOARD_NORMAL);//???
+
+                    //Reset Work Around
+                    allowgameservices = false;
+                    gsCount = 0;
                 }
                 else if (tempButton.text.equals("Main Menu")) {
                     mode = gameMode.MAIN_MENU_INIT;//Ermmm.... I guess that's all?
@@ -1223,6 +1237,10 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         }
         s.trim();
         return s;
+    }
+
+    public static boolean allowGameServices() {
+        return allowgameservices;
     }
 
     //Game Services Interface

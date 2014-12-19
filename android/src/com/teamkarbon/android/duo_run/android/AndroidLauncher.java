@@ -180,13 +180,16 @@ public class AndroidLauncher extends AndroidApplication implements
             Games.Leaderboards.submitScore(mGoogleApiClient, id, score);
             debug("erm", "Score Submitted");
         } else {
+            signIn();
+            if(!isSignedIn())
+                Toast.makeText(getApplicationContext(), "Y U NO SIGN IN!", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void showScores(String id) {
         Log.d(TAG, "(Interface) showScores() have been called!");
-        if (isSignedIn()) {
+        if (isSignedIn() && derptest.allowGameServices()) {
             startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient, id), REQUEST_SCORE);
         } else {
             Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
@@ -196,10 +199,11 @@ public class AndroidLauncher extends AndroidApplication implements
     @Override
     public void showAchievements() {
         Log.d(TAG, "(Interface) showAchievements() have been called!");
-        if (isSignedIn()) {
+        if (isSignedIn() && derptest.allowGameServices()) {
             startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), REQUEST_ACHIEVEMENTS);
         } else {
-            Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
+            //Not too sure why, but android doesn't like toasts
+            //FIXME: Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -209,8 +213,8 @@ public class AndroidLauncher extends AndroidApplication implements
         if (isSignedIn()) {
             Games.Achievements.unlock(mGoogleApiClient, id);
         } else {
-            Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
         }
+            Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
