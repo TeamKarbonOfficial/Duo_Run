@@ -62,15 +62,25 @@ public class AndroidLauncher extends AndroidApplication implements
         derpTest = new derptest();
     }
 
-    protected void onFailed() {
+    protected boolean onFailed() {
+        final boolean[] isResolved = {false};//Just cuz its final gotta set to array for a workaround
+
         if (!isSignedIn()) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(), ERROR + "You are not logged in!", Toast.LENGTH_SHORT).show();
+                    if(derptest.allowGameServices()) {//Make sure the problem is because the user is not signed in, not because of button spam...
+                        signIn();
+                        if(!isSignedIn()) {
+                            Toast.makeText(getApplicationContext(), getString(R.string.signin_other_error), Toast.LENGTH_SHORT).show();
+                            isResolved[0] = false;
+                        }
+                        else isResolved[0] = true;
+                    }
                 }
             });
         }
+        return isResolved[0];
     }
 
     //Basic android stuff
@@ -191,7 +201,11 @@ public class AndroidLauncher extends AndroidApplication implements
             Games.Leaderboards.submitScore(mGoogleApiClient, id, score);
             debug("erm", "Score Submitted");
         } else {
-            onFailed();
+            if(onFailed())//Returns true if resolved..
+            {
+                Games.Leaderboards.submitScore(mGoogleApiClient, id, score);
+                debug("erm", "Score Submitted + Resolve");
+            }
         }
     }
 
@@ -201,7 +215,10 @@ public class AndroidLauncher extends AndroidApplication implements
         if (isSignedIn() && derptest.allowGameServices()) {
             startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient, id), REQUEST_SCORE);
         } else {
-            onFailed();
+            if(onFailed())
+            {
+                startActivityForResult(Games.Leaderboards.getLeaderboardIntent(mGoogleApiClient, id), REQUEST_SCORE);
+            }
         }
     }
 
@@ -211,7 +228,10 @@ public class AndroidLauncher extends AndroidApplication implements
         if (isSignedIn() && derptest.allowGameServices()) {
             startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), REQUEST_ACHIEVEMENTS);
         } else {
-            onFailed();
+            if(onFailed())
+            {
+                startActivityForResult(Games.Achievements.getAchievementsIntent(mGoogleApiClient), REQUEST_ACHIEVEMENTS);
+            }
         }
     }
 
@@ -221,7 +241,10 @@ public class AndroidLauncher extends AndroidApplication implements
         if (isSignedIn()) {
             Games.Achievements.unlock(mGoogleApiClient, id);
         } else {
-            onFailed();
+            if(onFailed())
+            {
+                Games.Achievements.unlock(mGoogleApiClient, id);
+            }
         }
     }
 
@@ -231,7 +254,10 @@ public class AndroidLauncher extends AndroidApplication implements
         if (isSignedIn()) {
             Games.Achievements.increment(mGoogleApiClient, id, number);
         } else {
-            onFailed();
+            if(onFailed())
+            {
+                Games.Achievements.increment(mGoogleApiClient, id, number);
+            }
         }
     }
 
