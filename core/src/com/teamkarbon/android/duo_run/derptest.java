@@ -560,7 +560,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                 obstaclesRemovalTimer = 0f;
                 obstaclesRemoveFlag = false;
                 obstaclesTimer = 0f;
-                mode = gameMode.SCORE_DISPLAY;
+                mode = gameMode.SCORE_DISPLAY;//??
 
                 customGUIBox = new CustomGUIBox(batch, String.valueOf(score), descalepercent(120f, 10f), descalepercent(70f, 70f), dialogBoxTexture, new String[]{
                         "Achievements", "Leaderboard", "Main Menu", "Play Again"
@@ -571,11 +571,25 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                     ball.setPos(pwidth(-60), pheight(0));
                 }
 
-                mode = gameMode.SCORE_DISPLAY;
+                mode = gameMode.SCORE_DISPLAY;//??
 
                 gsCount = 0;
 
                 Gdx.gl.glClearColor(0, 0.06f, 0.13f, 0.8f);//Set back to normal clear color...
+
+                //Achievements
+                if (androidMethods.isSignedIn()) {
+                    //Unlock Getting Started
+                    if(score >= 50) androidMethods.submitNorAchievements(ACHIEVEMENT_GETTING_STARTED);
+                    //Unlock Addicted!
+                    androidMethods.submitInAchievements(ACHIEVEMENT_ADDICTED, 1);
+                    //Unlock Cat
+                    if(instaDeathMode) androidMethods.submitInAchievements(ACHIEVEMENT_OH_YOURE_A_CAT, 1);
+                    //Unlock Not Afraid of Death!
+                    if(instaDeathMode && score >= 50000) androidMethods.submitNorAchievements(ACHIEVEMENT_NOT_AFRAID_OF_DEATH);
+                    //Unlock Average Joe
+                    if(!instaDeathMode && score >=50000) androidMethods.submitNorAchievements(ACHIEVEMENT_AVERAGE_JOE);
+                }
             }
 
             if(!gameOver) {
@@ -594,7 +608,6 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             DrawBall();
 
             DrawFloorsAndCeiling();
-
 
             if(lerpFlag){
                 customGUIBox.Translate(descalepercent( -(10 + lerp) * Gdx.graphics.getDeltaTime(), 0));//Animate while lerping
