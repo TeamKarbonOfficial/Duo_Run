@@ -633,6 +633,9 @@ public class derptest extends ApplicationAdapter {
                 if (tempButton != null && lerp > 14 && tempButton.text.equals("Play Again") && tempButton.animateFlag) {
                     tempButton = null;//Clear this.
                     adShownForThisSession = false;//And this
+                    touchData.deactivate();//And this
+                    lerpFlag = false;//And this
+                    gsCount = 0;//And this.
 
                     //Prep the Game Mode Select box.
                     customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(150, 30), descalepercent(80, 60),
@@ -644,6 +647,9 @@ public class derptest extends ApplicationAdapter {
                 } else if (tempButton != null && lerp > 14 && tempButton.text.equals("Main Menu") && tempButton.animateFlag) {
                     tempButton = null;//Clear this.
                     adShownForThisSession = false;//And this
+                    touchData.deactivate();//And this
+                    lerpFlag = false;//And this
+                    gsCount = 0;//And this.
 
                     //Switch~!
                     mode = gameMode.MAIN_MENU_INIT;
@@ -667,7 +673,7 @@ public class derptest extends ApplicationAdapter {
             if (tempButton == null) tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);
             else customGUIBox.DrawAndUpdate(bigfont, touchData);
 
-            bigfont.draw(batch, "touchpos: " + touchData.x + ", " + touchData.y, 190, 190);
+            bigfont.draw(batch, "touchpos: " + touchData.x + ", " + touchData.y + ", " + touchData.active, 190, 190);
             batch.end();
 
             //Once a CustomButton has been clicked, it will be stored as tempButton so that color
