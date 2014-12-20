@@ -655,6 +655,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             //lerping can take place upon the clicked button
             if(tempButton != null) {
                 if (tempButton.text.equals("Achievements")) {
+			                  	touchData.deactivate();
                     androidMethods.showAchievements();//???
                     tempButton = null;
 
@@ -663,6 +664,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                     gsCount = 0;
                 }
                 else if (tempButton.text.equals("Leaderboard")) {
+                    touchData.deactivate();
                     if(instaDeathMode) {
                         androidMethods.showScores(LEADERBOARD_INSTADEATH);
                     } else {
