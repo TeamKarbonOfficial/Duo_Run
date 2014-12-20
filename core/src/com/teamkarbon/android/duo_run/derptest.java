@@ -73,7 +73,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                                                   the object itself. If the object is rotated 90 degrees right, moving "up"
                                                   is equivalent to moving "right" in the game world.
                 Rotational Translation          : The change of quaternion of the object about its origin.
-                                                  AKA: Rotation with the origin being the pivot :P
+                                                  AKA: Rotation with the origin being tfhe pivot :P
             Lateral Positioning:
                 Vertex (plural Vertices)        : A Vector2 used to define a point in the game world along multiple axes
                 Polygon                         : A set of Vertices in counter clockwise (CCW) order defining the corners
@@ -87,7 +87,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             make obstacles, score, main menu, render menu, buttons, options, about
 
      */
-    public class derptest extends ApplicationAdapter {
+public class derptest extends ApplicationAdapter {
 
     //Everything Game Services
     public static AndroidMethods androidMethods;
@@ -103,7 +103,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
     gameMode mode; //A custom enum to manage multiple screens. (Game, main menu etc)
 
-    static boolean allowgameservices = true;
+    static boolean allowGameServices = true;//A boolean to make sure the gameServices thingy won't spam too much...
+    static boolean adShownForThisSession = false;//A boolean to make sure that the ads are only shown once per game over...
     int gsCount = 0;
 
     private final String BACK_BUTTON = "onBackPressed";
@@ -281,7 +282,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         Gdx.input.setInputProcessor(new InputAdapter() {
             //IMPORTANT: The Y - axis is 0 at the TOP by default.
             public boolean touchDown(int x, int y, int pointer, int button) {
-                if (x < descalepercent(50, 0).x)  Force = true;
+                if (x < descalepercent(50, 0).x) Force = true;
                 if (x >= descalepercent(50, 0).x) Force2 = true;
 
                 touchData.set(x, Gdx.graphics.getHeight() - y);
@@ -290,7 +291,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
             public boolean touchUp(int x, int y, int pointer, int button) {
                 /* This might note be the best way though...*/
-                if (x < descalepercent(50, 0).x)  Force = false;
+                if (x < descalepercent(50, 0).x) Force = false;
                 if (x >= descalepercent(50, 0).x) Force2 = false;
 
                 touchData.deactivate();
@@ -365,8 +366,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         //#game
         else if (mode == gameMode.GAME) {
 
-            if(lerpFlag && gameOver)
-            {
+            if (lerpFlag && gameOver) {
                 lerp += Gdx.graphics.getDeltaTime() * 5f;
                 Gdx.gl.glClearColor((float) Math.sin(lerp * Math.PI) / 2f, 0.06f, 0.13f, 0.8f);
             }
@@ -383,7 +383,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
                 Obstacle o = obstacles.get(x);
 
-                if(!gameOver) o.translate(percent(-(7 + level) * Gdx.graphics.getDeltaTime(), 0f));//Move left (7 + level) % of screen per second..
+                if (!gameOver)
+                    o.translate(percent(-(7 + level) * Gdx.graphics.getDeltaTime(), 0f));//Move left (7 + level) % of screen per second..
                 else o.translate(percent(-(7 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
 
                 //Remove at least 4 obstacles at a time
@@ -393,17 +394,15 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                     o.dispose(world);
                     obstaclesRemoveFlag = true;//This shows that a bulk removal has taken place.
                     continue;
-                }
-                else if (o.getPos().x < OUT_OF_BOUNDS_THRESHOLD) {
+                } else if (o.getPos().x < OUT_OF_BOUNDS_THRESHOLD) {
                     obstacles.remove(o);
                     x--;
                     o.dispose(world);
                     continue;
                 }
 
-                if((!o.type && !o.passed && o.getPos().x < ball.getPos().x) ||
-                        (o.type && !o.passed && o.getPos().x < ball2.getPos().x) && !gameOver)
-                {
+                if ((!o.type && !o.passed && o.getPos().x < ball.getPos().x) ||
+                        (o.type && !o.passed && o.getPos().x < ball2.getPos().x) && !gameOver) {
                     o.passed = true;
                     Polygon temp = new Polygon();
                     temp.setVertices(o.getVerticesAsFloatArray());
@@ -414,7 +413,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             }
 
             //Reset the timer knowing that a removal has taken place.
-            if(!gameOver && obstaclesRemoveFlag) obstaclesRemovalTimer = 0;
+            if (!gameOver && obstaclesRemoveFlag) obstaclesRemovalTimer = 0;
 
             //#Score
             score = (int) rawscore;
@@ -526,7 +525,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             //NOTE: This is not the last block of code in this gameMode. This is a flag setter to
             //      cue in the lerping of the obstacles out of the screen, and for the obstacles to
             //      stop spawning.
-            if(!gameOver) {
+            if (!gameOver) {
                 if (instaDeathMode) {
                     if (!inRange(ball.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN) ||
                             !inRange(ball2.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN)) {
@@ -552,8 +551,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             //NOTE: This is the final block of code before switching to score display.
             //      as this is when there are no more obstacles on screen and all have been disposed.
 
-            if(gameOver && obstacles.size() == 0)
-            {
+            if (gameOver && obstacles.size() == 0) {
                 lerp = 0;
                 lerpFlag = true;
                 gameOver = false;
@@ -566,8 +564,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                         "Achievements", "Leaderboard", "Main Menu", "Play Again"
                 }, new Color(0.1f, 0.4f, 0.1f, 0.5f), CustomGUIBox.BoxType.MODESELECT);
 
-                if(!inRange(ball.getPos().x, pwidth(-60), pwidth(60), rangeMode.WITHIN_OR_EQUIVALENT))
-                {
+                if (!inRange(ball.getPos().x, pwidth(-60), pwidth(60), rangeMode.WITHIN_OR_EQUIVALENT)) {
                     ball.setPos(pwidth(-60), pheight(0));
                 }
 
@@ -580,44 +577,62 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                 //Achievements
                 if (androidMethods.isSignedIn()) {
                     //Unlock Getting Started
-                    if(score >= 50) androidMethods.submitNorAchievements(ACHIEVEMENT_GETTING_STARTED);
+                    if (score >= 50)
+                        androidMethods.submitNorAchievements(ACHIEVEMENT_GETTING_STARTED);
                     //Unlock Addicted!
                     androidMethods.submitInAchievements(ACHIEVEMENT_ADDICTED, 1);
                     //Unlock Cat
-                    if(instaDeathMode) androidMethods.submitInAchievements(ACHIEVEMENT_OH_YOURE_A_CAT, 1);
+                    if (instaDeathMode)
+                        androidMethods.submitInAchievements(ACHIEVEMENT_OH_YOURE_A_CAT, 1);
                     //Unlock Not Afraid of Death!
-                    if(instaDeathMode && score >= 50000) androidMethods.submitNorAchievements(ACHIEVEMENT_NOT_AFRAID_OF_DEATH);
+                    if (instaDeathMode && score >= 50000)
+                        androidMethods.submitNorAchievements(ACHIEVEMENT_NOT_AFRAID_OF_DEATH);
                     //Unlock Average Joe
-                    if(!instaDeathMode && score >=50000) androidMethods.submitNorAchievements(ACHIEVEMENT_AVERAGE_JOE);
+                    if (!instaDeathMode && score >= 50000)
+                        androidMethods.submitNorAchievements(ACHIEVEMENT_AVERAGE_JOE);
                 }
             }
 
-            if(!gameOver) {
+            if (!gameOver) {
                 obstaclesTimer += Gdx.graphics.getDeltaTime();
                 obstaclesRemovalTimer += Gdx.graphics.getDeltaTime();
             }
         }
 
         //#score display
+        //IMPORTANT:
+        //Flags used: gsCount -> To prevent derping of UIThread, and to time to ads
+        //            adShownForThisSession -> Make sure ads show once only per game over... well, maybe less idk
+        //            tempButton -> When this is not null, means that a tempButton has been permanently selected,
+        //                          and a mode change is in progress
+        //            lerpFlag -> To manage lerping of the CustomGUIBox. When true and lerp > 31, decelerate and show the score submit thingy
+        //                                                               When false, just decelerate
+        //                                                               When true, just accelerate
+        //            touchData -> Make sure to deactivate after a click has been processed to prevent infinite clicking!
+        //Remember to RESET them all!!!
         else if (mode == gameMode.SCORE_DISPLAY) {
 
             if (gsCount < 51) gsCount++;
-            if (gsCount > 5) allowgameservices = true;
-            if (gsCount == 50) androidMethods.showflAds();
+            if (gsCount > 5) allowGameServices = true;
+            if (!adShownForThisSession && gsCount == 50) {
+                androidMethods.showflAds();
+                adShownForThisSession = true;
+            }
 
             DrawBall();
 
             DrawFloorsAndCeiling();
 
-            if(lerpFlag){
-                customGUIBox.Translate(descalepercent( -(10 + lerp) * Gdx.graphics.getDeltaTime(), 0));//Animate while lerping
-                if(tempButton != null && tempButton.animateFlag)//If that button has been clicked.
+            if (lerpFlag) {
+                customGUIBox.Translate(descalepercent(-(10 + lerp) * Gdx.graphics.getDeltaTime(), 0));//Animate while lerping
+                if (tempButton != null && tempButton.animateFlag)//If that button has been clicked.
                     tempButton.color.a = (float) (0.2f + (Math.sin((double) lerp * 2f) * 0.7f));
                 lerp += Gdx.graphics.getDeltaTime() * 14f;
 
-                if (tempButton != null && lerp > 14 && tempButton.animateFlag)//exit lerp; switch to game init.
-                {
+                //CHANGE MODE! switch to game init or main menu init
+                if (tempButton != null && lerp > 14 && tempButton.text.equals("Play Again") && tempButton.animateFlag) {
                     tempButton = null;//Clear this.
+                    adShownForThisSession = false;//And this
 
                     //Prep the Game Mode Select box.
                     customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(150, 30), descalepercent(80, 60),
@@ -626,26 +641,30 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
                     //Switch~!
                     mode = gameMode.GAME_INIT;
+                } else if (tempButton != null && lerp > 14 && tempButton.text.equals("Main Menu") && tempButton.animateFlag) {
+                    tempButton = null;//Clear this.
+                    adShownForThisSession = false;//And this
+
+                    //Switch~!
+                    mode = gameMode.MAIN_MENU_INIT;
                 }
             }
-            if(lerp > 31f || !lerpFlag)//Stop lerping
+            if (lerp > 31f || !lerpFlag)//Stop lerping
             {
-                if(lerpFlag) {
+                if (lerpFlag) {
                     androidMethods.showToastMessage("Score submitted!");//Show the score submitted notif here.
                 }
 
                 lerpFlag = false;
 
-                if(lerp > -10)
-                {
+                if (lerp > -10) {
                     lerp -= Gdx.graphics.getDeltaTime() * 19f;
-                    customGUIBox.Translate(descalepercent( -(10 + lerp) * Gdx.graphics.getDeltaTime(), 0));//Animate while lerping
-                }
-                else lerp = -10;
+                    customGUIBox.Translate(descalepercent(-(10 + lerp) * Gdx.graphics.getDeltaTime(), 0));//Animate while lerping
+                } else lerp = -10;
             }
 
             batch.begin();
-            if(tempButton == null) tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);
+            if (tempButton == null) tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);
             else customGUIBox.DrawAndUpdate(bigfont, touchData);
 
             bigfont.draw(batch, "touchpos: " + touchData.x + ", " + touchData.y, 190, 190);
@@ -653,32 +672,33 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
             //Once a CustomButton has been clicked, it will be stored as tempButton so that color
             //lerping can take place upon the clicked button
-            if(tempButton != null) {
+            if (tempButton != null) {
                 if (tempButton.text.equals("Achievements")) {
-			                  	touchData.deactivate();
-                    androidMethods.showAchievements();//???
-                    tempButton = null;
+                    touchData.deactivate();
+                    androidMethods.showAchievements();
 
                     //Reset Work Around
-                    allowgameservices = false;
+                    tempButton = null;
+                    allowGameServices = false;
                     gsCount = 0;
-                }
-                else if (tempButton.text.equals("Leaderboard")) {
+                } else if (tempButton.text.equals("Leaderboard")) {
                     touchData.deactivate();
-                    if(instaDeathMode) {
+                    if (instaDeathMode) {
                         androidMethods.showScores(LEADERBOARD_INSTADEATH);
                     } else {
                         androidMethods.showScores(LEADERBOARD_NORMAL);
                     }
 
                     //Reset Work Around
-                    allowgameservices = false;
+                    tempButton = null;
+                    allowGameServices = false;
                     gsCount = 0;
-                }
-                else if (tempButton.text.equals("Main Menu")) {
-                    mode = gameMode.MAIN_MENU_INIT;//Ermmm.... I guess that's all?
-                }
-                else if (tempButton.text.equals("Play Again")) {
+                } else if (tempButton.text.equals("Main Menu")) {
+                    tempButton.setColor(new Color(0.8f, 0.8f, 0.8f, 0.9f));
+                    tempButton.animateFlag = true;
+                    lerp = 0f;
+                    lerpFlag = true;
+                } else if (tempButton.text.equals("Play Again")) {
                     tempButton.setColor(new Color(0.8f, 0.8f, 0.8f, 0.9f));
                     tempButton.animateFlag = true;
                     lerp = 0f;
@@ -748,9 +768,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                                 new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.MODESELECT);
 
                     }
-                }
-                else if(o.id == "options")
-                {
+                } else if (o.id == "options") {
                     bigfont.setScale(3f);
 
                     bigfont.setColor(new Color(1, 1, 1, 1));
@@ -771,13 +789,9 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                         customGUIBox = new CustomGUIBox(batch, "Options", descalepercent(150, 30), descalepercent(80, 60),
                                 dialogBoxTexture, tempOptions, new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.CHECKBOX);
                     }
-                }
-                else if(o.id == "stats")
-                {
+                } else if (o.id == "stats") {
 
-                }
-                else if(o.id == "customize")
-                {
+                } else if (o.id == "customize") {
 
                 }
                 batch.end();
@@ -790,11 +804,10 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         //#game init
         else if (mode == gameMode.GAME_INIT) {
 
-            if(lerp < 40.5f && lerpFlag) {
+            if (lerp < 40.5f && lerpFlag) {
                 lerp += Gdx.graphics.getDeltaTime() * 7f;//Increase speed of obstacles to make a "zooming" effect
-                if(gameFlag && instaDeathMode) {//Make sure balls go back to the original spot
-                    if(!inRange(ball.getPos().x, pwidth(-3), pwidth(3), rangeMode.WITHIN_OR_EQUIVALENT))
-                    {
+                if (gameFlag && instaDeathMode) {//Make sure balls go back to the original spot
+                    if (!inRange(ball.getPos().x, pwidth(-3), pwidth(3), rangeMode.WITHIN_OR_EQUIVALENT)) {
                         /*F = ma
                         * F = 1/2mv^2
                         * D = 1/2at^2
@@ -806,42 +819,38 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                         * F = 1/2mv^2 ~ (2)
                         * F = 2d * m - 1/2mv^2 (YAY!)
                        *                              2 *       d               *       m            -   1/2    m*/
-                        ball.body.applyForceToCenter(2 * (0 - ball.getPos().x) * ball.body.getMass() - (1/2 * ball.body.getMass() *
+                        ball.body.applyForceToCenter(2 * (0 - ball.getPos().x) * ball.body.getMass() - (1 / 2 * ball.body.getMass() *
                                 //                         v                ^      2
                                 ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
 
                         overrideBallAutoPos = true;
-                    }
-                    else overrideBallAutoPos = false;
+                    } else overrideBallAutoPos = false;
 
-                    if(!inRange(ball2.getPos().x, pwidth(-3), pwidth(3), rangeMode.WITHIN_OR_EQUIVALENT))
-                    {
-                        ball2.body.applyForceToCenter(2 * (0 - ball.getPos().x) * ball.body.getMass() - (1/2 * ball.body.getMass() *
+                    if (!inRange(ball2.getPos().x, pwidth(-3), pwidth(3), rangeMode.WITHIN_OR_EQUIVALENT)) {
+                        ball2.body.applyForceToCenter(2 * (0 - ball.getPos().x) * ball.body.getMass() - (1 / 2 * ball.body.getMass() *
                                 ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
 
                         overrideBall2AutoPos = true;
-                    }
-                    else overrideBall2AutoPos = false;
+                    } else overrideBall2AutoPos = false;
                 }
-            }
-            else {
+            } else {
                 lerpFlag = false;
 
-                if(backFlag && lerp < -1f)//Reaches same speed as obs moving in main menu, 7 pwidth / s leftwards
+                if (backFlag && lerp < -1f)//Reaches same speed as obs moving in main menu, 7 pwidth / s leftwards
                 {
                     backFlag = false;//Reset dem flags.
                     lerpFlag = true;
                     mode = gameMode.MAIN_MENU;//Transit to main menu!
                 }
-                if(gameFlag && lerp < -2f)//Same speed as obs moving in game, 6 pwidth / s
+                if (gameFlag && lerp < -2f)//Same speed as obs moving in game, 6 pwidth / s
                 {
                     gameFlag = false;
                     lerpFlag = true;
                     mode = gameMode.GAME;//Go to game!
                 }
 
-                if(lerp > -8) lerp -= Gdx.graphics.getDeltaTime() * 14f;//Decelerate until
-                else          lerp = -8;//Stop...
+                if (lerp > -8) lerp -= Gdx.graphics.getDeltaTime() * 14f;//Decelerate until
+                else lerp = -8;//Stop...
             }
             //Accel: 2% width/s^2
 
@@ -860,7 +869,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                 Obstacle o = obstacles.get(x);
 
                 //either lerping or clicked on the back button
-                if(lerpFlag || backFlag || gameFlag) o.translate(percent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
+                if (lerpFlag || backFlag || gameFlag)
+                    o.translate(percent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
 
                 else {
                     ClearAllObstacles(obstacles, world);
@@ -871,7 +881,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
 
                 CreateRenderTriangles(o, triangles);
 
-                if(o.id.equals("play")) {
+                if (o.id.equals("play")) {
                     bigfont.setScale(3f);
                     bigfont.setColor(new Color(1, 1, 1, 1));
                     batch.begin();
@@ -896,27 +906,19 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             bigfont.draw(batch, "GUI pos: " + customGUIBox.pos.x + ", " + customGUIBox.pos.y, 60, 200);
 
             batch.end();
-            for(CustomButton c : customGUIBox.buttons)
-            {
-                if(backFlag && c.text.equals("Back"))
-                {
+            for (CustomButton c : customGUIBox.buttons) {
+                if (backFlag && c.text.equals("Back")) {
                     //Do that pulsating alpha thingy XD
                     c.color.a = (float) Math.sin((double) lerp * 4) / 4f + 0.4f;
-                }
-                else if(gameFlag && instaDeathMode && c.text.equals("Insta-Death"))
-                {
+                } else if (gameFlag && instaDeathMode && c.text.equals("Insta-Death")) {
                     c.color.a = (float) Math.sin((double) lerp * 4) / 4f + 0.4f;
-                }
-                else if(gameFlag && !instaDeathMode && c.text.equals("Normal"))
-                {
+                } else if (gameFlag && !instaDeathMode && c.text.equals("Normal")) {
                     c.color.a = (float) Math.sin((double) lerp * 4) / 4f + 0.4f;
                 }
             }
-            if(tempButton != null && !backFlag && !gameFlag)
-            {
+            if (tempButton != null && !backFlag && !gameFlag) {
                 Gdx.app.debug("gameModeSelect", tempButton.text);
-                if(tempButton.text.equals("Normal"))
-                {
+                if (tempButton.text.equals("Normal")) {
                     //TODO: Fill up
                     gameFlag = true;
                     instaDeathMode = false;
@@ -926,9 +928,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                     obstacles.clear();
 
                     lerp += 10;
-                }
-                else if(tempButton.text.equals("Insta-Death"))
-                {
+                } else if (tempButton.text.equals("Insta-Death")) {
                     gameFlag = true;
                     instaDeathMode = true;
                     lerpFlag = true;
@@ -937,9 +937,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
                     obstacles.clear();
 
                     lerp += 10;
-                }
-                else if(tempButton.text.equals("Back"))
-                {
+                } else if (tempButton.text.equals("Back")) {
                     ClearAllObstacles(obstacles, world);
                     obstacles.clear();
 
@@ -1007,8 +1005,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         return temp;
     }
 
-    public Vector2 descalepercent(float x, float y)
-    {
+    public Vector2 descalepercent(float x, float y) {
         Vector2 temp = new Vector2();
         temp.x = (x / 100f) * Gdx.graphics.getWidth();
         temp.y = (y / 100f) * Gdx.graphics.getHeight();
@@ -1045,7 +1042,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
     public void onBackPressed() {
         //TODO
         Gdx.app.debug(BACK_BUTTON, "onBackPressed have been called!");
-        if(mode == gameMode.MAIN_MENU) {
+        if (mode == gameMode.MAIN_MENU) {
 
         } else if (mode == gameMode.OPTIONS) {
             mode = gameMode.MAIN_MENU_INIT;
@@ -1134,8 +1131,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
     }
 
     //#process input
-    public void ProcessInput()
-    {
+    public void ProcessInput() {
         if (Force)
             ball.body.applyForceToCenter(0, 50, true);
         if (Force2)
@@ -1154,8 +1150,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
     }
 
     //#draw ball
-    public void DrawBall()
-    {
+    public void DrawBall() {
         shapeRenderer.setColor(0.5f, 0.5f, 0f, 0.4f);
         shapeRenderer.circle(ball.body.getPosition().x, ball.body.getPosition().y, pheight(10), 45);
         shapeRenderer.setColor(0f, 0f, 1f, 0.4f);
@@ -1163,8 +1158,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
     }
 
     //#draw floors and ceiling
-    public void DrawFloorsAndCeiling()
-    {
+    public void DrawFloorsAndCeiling() {
         //DrawAndUpdate the floors and the ceiling
         shapeRenderer.setColor(0.15f, 0.4f, 0.15f, 0.7f);
 
@@ -1177,8 +1171,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
     }
 
     //#create RenderTriangles
-    public void CreateRenderTriangles(Obstacle o, ArrayList<RenderTriangle> triangles)
-    {
+    public void CreateRenderTriangles(Obstacle o, ArrayList<RenderTriangle> triangles) {
         if (o.cshape == null && o.shape.getVertexCount() == 3)//Triangle
         {
             Vector2[] vects = new Vector2[]{new Vector2(), new Vector2(), new Vector2()};
@@ -1218,8 +1211,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
             triangles.add(new RenderTriangle(vects2, o.color));
 
 
-        }
-        else //circles
+        } else //circles
         {
             shapeRenderer.setColor(o.color);
             shapeRenderer.circle(o.getPos().x, o.getPos().y, o.radius, 25);
@@ -1227,10 +1219,8 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
     }
 
     //#DrawAndUpdate RenderTriangles
-    public void DrawAndUpdateRenderTriangles(ArrayList<RenderTriangle> triangles)
-    {
-        for (int i = 0; i < triangles.size(); i++)
-        {
+    public void DrawAndUpdateRenderTriangles(ArrayList<RenderTriangle> triangles) {
+        for (int i = 0; i < triangles.size(); i++) {
             RenderTriangle r = triangles.get(i);
             shapeRenderer.setColor(r.c);
             shapeRenderer.triangle(r.x1, r.y1, r.x2, r.y2, r.x3, r.y3);
@@ -1242,21 +1232,17 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         }
     }
 
-    public void ClearAllObstacles(ArrayList<Obstacle> obs, World world)
-    {
-        for(Obstacle o : obs)
-        {
+    public void ClearAllObstacles(ArrayList<Obstacle> obs, World world) {
+        for (Obstacle o : obs) {
             o.dispose(world);
         }
         obs.clear();
     }
 
     //For debug purposes.
-    public String floatArrayToString(float[] floats)
-    {
+    public String floatArrayToString(float[] floats) {
         String s = "";
-        for(float f : floats)
-        {
+        for (float f : floats) {
             s += String.valueOf(f);
             s += ", ";
         }
@@ -1265,7 +1251,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
     }
 
     public static boolean allowGameServices() {
-        return allowgameservices;
+        return allowGameServices;
     }
 
     //Game Services Interface
@@ -1275,16 +1261,25 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
     public interface AndroidMethods {
         //Game Services
         public void startsignIn();
+
         public void signIn();
+
         public void signOut();
+
         public void submitScore(String id, long score);
+
         public void showScores(String id);
+
         public void showAchievements();
+
         //NOTE! This is for NORMAL Achievements
         public void submitNorAchievements(String id);
+
         //NOTE! This is for Incremental Achievements
         public void submitInAchievements(String id, int number);
+
         public boolean isSignedIn();
+
         public void onSignInSucceeded();
 
         //Ads
@@ -1294,29 +1289,41 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
         public void showToastMessage(String txt);
 
         // Shared Preferences
+
         /**
          * Directions:
          * Once you have made changes to the values from prefputxxx,
          * Make sure you prefCommit(); or else it wouldn't save
-         *
+         * <p/>
          * KeyName is the value you want to use to be recalled at prefgetxxx
-         *
+         * <p/>
          * Also, you might want to preset some of the settings in AndroidLauncher,
          * because if nothing is set, it will return null, which might cause errors :P
-         *
+         * <p/>
          * prefClear(); is for a setting reset.
          */
         public void prefputBoolean(String KeyName, boolean value);
+
         public void prefputString(String KeyName, String value);
+
         public void prefputInt(String KeyName, int value);
+
         public void prefputFloat(String KeyName, float value);
+
         public void prefputLong(String KeyName, long value);
+
         public boolean prefgetBoolean(String KeyName);
+
         public String prefgetString(String KeyName);
+
         public int prefgetInt(String KeyName);
+
         public float prefgetFloat(String KeyName);
+
         public long prefgetLong(String KeyName);
+
         public void prefClear();
+
         public void prefCommit();
     }
 }
