@@ -614,7 +614,7 @@ public class derptest extends ApplicationAdapter {
 
             if (gsCount < 51) gsCount++;
             if (gsCount > 4) allowGameServices = true;
-            if (!adShownForThisSession && gsCount == 50) {
+            if (!adShownForThisSession && gsCount == 130) {
                 androidMethods.showflAds();
                 adShownForThisSession = true;
             }
