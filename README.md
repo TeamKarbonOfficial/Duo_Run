@@ -53,9 +53,14 @@ TODO
 - Make an endgame situation function
     - Extend the CustomGUIBox to fit 4 buttons in a 2 x 2 button matrix. **DONE**
     - Display a proper integer score in a rather convincing font. **In progress**
-    - Display a 2 x 2 button matrix consisting of "Leaderboard", "Menu", "Play Again" and "Achievements" **In progress*
-    - Figure out if that Achievements button should be in the main menu instead... :P
-- Create levels **done**
+    - Display a 2 x 2 button matrix consisting of "Leaderboard", "Main Menu", "Play Again" and "Achievements" **In progress*
+        - Fix lotsa bugs with Leaderboard and Achievements button
+        - Make sure the Main Menu button and Achievements button actually work.
+- Create levels **TODO**
+    - Gradually increase difficulty as game time passes.
+        - Increase speed
+        - Increase Spawn rate
+        - Spawn obstacles that move (Might be a little complex tho XD)
 - Create a level select screen **DONE**
     - Make proper GUI **DONE**
 - Create a main menu screen
@@ -76,4 +81,16 @@ TODO
     - Add at least 5 achievements (Required by Playstore) **Done**
     - Add Events??
     - Add leaderboards for all the gamemodes **Done**
+    - In-game money *In the quite far future*
+        - Make them as collectibles in the game + more with higher score
+        - Earned with achievements unlocked
+        - Buy upgrades (Applies in multiplayer mode as well!)
+            - Revive
+            - Increased control (level 1 - 9; level 10 = control of both up and down movements for both balls)
+            - Slow-mo (spawns collectibles in-game which temporarily slows the obstacles {not the whole game} down; level <=> frequency of spawn)
+            - One-colour (spawns collectibles in-game which renders all the obstacles to a single colour for 5s)
+    - Multiplayer mode *In the far future*
+        - One player controls one ball, but during the game, the two players will switch which sprite they're controlling
+        - Custom Sprites. (Put random picture, and tint the picture so that the user will know which faction the user is in)
+    - Redeem code **(10^9001.337)! / (3 - (1011b XOR 1000)) years later**
 - Test it on other devices too (to make sure the resolutions work and that the graphics aren't off-screen)
