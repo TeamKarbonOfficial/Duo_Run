@@ -48,7 +48,7 @@ TODO
     - Make them spawn properly **done**
     - Make them less laggy...  **done**
     - Make a proper scoring system based on area of obstacles covered **done**
-- Find out a way to check for collisions **done**
+- Find out a way to check for collisions **DONE**
 - Actually check for collisions **done**
 - Make an endgame situation function
     - Extend the CustomGUIBox to fit 4 buttons in a 2 x 2 button matrix. **DONE**
@@ -73,7 +73,7 @@ TODO
 - Add Game Service **In progress**
     - Get necessary libraries **Done**
     - Log in to Game Services **Done**
-    - Add at least 5 achievements (Required by Playstore) **suggestions?**
+    - Add at least 5 achievements (Required by Playstore) **Done**
     - Add Events??
     - Add leaderboards for all the gamemodes **Done**
 - Test it on other devices too (to make sure the resolutions work and that the graphics aren't off-screen)

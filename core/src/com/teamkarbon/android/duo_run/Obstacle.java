@@ -214,7 +214,7 @@ public class Obstacle {
         for(int _sides = 0; _sides < sides; _sides ++)//FIXME: sides variable is 0!
         {
             temp[_sides * 2] = localvertices[_sides * 2] + this.getPos().x;
-            temp[_sides * 2 + 1] = localvertices[_sides * 2 + 1] + this.getPos().y - 1f;
+            temp[_sides * 2 + 1] = localvertices[_sides * 2 + 1] + this.getPos().y - 0.6f;
         }
         return temp;
     }
