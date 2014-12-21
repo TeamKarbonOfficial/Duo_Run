@@ -865,11 +865,12 @@ public class derptest extends ApplicationAdapter {
                         * Given T, m and D and V, Find F such that when ball.x = 0, ball.velocity.x = 0. [5 marks]
                         * V = D/T
                         * D = 1/2a * 1
-                        * F = 2d * m ~~ (1)
+                        * D = 1/2 * F / m
+                        * F = 2d / m ~~ (1)
                         * F = 1/2mv^2 ~ (2)
-                        * F = 2d * m - 1/2mv^2 (YAY!)
+                        * F = 2d / m - 1/2mv^2 (YAY!)
                        *                              2 *       d               *       m            -   1/2    m*/
-                            ball.body.applyForceToCenter(2 * (0 - ball.getPos().x) * ball.body.getMass() - (1 / 2 * ball.body.getMass() *
+                            ball.body.applyForceToCenter(2 * (0 - ball.getPos().x) / ball.body.getMass() - (1 / 2 * ball.body.getMass() *
                                     //                         v                ^      2
                                     ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
 
@@ -896,12 +897,16 @@ public class derptest extends ApplicationAdapter {
                 {
                     backFlag = false;//Reset dem flags.
                     lerpFlag = false;
+                    overrideBallAutoPos = false;
+                    overrideBall2AutoPos = false;
                     mode = gameMode.MAIN_MENU;//Transit to main menu!
                 }
                 if (gameFlag && lerp < -2f)//Same speed as obs moving in game, 6 pwidth / s
                 {
                     gameFlag = false;
                     lerpFlag = false;
+                    overrideBallAutoPos = false;
+                    overrideBall2AutoPos = false;
                     mode = gameMode.GAME;//Go to game!
                 }
 
