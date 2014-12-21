@@ -616,7 +616,7 @@ public class derptest extends ApplicationAdapter {
         //Remember to RESET them all!!!
         else if (mode == gameMode.SCORE_DISPLAY) {
 
-            if (gsCount < 51) gsCount++;
+            if (gsCount <= 130) gsCount++;
             if (gsCount > 4) allowGameServices = true;
             if (!adShownForThisSession && gsCount == 130) {
                 androidMethods.showflAds();
