@@ -857,7 +857,7 @@ public class derptest extends ApplicationAdapter {
                 lerp += Gdx.graphics.getDeltaTime() * 7f;//Increase speed of obstacles to make a "zooming" effect
                 if (gameFlag) {//Make sure balls go back to the original spot
                     if(instaDeathMode) {
-                        if (!inRange(ball.getPos().x, pwidth(-3), pwidth(3), rangeMode.WITHIN_OR_EQUIVALENT)) {
+                        if (!inRange(ball.getPos().x, pwidth(-1), pwidth(1), rangeMode.WITHIN_OR_EQUIVALENT)) {
                         /*F = ma
                         * F = 1/2mv^2
                         * D = 1/2at^2
@@ -877,15 +877,15 @@ public class derptest extends ApplicationAdapter {
                             overrideBallAutoPos = true;
                         } else overrideBallAutoPos = false;
 
-                        if (!inRange(ball2.getPos().x, pwidth(-3), pwidth(3), rangeMode.WITHIN_OR_EQUIVALENT)) {
-                            ball2.body.applyForceToCenter(2 * (0 - ball.getPos().x) * ball.body.getMass() - (1 / 2 * ball.body.getMass() *
+                        if (!inRange(ball2.getPos().x, pwidth(-1), pwidth(1), rangeMode.WITHIN_OR_EQUIVALENT)) {
+                            ball2.body.applyForceToCenter(2 * (0 - ball.getPos().x) / ball.body.getMass() - (1 / 2 * ball.body.getMass() *
                                     ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
 
                             overrideBall2AutoPos = true;
                         } else overrideBall2AutoPos = false;
                     }
 
-                    if(customGUIBox.pos.x + customGUIBox.size.x < descale(pwidth(3)))
+                    if(customGUIBox.pos.x + customGUIBox.size.x < descale(pwidth(3)) && gameFlag)
                     {
                         lerpFlag = false;
                     }
