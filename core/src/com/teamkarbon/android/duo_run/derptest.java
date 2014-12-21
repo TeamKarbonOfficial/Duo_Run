@@ -532,6 +532,7 @@ public class derptest extends ApplicationAdapter {
                         Gdx.app.debug("instaDeathMode", "Game Over!");
                         gameOver = true;
                         lerp = 0;
+                        lerpFlag = true;
                         if (androidMethods.isSignedIn()) {
                             androidMethods.submitScore(LEADERBOARD_INSTADEATH, Long.valueOf(score));
                         }
@@ -540,6 +541,7 @@ public class derptest extends ApplicationAdapter {
                         !inRange(ball2.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN)) {
                     Gdx.app.debug("Normal mode", "Game over!");
                     gameOver = true;
+                    lerpFlag = true;
                     lerp = 0;
                     if (androidMethods.isSignedIn()) {
                         androidMethods.submitScore(LEADERBOARD_NORMAL, Long.valueOf(score));
@@ -866,7 +868,7 @@ public class derptest extends ApplicationAdapter {
                 if (gameFlag && lerp < -2f)//Same speed as obs moving in game, 6 pwidth / s
                 {
                     gameFlag = false;
-                    lerpFlag = false;
+                    lerpFlag = true;
                     mode = gameMode.GAME;//Go to game!
                 }
 
