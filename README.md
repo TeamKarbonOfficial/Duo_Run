@@ -52,10 +52,11 @@ TODO
 - Actually check for collisions **done**
 - Make an endgame situation function
     - Extend the CustomGUIBox to fit 4 buttons in a 2 x 2 button matrix. **DONE**
-    - Display a proper integer score in a rather convincing font. **In progress**
-    - Display a 2 x 2 button matrix consisting of "Leaderboard", "Main Menu", "Play Again" and "Achievements" **In progress*
-        - Fix lotsa bugs with Leaderboard and Achievements button
-        - Make sure the Main Menu button and Achievements button actually work.
+    - Display a proper integer score in a rather convincing font. **DONE**
+        - Make some cool animation when the score changes **Done, gotta make it slower tho**
+    - Display a 2 x 2 button matrix consisting of "Leaderboard", "Main Menu", "Play Again" and "Achievements" **DONE**
+        - Fix lotsa bugs with Leaderboard and Achievements button **DONE**
+        - Make sure the Main Menu button and Achievements button actually work. **DONE**
 - Create levels **TODO**
     - Gradually increase difficulty as game time passes.
         - Increase speed
@@ -64,9 +65,9 @@ TODO
 - Create a level select screen **DONE**
     - Make proper GUI **DONE**
 - Create a main menu screen
-    - Create an interface. **done**
-        - The user collides with the buttons using the respectively coloured balls to "click" the buttons. **done**
-        - Make the interface work **done**
+    - Create an interface. **DONE**
+        - The user collides with the buttons using the respectively coloured balls to "click" the buttons. **DONE**
+        - Make the interface work **DONE**
     - GO! button **DONE**
     - Options button
     - About button
