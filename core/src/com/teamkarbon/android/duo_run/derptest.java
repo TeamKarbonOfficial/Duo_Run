@@ -868,7 +868,7 @@ public class derptest extends ApplicationAdapter {
                 if (gameFlag && lerp < -2f)//Same speed as obs moving in game, 6 pwidth / s
                 {
                     gameFlag = false;
-                    lerpFlag = true;
+                    lerpFlag = false;
                     mode = gameMode.GAME;//Go to game!
                 }
 
