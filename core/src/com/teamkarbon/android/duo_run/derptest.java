@@ -634,7 +634,7 @@ public class derptest extends ApplicationAdapter {
                 lerp += Gdx.graphics.getDeltaTime() * 14f;
 
                 //CHANGE MODE! switch to game init or main menu init
-                if (tempButton != null && lerp > 14 && tempButton.text.equals("Play Again") && tempButton.animateFlag) {
+                if (tempButton != null && lerp > 31 && tempButton.text.equals("Play Again") && tempButton.animateFlag) {
                     tempButton = null;//Clear this.
                     adShownForThisSession = false;//And this
                     touchData.deactivate();//And this
@@ -659,7 +659,7 @@ public class derptest extends ApplicationAdapter {
                     mode = gameMode.MAIN_MENU_INIT;
                 }
             }
-            if (lerp > 31f || !lerpFlag)//Stop lerping
+            if ((lerp > 31f || !lerpFlag) && tempButton == null)//Stop lerping
             {
                 if (lerpFlag) {
                     androidMethods.showToastMessage("Score submitted!");//Show the score submitted notif here.
