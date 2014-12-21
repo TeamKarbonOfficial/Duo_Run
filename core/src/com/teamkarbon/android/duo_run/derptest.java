@@ -356,10 +356,10 @@ public class derptest extends ApplicationAdapter {
             obstacles.clear();//Makin' sure
 
             //Create a new obstacle with id "play"
-            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(60f), pheight(33f), false, "play"));//Play the game
-            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(100f), pheight(39f), true, "options"));//Go to options
-            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(140f), pheight(30f), true, "stats"));//See all game service - related stuff
-            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(96f), pheight(23f), false, "customize"));//Just an idea...
+            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(80f), pheight(33f), false, "play"));//Play the game
+            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(150f), pheight(39f), true, "options"));//Go to options
+            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(290f), pheight(30f), true, "stats"));//See all game service - related stuff
+            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(136f), pheight(23f), false, "customize"));//Just an idea...
             mode = gameMode.MAIN_MENU;
         }
 
@@ -630,11 +630,11 @@ public class derptest extends ApplicationAdapter {
             if (lerpFlag) {
                 customGUIBox.Translate(descalepercent(-(10 + lerp) * Gdx.graphics.getDeltaTime(), 0));//Animate while lerping
                 if (tempButton != null && tempButton.animateFlag)//If that button has been clicked.
-                    tempButton.color.a = (float) (0.2f + (Math.sin((double) lerp * 2f) * 0.7f));
+                    tempButton.color.a = (float) (0.2f + (Math.sin((double) lerp / 6f) * 0.7f));
                 lerp += Gdx.graphics.getDeltaTime() * 14f;
 
                 //CHANGE MODE! switch to game init or main menu init
-                if (tempButton != null && lerp > 31 && tempButton.text.equals("Play Again") && tempButton.animateFlag) {
+                if (tempButton != null && lerp > 42 && tempButton.text.equals("Play Again") && tempButton.animateFlag) {
                     tempButton = null;//Clear this.
                     adShownForThisSession = false;//And this
                     touchData.deactivate();//And this
@@ -648,7 +648,7 @@ public class derptest extends ApplicationAdapter {
 
                     //Switch~!
                     mode = gameMode.GAME_INIT;
-                } else if (tempButton != null && lerp > 14 && tempButton.text.equals("Main Menu") && tempButton.animateFlag) {
+                } else if (tempButton != null && lerp > 42 && tempButton.text.equals("Main Menu") && tempButton.animateFlag) {
                     tempButton = null;//Clear this.
                     adShownForThisSession = false;//And this
                     touchData.deactivate();//And this
@@ -820,8 +820,9 @@ public class derptest extends ApplicationAdapter {
 
             if (lerp < 40.5f && lerpFlag) {
                 lerp += Gdx.graphics.getDeltaTime() * 7f;//Increase speed of obstacles to make a "zooming" effect
-                if (gameFlag && instaDeathMode) {//Make sure balls go back to the original spot
-                    if (!inRange(ball.getPos().x, pwidth(-3), pwidth(3), rangeMode.WITHIN_OR_EQUIVALENT)) {
+                if (gameFlag) {//Make sure balls go back to the original spot
+                    if(instaDeathMode) {
+                        if (!inRange(ball.getPos().x, pwidth(-3), pwidth(3), rangeMode.WITHIN_OR_EQUIVALENT)) {
                         /*F = ma
                         * F = 1/2mv^2
                         * D = 1/2at^2
@@ -833,19 +834,25 @@ public class derptest extends ApplicationAdapter {
                         * F = 1/2mv^2 ~ (2)
                         * F = 2d * m - 1/2mv^2 (YAY!)
                        *                              2 *       d               *       m            -   1/2    m*/
-                        ball.body.applyForceToCenter(2 * (0 - ball.getPos().x) * ball.body.getMass() - (1 / 2 * ball.body.getMass() *
-                                //                         v                ^      2
-                                ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
+                            ball.body.applyForceToCenter(2 * (0 - ball.getPos().x) * ball.body.getMass() - (1 / 2 * ball.body.getMass() *
+                                    //                         v                ^      2
+                                    ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
 
-                        overrideBallAutoPos = true;
-                    } else overrideBallAutoPos = false;
+                            overrideBallAutoPos = true;
+                        } else overrideBallAutoPos = false;
 
-                    if (!inRange(ball2.getPos().x, pwidth(-3), pwidth(3), rangeMode.WITHIN_OR_EQUIVALENT)) {
-                        ball2.body.applyForceToCenter(2 * (0 - ball.getPos().x) * ball.body.getMass() - (1 / 2 * ball.body.getMass() *
-                                ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
+                        if (!inRange(ball2.getPos().x, pwidth(-3), pwidth(3), rangeMode.WITHIN_OR_EQUIVALENT)) {
+                            ball2.body.applyForceToCenter(2 * (0 - ball.getPos().x) * ball.body.getMass() - (1 / 2 * ball.body.getMass() *
+                                    ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
 
-                        overrideBall2AutoPos = true;
-                    } else overrideBall2AutoPos = false;
+                            overrideBall2AutoPos = true;
+                        } else overrideBall2AutoPos = false;
+                    }
+
+                    if(customGUIBox.pos.x + customGUIBox.size.x < descale(pwidth(3)))
+                    {
+                        lerpFlag = false;
+                    }
                 }
             } else {
                 lerpFlag = false;
@@ -853,13 +860,13 @@ public class derptest extends ApplicationAdapter {
                 if (backFlag && lerp < -1f)//Reaches same speed as obs moving in main menu, 7 pwidth / s leftwards
                 {
                     backFlag = false;//Reset dem flags.
-                    lerpFlag = true;
+                    lerpFlag = false;
                     mode = gameMode.MAIN_MENU;//Transit to main menu!
                 }
                 if (gameFlag && lerp < -2f)//Same speed as obs moving in game, 6 pwidth / s
                 {
                     gameFlag = false;
-                    lerpFlag = true;
+                    lerpFlag = false;
                     mode = gameMode.GAME;//Go to game!
                 }
 
