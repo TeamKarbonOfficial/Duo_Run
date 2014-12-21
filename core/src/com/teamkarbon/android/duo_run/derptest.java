@@ -802,7 +802,7 @@ public class derptest extends ApplicationAdapter {
                             }
                         }
 
-                        customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(260, 30), descalepercent(80, 60),
+                        customGUIBox = new CustomGUIBox(batch, "Select Mode:", descalepercent(260, 30), descalepercent(80, 60),
                                 dialogBoxTexture, new String[]{"Normal", "Insta-Death", "Back"},
                                 new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.MODESELECT);
 
