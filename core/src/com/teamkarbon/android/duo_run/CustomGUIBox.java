@@ -122,15 +122,19 @@ public class CustomGUIBox {
                 options list are used as game modes in this BoxType
              */
 
+            //Set font size
+            if(604f / font.getBounds(DialogMessage.trim()).width < 10f)
+                font.setScale(604f / font.getBounds(DialogMessage.trim()).width);
+            else
+                font.setScale(10f);
+
             //Check if the message ends with a colon, then offset the drawn header to the left so it looks more aesthetically pleasing :P
             if(String.valueOf(DialogMessage.trim().charAt(DialogMessage.trim().length() - 1)).equals(":"))
             {
-                font.setScale(604f / font.getBounds(DialogMessage.trim()).width);
                 font.setColor(new Color(1f, 1f, 1f, 0.6f));//Just set it to white first :P
                 font.draw(batch, DialogMessage, pos.x + pwidth(10f),
                         pos.y + size.y - pheight(10f));
             } else {
-                font.setScale(604f / font.getBounds(DialogMessage.trim()).width);
                 font.setColor(new Color(1f, 1f, 1f, 0.6f));//Just set it to white first :P
                 font.draw(batch, DialogMessage, pos.x + pwidth(50f) - (font.getBounds(DialogMessage).width / 2f),
                         pos.y + size.y - pheight(10f));
