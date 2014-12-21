@@ -122,7 +122,7 @@ public class CustomGUIBox {
                 options list are used as game modes in this BoxType
              */
 
-            font.setScale(1.5f / (DialogMessage.length() / 10f));
+            font.setScale((1.5f / (DialogMessage.length()) / 10f));
             font.setColor(new Color(1f, 1f, 1f, 0.6f));//Just set it to white first :P
             font.draw(batch, DialogMessage, pos.x + pwidth(50f) - (font.getBounds(DialogMessage).width / 2f),
                     pos.y + size.y - pheight(10f));

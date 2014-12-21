@@ -357,8 +357,8 @@ public class derptest extends ApplicationAdapter {
 
             //Create a new obstacle with id "play"
             obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(80f), pheight(33f), false, "play"));//Play the game
-            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(150f), pheight(39f), true, "options"));//Go to options
-            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(290f), pheight(30f), true, "stats"));//See all game service - related stuff
+            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(100f), pheight(39f), true, "options"));//Go to options
+            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(150f), pheight(30f), true, "stats"));//See all game service - related stuff
             obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(136f), pheight(23f), false, "customize"));//Just an idea...
             mode = gameMode.MAIN_MENU;
         }
@@ -401,8 +401,8 @@ public class derptest extends ApplicationAdapter {
                     continue;
                 }
 
-                if ((!o.type && !o.passed && o.getPos().x < ball.getPos().x) ||
-                        (o.type && !o.passed && o.getPos().x < ball2.getPos().x) && !gameOver) {
+                if (((!o.type && !o.passed && o.getPos().x < ball.getPos().x) ||
+                        (o.type && !o.passed && o.getPos().x < ball2.getPos().x)) && !gameOver) {
                     o.passed = true;
                     Polygon temp = new Polygon();
                     temp.setVertices(o.getVerticesAsFloatArray());
@@ -416,7 +416,8 @@ public class derptest extends ApplicationAdapter {
             if (!gameOver && obstaclesRemoveFlag) obstaclesRemovalTimer = 0;
 
             //#Score
-            score = (int) rawscore;
+            if(score < (int) rawscore) score += (int) ((rawscore - score) / 4f);
+            if(score > (int) rawscore) score -= (int) ((rawscore - score) / 4f);
 
             DrawAndUpdateRenderTriangles(triangles);
 
@@ -425,10 +426,10 @@ public class derptest extends ApplicationAdapter {
             smallfont.setScale(3);
             //debug!!!!
             batch.begin();
-            smallfont.draw(batch, "dLevel: " + level, 300, 200);
-            smallfont.setColor(Color.MAGENTA);
-            smallfont.setScale(4);
-            smallfont.draw(batch, "Score: " + score, 100, 100);
+            smallfont.draw(batch, "dLevel: " + level, 300, 240);
+            bigfont.setColor(Color.LIGHT_GRAY);
+            bigfont.setScale(4f);
+            bigfont.draw(batch, String.valueOf(score), descalepercent(40, 90).x, descalepercent(40, 90).y);
             batch.end();
 
             //Make dem obstacles
@@ -533,6 +534,11 @@ public class derptest extends ApplicationAdapter {
                         gameOver = true;
                         lerp = 0;
                         lerpFlag = true;
+
+                        //Make sure all obstacles given passed flag as no score should be added for passed obstacles after game over :P
+                        for(Obstacle _o : obstacles)
+                            _o.passed = true;
+
                         if (androidMethods.isSignedIn()) {
                             androidMethods.submitScore(LEADERBOARD_INSTADEATH, Long.valueOf(score));
                         }
@@ -543,6 +549,11 @@ public class derptest extends ApplicationAdapter {
                     gameOver = true;
                     lerpFlag = true;
                     lerp = 0;
+
+                    //Make sure all obstacles given passed flag as no score should be added for passed obstacles after game over :P
+                    for(Obstacle _o : obstacles)
+                        _o.passed = true;
+
                     if (androidMethods.isSignedIn()) {
                         androidMethods.submitScore(LEADERBOARD_NORMAL, Long.valueOf(score));
                     }
@@ -743,7 +754,7 @@ public class derptest extends ApplicationAdapter {
                 o.translate(percent(-(10) * Gdx.graphics.getDeltaTime(), 0f));
 
                 if (o.getPos().x < pwidth(-50f - 24f)) {
-                    o.setPos(pwidth(50f + 24f), o.getPos().y);
+                    o.setPos(pwidth(50f + 18f), o.getPos().y);
                 }
 
                 CreateRenderTriangles(o, triangles);
@@ -779,6 +790,18 @@ public class derptest extends ApplicationAdapter {
                         o.isClicked = true;
                         lerp = 0f;
                         lerpFlag = true;
+
+                        //Make sure all obstacles that are to the right of the screen are cleared
+                        for(int y = 0; y < obstacles.size(); y++)
+                        {
+                            Obstacle temp = obstacles.get(y);
+                            if(temp.getPos().x > pwidth(55f))
+                            {
+                                temp.dispose(world);
+                                obstacles.remove(temp);
+                            }
+                        }
+
                         customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(260, 30), descalepercent(80, 60),
                                 dialogBoxTexture, new String[]{"Normal", "Insta-Death", "Back"},
                                 new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.MODESELECT);
@@ -801,6 +824,16 @@ public class derptest extends ApplicationAdapter {
                         lerp = 0f;
                         lerpFlag = true;
                         //TODO: Make a proper options GUIBox
+                        //Make sure all obstacles that are to the right of the screen are cleared
+                        for(int y = 0; y < obstacles.size(); y++)
+                        {
+                            Obstacle temp = obstacles.get(y);
+                            if(temp.getPos().x > pwidth(55f))
+                            {
+                                temp.dispose(world);
+                                obstacles.remove(temp);
+                            }
+                        }
                         String[] tempOptions = new String[]{"Vibrate"};
                         customGUIBox = new CustomGUIBox(batch, "Options", descalepercent(150, 30), descalepercent(80, 60),
                                 dialogBoxTexture, tempOptions, new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.CHECKBOX);
