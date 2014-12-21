@@ -416,8 +416,8 @@ public class derptest extends ApplicationAdapter {
             if (!gameOver && obstaclesRemoveFlag) obstaclesRemovalTimer = 0;
 
             //#Score
-            if(score < (int) rawscore) score += (int) ((rawscore - score) / 4f);
-            if(score > (int) rawscore) score -= (int) ((rawscore - score) / 4f);
+            if(score < (int) rawscore) score += (int) ((rawscore - score) / 15f);
+            if(score > (int) rawscore) score -= (int) ((rawscore - score) / 15f);
 
             DrawAndUpdateRenderTriangles(triangles);
 
@@ -699,6 +699,26 @@ public class derptest extends ApplicationAdapter {
                 if (tempButton.text.equals("Achievements")) {
                     touchData.deactivate();
                     androidMethods.showAchievements();
+                    touchData.deactivate();
+                    Gdx.input.setInputProcessor(new InputAdapter() {
+                        //IMPORTANT: The Y - axis is 0 at the TOP by default.
+                        public boolean touchDown(int x, int y, int pointer, int button) {
+                            if (x < descalepercent(50, 0).x) Force = true;
+                            if (x >= descalepercent(50, 0).x) Force2 = true;
+
+                            touchData.set(x, Gdx.graphics.getHeight() - y);
+                            return true;
+                        }
+
+                        public boolean touchUp(int x, int y, int pointer, int button) {
+                            /* This might not be the best way though...*/
+                            if (x < descalepercent(50, 0).x) Force = false;
+                            if (x >= descalepercent(50, 0).x) Force2 = false;
+
+                            touchData.deactivate();
+                            return true;
+                        }
+                    });
 
                     //Reset Work Around
                     tempButton = null;
@@ -711,6 +731,26 @@ public class derptest extends ApplicationAdapter {
                     } else {
                         androidMethods.showScores(LEADERBOARD_NORMAL);
                     }
+                    touchData.deactivate();
+                    Gdx.input.setInputProcessor(new InputAdapter() {
+                        //IMPORTANT: The Y - axis is 0 at the TOP by default.
+                        public boolean touchDown(int x, int y, int pointer, int button) {
+                            if (x < descalepercent(50, 0).x) Force = true;
+                            if (x >= descalepercent(50, 0).x) Force2 = true;
+
+                            touchData.set(x, Gdx.graphics.getHeight() - y);
+                            return true;
+                        }
+
+                        public boolean touchUp(int x, int y, int pointer, int button) {
+                            /* This might not be the best way though...*/
+                            if (x < descalepercent(50, 0).x) Force = false;
+                            if (x >= descalepercent(50, 0).x) Force2 = false;
+
+                            touchData.deactivate();
+                            return true;
+                        }
+                    });
 
                     //Reset Work Around
                     tempButton = null;
