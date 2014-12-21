@@ -565,8 +565,12 @@ public class derptest extends ApplicationAdapter {
                 }, new Color(0.1f, 0.4f, 0.1f, 0.5f), CustomGUIBox.BoxType.MODESELECT);
 
                 if (!inRange(ball.getPos().x, pwidth(-60), pwidth(60), rangeMode.WITHIN_OR_EQUIVALENT)) {
-                    ball.setPos(pwidth(-60), pheight(0));
+                    ball.setPos(pwidth(-55), pheight(10));
                 }
+                if (!inRange(ball2.getPos().x, pwidth(-60), pwidth(60), rangeMode.WITHIN_OR_EQUIVALENT)) {
+                    ball2.setPos(pwidth(-55), pheight(10));
+                }
+
 
                 mode = gameMode.SCORE_DISPLAY;//??
 
