@@ -384,7 +384,7 @@ public class derptest extends ApplicationAdapter {
                 Obstacle o = obstacles.get(x);
 
                 if (!gameOver)
-                    o.translate(percent(-(7 + level) * Gdx.graphics.getDeltaTime(), 0f));//Move left (7 + level) % of screen per second..
+                    o.translate(percent(-(10 + level) * Gdx.graphics.getDeltaTime(), 0f));//Move left (7 + level) % of screen per second..
                 else o.translate(percent(-(7 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
 
                 //Remove at least 4 obstacles at a time
@@ -636,7 +636,7 @@ public class derptest extends ApplicationAdapter {
                 lerp += Gdx.graphics.getDeltaTime() * 14f;
 
                 //CHANGE MODE! switch to game init or main menu init
-                if (tempButton != null && lerp > 42 && tempButton.text.equals("Play Again") && tempButton.animateFlag) {
+                if (tempButton != null && lerp > 56 && tempButton.text.equals("Play Again") && tempButton.animateFlag) {
                     tempButton = null;//Clear this.
                     adShownForThisSession = false;//And this
                     touchData.deactivate();//And this
@@ -650,7 +650,7 @@ public class derptest extends ApplicationAdapter {
 
                     //Switch~!
                     mode = gameMode.GAME_INIT;
-                } else if (tempButton != null && lerp > 42 && tempButton.text.equals("Main Menu") && tempButton.animateFlag) {
+                } else if (tempButton != null && lerp > 49 && tempButton.text.equals("Main Menu") && tempButton.animateFlag) {
                     tempButton = null;//Clear this.
                     adShownForThisSession = false;//And this
                     touchData.deactivate();//And this
@@ -740,7 +740,7 @@ public class derptest extends ApplicationAdapter {
 
                 Obstacle o = obstacles.get(x);
 
-                o.translate(percent(-(7) * Gdx.graphics.getDeltaTime(), 0f));
+                o.translate(percent(-(10) * Gdx.graphics.getDeltaTime(), 0f));
 
                 if (o.getPos().x < pwidth(-50f - 24f)) {
                     o.setPos(pwidth(50f + 24f), o.getPos().y);
