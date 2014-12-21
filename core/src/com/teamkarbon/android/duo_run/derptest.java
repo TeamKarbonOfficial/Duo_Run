@@ -899,7 +899,7 @@ public class derptest extends ApplicationAdapter {
                     lerpFlag = false;
                     overrideBallAutoPos = false;
                     overrideBall2AutoPos = false;
-                    mode = gameMode.MAIN_MENU;//Transit to main menu!
+                    mode = gameMode.MAIN_MENU_INIT;//Transit to main menu INIT!
                 }
                 if (gameFlag && lerp < -2f)//Same speed as obs moving in game, 6 pwidth / s
                 {
@@ -1010,13 +1010,9 @@ public class derptest extends ApplicationAdapter {
                     ClearAllObstacles(obstacles, world);
                     obstacles.clear();
 
-                    lerp += 0;//Reset lerp to 0 so that it will move gui out of screen and move obstacle into screen
+                    lerp += 10;
                     PolygonShape temp = new PolygonShape();
                     temp.setAsBox(pwidth(20), pheight(20));
-
-                    //Create a new obstacle with id "play"
-                    Obstacle o = new Obstacle(temp, world, pwidth(150), pheight(48), false, "play");
-                    obstacles.add(o);
 
                     backFlag = true;
                     lerpFlag = true;//Continue lerping again...
