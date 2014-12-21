@@ -1011,8 +1011,6 @@ public class derptest extends ApplicationAdapter {
                     obstacles.clear();
 
                     lerp += 10;
-                    PolygonShape temp = new PolygonShape();
-                    temp.setAsBox(pwidth(20), pheight(20));
 
                     backFlag = true;
                     lerpFlag = true;//Continue lerping again...
