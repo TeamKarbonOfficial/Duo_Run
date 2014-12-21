@@ -359,7 +359,7 @@ public class derptest extends ApplicationAdapter {
             obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(80f), pheight(33f), false, "play"));//Play the game
             obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(100f), pheight(39f), true, "options"));//Go to options
             obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(150f), pheight(30f), true, "stats"));//See all game service - related stuff
-            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(136f), pheight(23f), false, "customize"));//Just an idea...
+            //obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(136f), pheight(23f), false, "customize"));//Just an idea...
             mode = gameMode.MAIN_MENU;
         }
 
@@ -937,14 +937,22 @@ public class derptest extends ApplicationAdapter {
 
                 CreateRenderTriangles(o, triangles);
 
+                batch.begin();
                 if (o.id.equals("play")) {
                     bigfont.setScale(3f);
                     bigfont.setColor(new Color(1, 1, 1, 1));
-                    batch.begin();
                     bigfont.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - (bigfont.getBounds("GO!").width / 2f),
                             descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) + (bigfont.getBounds("GO!").height / 2f));
-                    batch.end();
                 }
+
+                if (o.id.equals("options")) {
+                    bigfont.setScale(3f);
+
+                    bigfont.setColor(new Color(1, 1, 1, 1));
+                    bigfont.draw(batch, "Options", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - (bigfont.getBounds("Options ").width / 2f),
+                            descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) + (bigfont.getBounds("Options").height / 2f));
+                }
+                batch.end();
 
                 //#render button
                 //play button
