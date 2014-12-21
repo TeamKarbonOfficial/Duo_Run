@@ -704,15 +704,19 @@ public class derptest extends ApplicationAdapter {
                     allowGameServices = false;
                     gsCount = 0;
                 } else if (tempButton.text.equals("Main Menu")) {
-                    tempButton.setColor(new Color(0.8f, 0.8f, 0.8f, 0.9f));
-                    tempButton.animateFlag = true;
-                    lerp = 0f;
-                    lerpFlag = true;
+                    if(!lerpFlag) {//Make sure these lines only happens once! :O
+                        lerp = 0f;
+                        tempButton.setColor(new Color(0.8f, 0.8f, 0.8f, 0.9f));
+                        tempButton.animateFlag = true;
+                        lerpFlag = true;
+                    }
                 } else if (tempButton.text.equals("Play Again")) {
-                    tempButton.setColor(new Color(0.8f, 0.8f, 0.8f, 0.9f));
-                    tempButton.animateFlag = true;
-                    lerp = 0f;
-                    lerpFlag = true;
+                    if(!lerpFlag) {//Make sure these lines only happens once! :O
+                        lerp = 0f;
+                        tempButton.setColor(new Color(0.8f, 0.8f, 0.8f, 0.9f));
+                        tempButton.animateFlag = true;
+                        lerpFlag = true;
+                    }
                 }
             }
         }
