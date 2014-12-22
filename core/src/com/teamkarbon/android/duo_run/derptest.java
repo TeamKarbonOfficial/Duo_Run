@@ -384,7 +384,7 @@ public class derptest extends ApplicationAdapter {
                 Obstacle o = obstacles.get(x);
 
                 if (!gameOver)
-                    o.translate(percent(-(10 + level) * Gdx.graphics.getDeltaTime(), 0f));//Move left (7 + level) % of screen per second..
+                    o.translate(percent(-(10 + level * 2f) * Gdx.graphics.getDeltaTime(), 0f));//Move left (7 + level) % of screen per second..
                 else o.translate(percent(-(7 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
 
                 //Remove at least 4 obstacles at a time
@@ -418,6 +418,8 @@ public class derptest extends ApplicationAdapter {
             //#Score
             if(score < (int) rawscore) score += (int) ((rawscore - score) / 15f);
             if(score > (int) rawscore) score -= (int) ((rawscore - score) / 15f);
+
+            level = (int) (score / 200f);
 
             DrawAndUpdateRenderTriangles(triangles);
 
