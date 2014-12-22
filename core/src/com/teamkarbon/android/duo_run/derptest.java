@@ -700,28 +700,10 @@ public class derptest extends ApplicationAdapter {
                     touchData.deactivate();
                     androidMethods.showAchievements();
                     touchData.deactivate();
-                    Gdx.input.setInputProcessor(new InputAdapter() {
-                        //IMPORTANT: The Y - axis is 0 at the TOP by default.
-                        public boolean touchDown(int x, int y, int pointer, int button) {
-                            if (x < descalepercent(50, 0).x) Force = true;
-                            if (x >= descalepercent(50, 0).x) Force2 = true;
-
-                            touchData.set(x, Gdx.graphics.getHeight() - y);
-                            return true;
-                        }
-
-                        public boolean touchUp(int x, int y, int pointer, int button) {
-                            /* This might not be the best way though...*/
-                            if (x < descalepercent(50, 0).x) Force = false;
-                            if (x >= descalepercent(50, 0).x) Force2 = false;
-
-                            touchData.deactivate();
-                            return true;
-                        }
-                    });
 
                     //Reset Work Around
                     tempButton = null;
+                    Force = false;
                     allowGameServices = false;
                     gsCount = 0;
                 } else if (tempButton.text.equals("Leaderboard")) {
@@ -732,28 +714,10 @@ public class derptest extends ApplicationAdapter {
                         androidMethods.showScores(LEADERBOARD_NORMAL);
                     }
                     touchData.deactivate();
-                    Gdx.input.setInputProcessor(new InputAdapter() {
-                        //IMPORTANT: The Y - axis is 0 at the TOP by default.
-                        public boolean touchDown(int x, int y, int pointer, int button) {
-                            if (x < descalepercent(50, 0).x) Force = true;
-                            if (x >= descalepercent(50, 0).x) Force2 = true;
-
-                            touchData.set(x, Gdx.graphics.getHeight() - y);
-                            return true;
-                        }
-
-                        public boolean touchUp(int x, int y, int pointer, int button) {
-                            /* This might not be the best way though...*/
-                            if (x < descalepercent(50, 0).x) Force = false;
-                            if (x >= descalepercent(50, 0).x) Force2 = false;
-
-                            touchData.deactivate();
-                            return true;
-                        }
-                    });
 
                     //Reset Work Around
                     tempButton = null;
+                    Force2 = false;
                     allowGameServices = false;
                     gsCount = 0;
                 } else if (tempButton.text.equals("Main Menu")) {
