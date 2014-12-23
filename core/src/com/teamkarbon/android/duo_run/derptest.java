@@ -903,6 +903,7 @@ public class derptest extends ApplicationAdapter {
                         lerp = 0f;
                         lerpFlag = true;
                         //TODO: Make a proper options GUIBox
+
                         //Make sure all obstacles that are to the right of the screen are cleared
                         for(int y = 0; y < obstacles.size(); y++)
                         {
@@ -913,6 +914,7 @@ public class derptest extends ApplicationAdapter {
                                 obstacles.remove(temp);
                             }
                         }
+
                         String[] tempOptions = new String[]{"Vibrate"};
                         customGUIBox = new CustomGUIBox(batch, "Options", descalepercent(150, 30), descalepercent(80, 60),
                                 dialogBoxTexture, tempOptions, new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.CHECKBOX);
@@ -1027,9 +1029,7 @@ public class derptest extends ApplicationAdapter {
                     bigfont.setColor(new Color(1, 1, 1, 1));
                     bigfont.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - (bigfont.getBounds("GO!").width / 2f),
                             descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) + (bigfont.getBounds("GO!").height / 2f));
-                }
-
-                if (o.id.equals("options")) {
+                } else if (o.id.equals("options")) {
                     bigfont.setScale(3f);
 
                     bigfont.setColor(new Color(1, 1, 1, 1));
@@ -1070,7 +1070,6 @@ public class derptest extends ApplicationAdapter {
                     //Reset score :D
                     score = 0;
 
-                    //TODO: Fill up
                     gameFlag = true;
                     instaDeathMode = false;
                     lerpFlag = true;
@@ -1108,6 +1107,51 @@ public class derptest extends ApplicationAdapter {
         //#options
         else if (mode == gameMode.OPTIONS) {
 
+            DrawBall();
+
+            DrawFloorsAndCeiling();
+
+            ArrayList<RenderTriangle> triangles = new ArrayList<RenderTriangle>();
+
+            for (int x = 0; x < obstacles.size(); x++) {
+
+                Obstacle o = obstacles.get(x);
+
+                //either lerping or clicked on the back button
+                if (lerpFlag || backFlag)
+                    o.translate(percent(-(8 + lerp) * Gdx.graphics.getDeltaTime(), 0f));
+
+                else {
+                    ClearAllObstacles(obstacles, world);
+                    obstacles.remove(o);
+                    x--;
+                    continue;
+                }
+
+                CreateRenderTriangles(o, triangles);
+
+                batch.begin();
+                if (o.id.equals("play")) {
+                    bigfont.setScale(3f);
+                    bigfont.setColor(new Color(1, 1, 1, 1));
+                    bigfont.draw(batch, "GO!", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - (bigfont.getBounds("GO!").width / 2f),
+                            descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) + (bigfont.getBounds("GO!").height / 2f));
+                } else if (o.id.equals("options")) {
+                    bigfont.setScale(3f);
+
+                    bigfont.setColor(new Color(1, 1, 1, 1));
+                    bigfont.draw(batch, "Options", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - (bigfont.getBounds("Options ").width / 2f),
+                            descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) + (bigfont.getBounds("Options").height / 2f));
+                }
+                batch.end();
+
+                //#render button
+                //play button
+                if (o.isClicked) {
+                    //Pulsating alpha from 30% to 80%
+                    o.color.a = (float) Math.sin((double) lerp * 4) / 4f + 0.4f;
+                }
+            }
         }
         //#about
         else if (mode == gameMode.ABOUT) {

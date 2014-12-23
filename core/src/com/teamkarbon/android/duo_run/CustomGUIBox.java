@@ -152,20 +152,73 @@ public class CustomGUIBox {
                 if(b.isClicked(touchData, this.pos)) tempButton = b;
                 Gdx.app.debug("BPOS", b.getGlobalPos(this.pos).x + ", " + b.getGlobalPos(this.pos).y + "::" + b.text);
             }
-        }
-        else if (boxType == BoxType.CHECKBOX)
-        {
 
+            return tempButton;
+        }
+        else if (boxType == BoxType.CHECKBOX) {
+
+            if (604f / font.getBounds(DialogMessage.trim()).width < 10f)
+                font.setScale(604f / font.getBounds(DialogMessage.trim()).width);
+            else
+                font.setScale(10f);
+
+            //Check if the message ends with a colon, then offset the drawn header to the left so it looks more aesthetically pleasing :P
+            if (String.valueOf(DialogMessage.trim().charAt(DialogMessage.trim().length() - 1)).equals(":")) {
+                font.setColor(new Color(1f, 1f, 1f, 0.6f));//Just set it to white first :P
+                font.draw(batch, DialogMessage, pos.x + pwidth(10f),
+                        pos.y + size.y - pheight(10f));
+            } else {
+                font.setColor(new Color(1f, 1f, 1f, 0.6f));//Just set it to white first :P
+                font.draw(batch, DialogMessage, pos.x + pwidth(50f) - (font.getBounds(DialogMessage).width / 2f),
+                        pos.y + size.y - pheight(10f));
+            }
+
+            for (CheckBox c : checkBoxes) {
+                //Draw the check box
+                batch.setColor(c.color);
+                batch.draw(DialogPic, c.getGlobalBoxPos(this, font).x, c.getGlobalBoxPos(this, font).y,
+                        c.size.x, c.size.y);
+
+                //Draw the text
+                font.draw(batch, c.text, c.getGlobalPos(this.pos).x, c.getGlobalPos(this.pos).y);
+
+                //Check if clicked
+                if(c.isClicked(touchData, this, font))
+                {
+                    c.flip();
+                }
+            }
+
+            //TODO: Allow for this mode to have buttons as well. (The back button is still needed)
+            for(CustomButton b : buttons)
+            {
+                batch.setColor(b.color);
+                batch.draw(DialogPic, b.getGlobalPos(this.pos).x, b.getGlobalPos(this.pos).y, b.size.x, b.size.y);
+                //draws the text at the centre
+                font.setScale(1.4f);
+                font.draw(batch, b.text, b.getGlobalPos(this.pos).x + (b.size.x / 2f) - (font.getBounds(b.text).width / 2f),
+                        b.getGlobalPos(this.pos).y + (b.size.y / 2f) - (font.getBounds(b.text).height / 2f));
+                //Single touch capabilities for now...
+                if(b.isClicked(touchData, this.pos)) tempButton = b;
+                Gdx.app.debug("BPOS", b.getGlobalPos(this.pos).x + ", " + b.getGlobalPos(this.pos).y + "::" + b.text);
+            }
+
+            return tempButton;
         }
 
-        return tempButton;
+        return null;
     }
 
-    public void CheckOptionClicked(TouchData touchData)
+    public ArrayList<CheckBox> getCheckBoxes()
     {
-
+        return checkBoxes;
     }
 
+    //TODO: Fix this implementation
+    public void AddButton(CustomButton button)
+    {
+        this.buttons.add(button);
+    }
 
     public void Translate(Vector2 translation)
     {

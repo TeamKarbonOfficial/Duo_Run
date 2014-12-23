@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
  * Created by Matthew on 7/12/2014.
  */
 public class CheckBox {
+    //Note: size value is the size of the check box only, not including the text..
     Vector2 pos, size;//Note: pos value is relative to the host CustomGUIBox, and is the pos of the bottom left of the text.
     String text;
     Color color;//Color when depressed.
@@ -31,10 +32,27 @@ public class CheckBox {
         color = _color;
         isChecked = false;
     }
+    
+    //host: the host CustomGUIBox
+    //font: the font used by the host
+    public boolean isClicked(TouchData touchData, CustomGUIBox host, BitmapFont font)
+    {
+        if(touchData.active && touchData.x >= getGlobalBoxPos(host, font).x && touchData.x <= getGlobalBoxPos(host, font).x + size.x
+                            && touchData.y >= getGlobalBoxPos(host, font).y && touchData.y <= getGlobalBoxPos(host, font).y + size.y)
+        {
+            return true;
+        }
+        return false;
+    }
 
     public boolean flip()
     {
         isChecked = !isChecked;
+
+        //Flip colours as well...
+        if(isChecked) color = color.add(0, 0.3f, 0, 0);
+        else          color = color.sub(0, 0.3f, 0, 0);
+
         return isChecked;
     }
 
@@ -44,8 +62,8 @@ public class CheckBox {
     }
 
     //This Vector2 value is the place to draw the clickable check box.
-    public Vector2 getGlobalBoxPos(Vector2 hostPos, BitmapFont font, CustomGUIBox guiBoxHost)
+    public Vector2 getGlobalBoxPos(CustomGUIBox guiBoxHost, BitmapFont font)
     {
-        return this.getGlobalPos(hostPos).add(font.getBounds(text).width + guiBoxHost.pwidth(5f), 0f);
+        return this.getGlobalPos(guiBoxHost.pos).add(font.getBounds(text).width + guiBoxHost.pwidth(5f), 0f);
     }
 }
