@@ -101,6 +101,19 @@ public class derptest extends ApplicationAdapter {
     private final String LEADERBOARD_NORMAL = "CgkIppTW5vgMEAIQAQ";
     private final String LEADERBOARD_INSTADEATH = "CgkIppTW5vgMEAIQAg";
 
+    //Shared Preferences constants
+    private final String PREF_WAS_OFFLINE = "WO";
+    private final String PREF_GETTING_STARTED = "A_GS";
+    private final String PREF_ADDICTED = "A_A";
+    private final String PREF_OH_YOURE_A_CAT = "A_OYAC";
+    private final String PREF_NOT_AFRAID_OF_DEATH = "A_NAOD";
+    private final String PREF_AVERAGE_JOE = "A_AJ";
+    private final String PREF_NORMAL = "L_N";
+    private final String PREF_INSTADEATH = "L_I";
+
+    private int A_Addicted;
+    private int A_OH_YOURE_A_CAT;
+
     gameMode mode; //A custom enum to manage multiple screens. (Game, main menu etc)
 
     static boolean allowGameServices = true;//A boolean to make sure the gameServices thingy won't spam too much...
@@ -542,6 +555,7 @@ public class derptest extends ApplicationAdapter {
                             _o.passed = true;
 
                         if (androidMethods.isSignedIn()) {
+                            //TODO
                             androidMethods.submitScore(LEADERBOARD_INSTADEATH, Long.valueOf(score));
                         }
                     }
@@ -557,6 +571,7 @@ public class derptest extends ApplicationAdapter {
                         _o.passed = true;
 
                     if (androidMethods.isSignedIn()) {
+                        //TODO
                         androidMethods.submitScore(LEADERBOARD_NORMAL, Long.valueOf(score));
                     }
                 }
@@ -595,12 +610,33 @@ public class derptest extends ApplicationAdapter {
 
                 //Achievements
                 if (androidMethods.isSignedIn()) {
+                    //Check if the user was offline
+                    if (androidMethods.prefgetBoolean(PREF_WAS_OFFLINE)) {
+                        //Unlock Getting Started
+                        if (androidMethods.prefgetBoolean(PREF_GETTING_STARTED))
+                            androidMethods.submitNorAchievements(ACHIEVEMENT_GETTING_STARTED);
+                        //Unlock Addicted!
+                        androidMethods.submitInAchievements(ACHIEVEMENT_ADDICTED, androidMethods.prefgetInt(PREF_ADDICTED));
+                        androidMethods.prefputInt(PREF_ADDICTED, 0);
+                        //FIXME: Unlock Cat
+                        androidMethods.submitInAchievements(ACHIEVEMENT_OH_YOURE_A_CAT, androidMethods.prefgetInt(PREF_OH_YOURE_A_CAT));
+                        androidMethods.prefputInt(PREF_OH_YOURE_A_CAT, 0);
+                        //Unlock Not Afraid of Death!
+                        if (androidMethods.prefgetBoolean(PREF_NOT_AFRAID_OF_DEATH))
+                            androidMethods.submitNorAchievements(ACHIEVEMENT_NOT_AFRAID_OF_DEATH);
+                        //Unlock Average Joe
+                        if (androidMethods.prefgetBoolean(PREF_AVERAGE_JOE))
+                            androidMethods.submitNorAchievements(ACHIEVEMENT_AVERAGE_JOE);
+                        //Reset the flag
+                        androidMethods.prefputBoolean(PREF_WAS_OFFLINE, false);
+                    }
+
                     //Unlock Getting Started
                     if (score >= 50)
                         androidMethods.submitNorAchievements(ACHIEVEMENT_GETTING_STARTED);
                     //Unlock Addicted!
                     androidMethods.submitInAchievements(ACHIEVEMENT_ADDICTED, 1);
-                    //Unlock Cat
+                    //FIXME: Unlock Cat
                     if (instaDeathMode)
                         androidMethods.submitInAchievements(ACHIEVEMENT_OH_YOURE_A_CAT, 1);
                     //Unlock Not Afraid of Death!
@@ -609,6 +645,25 @@ public class derptest extends ApplicationAdapter {
                     //Unlock Average Joe
                     if (!instaDeathMode && score >= 50000)
                         androidMethods.submitNorAchievements(ACHIEVEMENT_AVERAGE_JOE);
+                } else {
+                    //User not signed in, change flag
+                    androidMethods.prefputBoolean(PREF_WAS_OFFLINE, true);
+                    //Unlock Getting Started
+                    if (score >= 50)
+                        androidMethods.prefputBoolean(PREF_GETTING_STARTED, true);
+                    //Unlock Addicted!
+                    A_Addicted = androidMethods.prefgetInt(PREF_ADDICTED);
+                    androidMethods.prefputInt(PREF_ADDICTED, A_Addicted + 1);
+                    //FIXME: Unlock Cat
+                    if (instaDeathMode)
+                        A_OH_YOURE_A_CAT = androidMethods.prefgetInt(PREF_OH_YOURE_A_CAT);
+                        androidMethods.prefputInt(PREF_OH_YOURE_A_CAT, A_OH_YOURE_A_CAT + 1);
+                    //Unlock Not Afraid of Death!
+                    if (instaDeathMode && score >= 50000)
+                        androidMethods.prefputBoolean(PREF_NOT_AFRAID_OF_DEATH, true);
+                    //Unlock Average Joe
+                    if (!instaDeathMode && score >= 50000)
+                        androidMethods.prefputBoolean(PREF_AVERAGE_JOE, true);
                 }
             }
 
@@ -994,6 +1049,9 @@ public class derptest extends ApplicationAdapter {
             if (tempButton != null && !backFlag && !gameFlag) {
                 Gdx.app.debug("gameModeSelect", tempButton.text);
                 if (tempButton.text.equals("Normal")) {
+                    //Reset score :D
+                    score = 0;
+
                     //TODO: Fill up
                     gameFlag = true;
                     instaDeathMode = false;
@@ -1004,6 +1062,9 @@ public class derptest extends ApplicationAdapter {
 
                     lerp += 10;
                 } else if (tempButton.text.equals("Insta-Death")) {
+                    //Reset score :D
+                    score = 0;
+
                     gameFlag = true;
                     instaDeathMode = true;
                     lerpFlag = true;
