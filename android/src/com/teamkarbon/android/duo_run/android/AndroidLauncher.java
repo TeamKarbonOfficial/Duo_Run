@@ -322,28 +322,28 @@ public class AndroidLauncher extends AndroidApplication implements
     }
 
     @Override
-    public boolean prefgetBoolean(String KeyName) {
-        return pref.getBoolean(KeyName, Boolean.parseBoolean(null));
+    public boolean prefgetBoolean(String KeyName, boolean defaultVal) {
+        return pref.getBoolean(KeyName, defaultVal);
     }
 
     @Override
-    public String prefgetString(String KeyName) {
-        return pref.getString(KeyName, null);
+    public String prefgetString(String KeyName, String defaultVal) {
+        return pref.getString(KeyName, defaultVal);
     }
 
     @Override
-    public int prefgetInt(String KeyName) {
-        return pref.getInt(KeyName, Integer.parseInt(null));
+    public int prefgetInt(String KeyName, int defaultVal) {
+        return pref.getInt(KeyName, defaultVal);
     }
 
     @Override
-    public float prefgetFloat(String KeyName) {
-        return pref.getFloat(KeyName, Float.parseFloat(null));
+    public float prefgetFloat(String KeyName, float defaultVal) {
+        return pref.getFloat(KeyName, defaultVal);
     }
 
     @Override
-    public long prefgetLong(String KeyName) {
-        return pref.getLong(KeyName, Long.parseLong(null));
+    public long prefgetLong(String KeyName, long defaultVal) {
+        return pref.getLong(KeyName, defaultVal);
     }
 
     @Override

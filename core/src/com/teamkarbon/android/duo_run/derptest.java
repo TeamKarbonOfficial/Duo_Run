@@ -102,6 +102,8 @@ public class derptest extends ApplicationAdapter {
     private final String LEADERBOARD_INSTADEATH = "CgkIppTW5vgMEAIQAg";
 
     //Shared Preferences constants
+    //KEY: A: Achievements, L: Leaderboards, S: Settings
+    //Values stored when user not online, prefs to be uploaded once user is online
     private final String PREF_WAS_OFFLINE = "WO";
     private final String PREF_GETTING_STARTED = "A_GS";
     private final String PREF_ADDICTED = "A_A";
@@ -110,6 +112,11 @@ public class derptest extends ApplicationAdapter {
     private final String PREF_AVERAGE_JOE = "A_AJ";
     private final String PREF_NORMAL = "L_N";
     private final String PREF_INSTADEATH = "L_I";
+
+    //Settings Prefs
+    private final String PREF_VIBRATION_ON = "S_V";
+    private final String PREF_MUSIC_VOLUME = "S_M";
+    private final String PREF_FX_VOLUME = "S_FX";
 
     private int A_Addicted;
     private int A_Oh_Youre_A_Cat;
@@ -170,6 +177,10 @@ public class derptest extends ApplicationAdapter {
     boolean backFlag = false;//A flag where set true within gameMode.GAME_INIT when the back button is clicked...
     boolean gameFlag = false;//A flag where set true within gameMode.GAME_INIT when the selected game mode is clicked...
     CustomButton tempButton;
+
+    boolean VibrationOn;
+    int volumePercent;
+    int fxPercent;
 
     Texture splashScreen;//TODO: Make a logo/splash screen to display on init and perhaps other places when needed...
 
@@ -331,6 +342,11 @@ public class derptest extends ApplicationAdapter {
         overrideBall2AutoPos = false;
 
         Gdx.gl.glClearColor(0, 0.06f, 0.13f, 0.8f);
+
+        //SharedPrefs get Settings
+        VibrationOn = androidMethods.prefgetBoolean(PREF_VIBRATION_ON, false);
+        volumePercent = androidMethods.prefgetInt(PREF_MUSIC_VOLUME, 50);
+        fxPercent = androidMethods.prefgetInt(PREF_FX_VOLUME, 50);
 
         //TODO: INFO: Debug!!! Remove when game functionality complete!
         //#debug init
@@ -555,16 +571,16 @@ public class derptest extends ApplicationAdapter {
                             _o.passed = true;
 
                         if (androidMethods.isSignedIn()) {
-                            if(androidMethods.prefgetBoolean(PREF_WAS_OFFLINE)) {
+                            if(androidMethods.prefgetBoolean(PREF_WAS_OFFLINE, false)) {
                                 //Do not reset flag, or achievements will screw up
-                                androidMethods.submitScore(LEADERBOARD_INSTADEATH, Long.valueOf(androidMethods.prefgetInt(PREF_INSTADEATH)));
+                                androidMethods.submitScore(LEADERBOARD_INSTADEATH, Long.valueOf(androidMethods.prefgetInt(PREF_INSTADEATH, 0)));
                                 //Just in case, the user switch accounts
                                 androidMethods.prefputInt(PREF_INSTADEATH, 0);
                             }
                             androidMethods.submitScore(LEADERBOARD_INSTADEATH, Long.valueOf(score));
                         } else {
                             //No need to set flag
-                            if (score > androidMethods.prefgetInt(PREF_INSTADEATH))
+                            if (score > androidMethods.prefgetInt(PREF_INSTADEATH, 0))
                             androidMethods.prefputInt(PREF_INSTADEATH, score);
                         }
                     }
@@ -580,16 +596,16 @@ public class derptest extends ApplicationAdapter {
                         _o.passed = true;
 
                     if (androidMethods.isSignedIn()) {
-                        if(androidMethods.prefgetBoolean(PREF_WAS_OFFLINE)) {
+                        if(androidMethods.prefgetBoolean(PREF_WAS_OFFLINE, false)) {
                             //Do not reset flag, or achievements will screw up
-                            androidMethods.submitScore(LEADERBOARD_NORMAL, Long.valueOf(androidMethods.prefgetInt(PREF_NORMAL)));
+                            androidMethods.submitScore(LEADERBOARD_NORMAL, Long.valueOf(androidMethods.prefgetInt(PREF_NORMAL, 0)));
                             //Just in case, the user switch accounts
                             androidMethods.prefputInt(PREF_NORMAL, 0);
                         }
                         androidMethods.submitScore(LEADERBOARD_NORMAL, Long.valueOf(score));
                     } else {
                         //No need to set flag
-                        if (score > androidMethods.prefgetInt(PREF_NORMAL))
+                        if (score > androidMethods.prefgetInt(PREF_NORMAL, 0))
                             androidMethods.prefputInt(PREF_NORMAL, score);
                     }
                 }
@@ -628,22 +644,22 @@ public class derptest extends ApplicationAdapter {
 
                 //Achievements
                 if (androidMethods.isSignedIn()) {
-                    //Check if the user was offline
-                    if (androidMethods.prefgetBoolean(PREF_WAS_OFFLINE)) {
+                    //Check if the user was offline, then update the play services stuff using stored values, then reset the stored vals
+                    if (androidMethods.prefgetBoolean(PREF_WAS_OFFLINE, true)) {
                         //Unlock Getting Started
-                        if (androidMethods.prefgetBoolean(PREF_GETTING_STARTED))
+                        if (androidMethods.prefgetBoolean(PREF_GETTING_STARTED, false))
                             androidMethods.submitNorAchievements(ACHIEVEMENT_GETTING_STARTED);
-                        //Unlock Addicted!
-                        androidMethods.submitInAchievements(ACHIEVEMENT_ADDICTED, androidMethods.prefgetInt(PREF_ADDICTED));
+                        //Add PREF_ADDICTED to the achievements counter
+                        androidMethods.submitInAchievements(ACHIEVEMENT_ADDICTED, androidMethods.prefgetInt(PREF_ADDICTED, 0));
                         androidMethods.prefputInt(PREF_ADDICTED, 0);
                         //FIXME: Unlock Cat
-                        androidMethods.submitInAchievements(ACHIEVEMENT_OH_YOURE_A_CAT, androidMethods.prefgetInt(PREF_OH_YOURE_A_CAT));
+                        androidMethods.submitInAchievements(ACHIEVEMENT_OH_YOURE_A_CAT, androidMethods.prefgetInt(PREF_OH_YOURE_A_CAT, 0));
                         androidMethods.prefputInt(PREF_OH_YOURE_A_CAT, 0);
                         //Unlock Not Afraid of Death!
-                        if (androidMethods.prefgetBoolean(PREF_NOT_AFRAID_OF_DEATH))
+                        if (androidMethods.prefgetBoolean(PREF_NOT_AFRAID_OF_DEATH, false))
                             androidMethods.submitNorAchievements(ACHIEVEMENT_NOT_AFRAID_OF_DEATH);
                         //Unlock Average Joe
-                        if (androidMethods.prefgetBoolean(PREF_AVERAGE_JOE))
+                        if (androidMethods.prefgetBoolean(PREF_AVERAGE_JOE, false))
                             androidMethods.submitNorAchievements(ACHIEVEMENT_AVERAGE_JOE);
                         //Reset the flag
                         androidMethods.prefputBoolean(PREF_WAS_OFFLINE, false);
@@ -670,11 +686,11 @@ public class derptest extends ApplicationAdapter {
                     if (score >= 50)
                         androidMethods.prefputBoolean(PREF_GETTING_STARTED, true);
                     //Unlock Addicted!
-                    A_Addicted = androidMethods.prefgetInt(PREF_ADDICTED);
+                    A_Addicted = androidMethods.prefgetInt(PREF_ADDICTED, 0);
                     androidMethods.prefputInt(PREF_ADDICTED, A_Addicted + 1);
                     //FIXME: Unlock Cat
                     if (instaDeathMode)
-                        A_Oh_Youre_A_Cat = androidMethods.prefgetInt(PREF_OH_YOURE_A_CAT);
+                        A_Oh_Youre_A_Cat = androidMethods.prefgetInt(PREF_OH_YOURE_A_CAT, 0);
                         androidMethods.prefputInt(PREF_OH_YOURE_A_CAT, A_Oh_Youre_A_Cat + 1);
                     //Unlock Not Afraid of Death!
                     if (instaDeathMode && score >= 50000)
@@ -918,6 +934,7 @@ public class derptest extends ApplicationAdapter {
                         String[] tempOptions = new String[]{"Vibrate"};
                         customGUIBox = new CustomGUIBox(batch, "Options", descalepercent(150, 30), descalepercent(80, 60),
                                 dialogBoxTexture, tempOptions, new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.CHECKBOX);
+                        customGUIBox.addButton("Back");
                     }
                 } else if (o.id == "stats") {
 
@@ -1104,8 +1121,40 @@ public class derptest extends ApplicationAdapter {
             DrawAndUpdateRenderTriangles(triangles);
 
         }
+
+        //Flags used:
+        //lerpFlag
+        //backFlag
+        // + clear:
+        //obstacles
         //#options
         else if (mode == gameMode.OPTIONS) {
+            if(lerpFlag) {
+                lerp += 10f * Gdx.graphics.getDeltaTime();
+
+                if(lerp > 30f) {
+                    lerpFlag = false;
+                }
+            }
+            else if(backFlag)
+            {
+                lerp += 10f * Gdx.graphics.getDeltaTime();
+                if(lerp > 30f){
+                    //Reset everythin
+                    lerpFlag = false;
+                    backFlag = false;
+                    tempButton = null;
+
+                    //And gooo
+                    mode = gameMode.MAIN_MENU_INIT;
+                }
+            }
+            else {
+                if (lerp > 0)
+                    lerp -= 20f * Gdx.graphics.getDeltaTime();
+                else
+                    lerp = 0;
+            }
 
             DrawBall();
 
@@ -1152,8 +1201,22 @@ public class derptest extends ApplicationAdapter {
                     o.color.a = (float) Math.sin((double) lerp * 4) / 4f + 0.4f;
                 }
             }
+
+            tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);
+            ArrayList<CheckBox> checkBoxes = customGUIBox.getCheckBoxes();
+
+            if(tempButton != null && !backFlag)
+            {
+                if(tempButton.text.equals("Back"))
+                {
+                    backFlag = true;
+
+                    //TODO: Save data
+
+                }
+            }
         }
-        //#about
+    //#about
         else if (mode == gameMode.ABOUT) {
 
         }
@@ -1504,15 +1567,15 @@ public class derptest extends ApplicationAdapter {
 
         public void prefputLong(String KeyName, long value);
 
-        public boolean prefgetBoolean(String KeyName);
+        public boolean prefgetBoolean(String KeyName, boolean defaultValue);
 
-        public String prefgetString(String KeyName);
+        public String prefgetString(String KeyName, String defaultValue);
 
-        public int prefgetInt(String KeyName);
+        public int prefgetInt(String KeyName, int defaultValue);
 
-        public float prefgetFloat(String KeyName);
+        public float prefgetFloat(String KeyName, float defaultValue);
 
-        public long prefgetLong(String KeyName);
+        public long prefgetLong(String KeyName, long defaultValue);
 
         public void prefClear();
 

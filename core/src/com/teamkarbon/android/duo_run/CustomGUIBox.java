@@ -36,6 +36,7 @@ public class CustomGUIBox {
     ArrayList<CheckBox> checkBoxes;
 
     private float count;
+    private float buttonsCount;
     private Vector2 tempPos;
     private Vector2 tempSize;
 
@@ -93,6 +94,8 @@ public class CustomGUIBox {
                     count++;
                 }
             }
+
+            buttonsCount = options.length;
         }
         if(boxType == BoxType.CHECKBOX)
         {
@@ -214,10 +217,13 @@ public class CustomGUIBox {
         return checkBoxes;
     }
 
-    //TODO: Fix this implementation
-    public void AddButton(CustomButton button)
+    //TODO: Make sure this works
+    public void addButton(String buttonText)
     {
-        this.buttons.add(button);
+        buttonsCount ++;
+        if(boxType == BoxType.CHECKBOX) {
+            buttons.add(new CustomButton(percent(10f + (buttonsCount - 1f) * 40f, 60f), percent(30f, 30f), buttonText, invert(this.color)));
+        }
     }
 
     public void Translate(Vector2 translation)
@@ -240,6 +246,11 @@ public class CustomGUIBox {
     public float pheight(float percent)
     {
         return ((percent / 100f) * size.y);
+    }
+
+    public Vector2 percent(float x, float y)
+    {
+        return new Vector2(pwidth(x), pwidth(y));
     }
 
     private Color invert(Color c){
