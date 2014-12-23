@@ -112,7 +112,7 @@ public class derptest extends ApplicationAdapter {
     private final String PREF_INSTADEATH = "L_I";
 
     private int A_Addicted;
-    private int A_OH_YOURE_A_CAT;
+    private int A_Oh_Youre_A_Cat;
 
     gameMode mode; //A custom enum to manage multiple screens. (Game, main menu etc)
 
@@ -555,8 +555,17 @@ public class derptest extends ApplicationAdapter {
                             _o.passed = true;
 
                         if (androidMethods.isSignedIn()) {
-                            //TODO
+                            if(androidMethods.prefgetBoolean(PREF_WAS_OFFLINE)) {
+                                //Do not reset flag, or achievements will screw up
+                                androidMethods.submitScore(LEADERBOARD_INSTADEATH, Long.valueOf(androidMethods.prefgetInt(PREF_INSTADEATH)));
+                                //Just in case, the user switch accounts
+                                androidMethods.prefputInt(PREF_INSTADEATH, 0);
+                            }
                             androidMethods.submitScore(LEADERBOARD_INSTADEATH, Long.valueOf(score));
+                        } else {
+                            //No need to set flag
+                            if (score > androidMethods.prefgetInt(PREF_INSTADEATH))
+                            androidMethods.prefputInt(PREF_INSTADEATH, score);
                         }
                     }
                 } else if (!inRange(ball.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN) ||
@@ -571,8 +580,17 @@ public class derptest extends ApplicationAdapter {
                         _o.passed = true;
 
                     if (androidMethods.isSignedIn()) {
-                        //TODO
+                        if(androidMethods.prefgetBoolean(PREF_WAS_OFFLINE)) {
+                            //Do not reset flag, or achievements will screw up
+                            androidMethods.submitScore(LEADERBOARD_NORMAL, Long.valueOf(androidMethods.prefgetInt(PREF_NORMAL)));
+                            //Just in case, the user switch accounts
+                            androidMethods.prefputInt(PREF_NORMAL, 0);
+                        }
                         androidMethods.submitScore(LEADERBOARD_NORMAL, Long.valueOf(score));
+                    } else {
+                        //No need to set flag
+                        if (score > androidMethods.prefgetInt(PREF_NORMAL))
+                            androidMethods.prefputInt(PREF_NORMAL, score);
                     }
                 }
             }
@@ -656,8 +674,8 @@ public class derptest extends ApplicationAdapter {
                     androidMethods.prefputInt(PREF_ADDICTED, A_Addicted + 1);
                     //FIXME: Unlock Cat
                     if (instaDeathMode)
-                        A_OH_YOURE_A_CAT = androidMethods.prefgetInt(PREF_OH_YOURE_A_CAT);
-                        androidMethods.prefputInt(PREF_OH_YOURE_A_CAT, A_OH_YOURE_A_CAT + 1);
+                        A_Oh_Youre_A_Cat = androidMethods.prefgetInt(PREF_OH_YOURE_A_CAT);
+                        androidMethods.prefputInt(PREF_OH_YOURE_A_CAT, A_Oh_Youre_A_Cat + 1);
                     //Unlock Not Afraid of Death!
                     if (instaDeathMode && score >= 50000)
                         androidMethods.prefputBoolean(PREF_NOT_AFRAID_OF_DEATH, true);
