@@ -206,6 +206,11 @@ public class CustomGUIBox {
                 if(b.isClicked(touchData, this.pos)) tempButton = b;
                 Gdx.app.debug("BPOS", b.getGlobalPos(this.pos).x + ", " + b.getGlobalPos(this.pos).y + "::" + b.text);
             }
+			
+			for(CustomSlider s : sliders)
+			{
+				font.draw(batch, s.text  s.leftPos.x - pwidth(4), s.leftPos.y - pheight(10));
+			}
 
             return tempButton;
         }
