@@ -41,6 +41,18 @@ public class CustomSlider {
         }
         return false;
     }
+	
+	public void moveSlider(Vector2 _sliderPos)
+	{
+		sliderPos = _sliderPos;
+		sliderPercent = ((sliderPos.x - leftPos.x) / length * 100f);
+	}
+	
+	public void moveSlider(float _sliderPercent)
+	{
+		sliderPercent = _sliderPercent;
+		sliderPos.x = leftPos.x + (sliderPercent / 100f * length);
+	}
 
     public void setColor(Color c) { color = c; }
 
