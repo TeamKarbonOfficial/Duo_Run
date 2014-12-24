@@ -931,7 +931,7 @@ public class derptest extends ApplicationAdapter {
                             }
                         }
 
-                        String[] tempOptions = new String[]{"Vibrate"};
+                        String[] tempOptions = new String[]{"Vibrate", "Music Volume", "FX Volume"};
                         customGUIBox = new CustomGUIBox(batch, "Options", descalepercent(150, 30), descalepercent(80, 60),
                                 dialogBoxTexture, tempOptions, new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.CHECKBOX);
                         customGUIBox.addButton("Back");
@@ -1212,7 +1212,14 @@ public class derptest extends ApplicationAdapter {
                     backFlag = true;
 
                     //TODO: Save data
-
+					for(CheckBox c : checkBoxes) {
+						if(c.text.equals("Vibration")
+							androidMethods.prefput(PREF_VIBRATION_ON, c.isChecked);
+						else if(c.text.equals("Music Volume")
+							;
+						else if(c.text.equals("FX Volume")
+							;
+					}
                 }
             }
         }
