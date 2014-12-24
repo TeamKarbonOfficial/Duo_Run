@@ -34,6 +34,7 @@ public class CustomGUIBox {
     private CustomButton tempButton;
 
     ArrayList<CheckBox> checkBoxes;
+	ArrayList<CustomSlider> sliders;
 
     private float count;
     private float buttonsCount;
@@ -225,6 +226,11 @@ public class CustomGUIBox {
             buttons.add(new CustomButton(percent(10f + (buttonsCount - 1f) * 40f, 60f), percent(30f, 30f), buttonText, invert(this.color)));
         }
     }
+	
+	public void addSlider(String sliderText)
+	{
+		
+	}
 
     public void Translate(Vector2 translation)
     {
