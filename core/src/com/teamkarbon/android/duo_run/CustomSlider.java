@@ -11,21 +11,23 @@ public class CustomSlider {
 	//NOTE: All values are in pixels...
     Vector2 pos, size, leftPos, rightPos;//Note: pos value is pos of relative to the host CustomGUIBox.
 	Vector2 sliderPos;//Origin of slider button is centre!
-	int sliderPercent;
+	float sliderPercent;
+    float length;
     String text;
     Color color;
     boolean animateFlag;
 
 	//Length: length of the slider leftPos + length = rightPos
-    public CustomSlider(Vector2 leftmost, float length, Vector2 _size, String _text, Color _color, float _sliderPercent)
+    public CustomSlider(Vector2 leftmost, float _length, Vector2 _size, String _text, Color _color, float _sliderPercent)
     {
+        length = _length;
         pos = new Vector2((leftmost.x + length) / 2, leftmost.y);
 		leftPos = leftmost;
 		rightPos = leftmost.add(length, 0);
         size = _size;
         text = _text;
         color = _color;
-		sliderPercent = _sliderPercent
+		sliderPercent = _sliderPercent;
 		sliderPos = new Vector2(leftPos.x + (sliderPercent / 100f * length), leftPos.y);
         animateFlag = false;
     }
