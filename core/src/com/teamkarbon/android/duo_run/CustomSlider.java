@@ -13,6 +13,9 @@ public class CustomSlider {
 	Vector2 sliderPos;//Origin of slider button is centre!
 	float sliderPercent;
     float length;
+    float value;
+    float min;
+    float max;
     String text;
     Color color;
     boolean animateFlag;
@@ -30,6 +33,26 @@ public class CustomSlider {
 		sliderPercent = _sliderPercent;
 		sliderPos = new Vector2(leftPos.x + (sliderPercent / 100f * length), leftPos.y);
         animateFlag = false;
+        min = 0;
+        max = 100;
+        value = min + (max * sliderPercent / 100f);
+    }
+
+    public CustomSlider(Vector2 leftmost, float _length, Vector2 _size, String _text, Color _color, float _sliderPercent, float _min, float _max)
+    {
+        length = _length;
+        pos = new Vector2((leftmost.x + length) / 2, leftmost.y);
+        leftPos = leftmost;
+        rightPos = leftmost.add(length, 0);
+        size = _size;
+        text = _text;
+        color = _color;
+        sliderPercent = _sliderPercent;
+        sliderPos = new Vector2(leftPos.x + (sliderPercent / 100f * length), leftPos.y);
+        animateFlag = false;
+        min = _min;
+        max = _max;
+        value = min + (max * sliderPercent / 100f);
     }
 
     public boolean isSliderClicked(TouchData touchData, Vector2 hostPos)
@@ -55,6 +78,16 @@ public class CustomSlider {
 		sliderPercent = _sliderPercent;
 		sliderPos.x = leftPos.x + (sliderPercent / 100f * length);
 	}
+
+    public float getPercent()
+    {
+        return sliderPercent;
+    }
+
+    public float getValue()
+    {
+        return value;
+    }
 
     public void setColor(Color c) { color = c; }
 
