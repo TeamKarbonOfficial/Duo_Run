@@ -209,7 +209,7 @@ public class CustomGUIBox {
 			
 			for(CustomSlider s : sliders)
 			{
-				font.draw(batch, s.text  s.leftPos.x - pwidth(4), s.leftPos.y - pheight(10));
+				font.draw(batch, s.text, s.leftPos.x - pwidth(4), s.leftPos.y - pheight(10));
 			}
 
             return tempButton;

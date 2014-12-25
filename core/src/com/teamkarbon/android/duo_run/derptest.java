@@ -1213,11 +1213,11 @@ public class derptest extends ApplicationAdapter {
 
                     //TODO: Save data
 					for(CheckBox c : checkBoxes) {
-						if(c.text.equals("Vibration")
-							androidMethods.prefput(PREF_VIBRATION_ON, c.isChecked);
-						else if(c.text.equals("Music Volume")
+						if(c.text.equals("Vibration"))
+							androidMethods.prefputBoolean(PREF_VIBRATION_ON, c.isChecked);
+						else if(c.text.equals("Music Volume"))
 							;
-						else if(c.text.equals("FX Volume")
+						else if(c.text.equals("FX Volume"))
 							;
 					}
                 }
