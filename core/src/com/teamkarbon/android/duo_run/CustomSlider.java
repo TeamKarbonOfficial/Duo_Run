@@ -1,6 +1,7 @@
 package com.teamkarbon.android.duo_run;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -11,6 +12,8 @@ public class CustomSlider {
 	//NOTE: All values are in pixels...
     Vector2 pos, size, leftPos, rightPos;//Note: pos value is pos of relative to the host CustomGUIBox.
 	Vector2 sliderPos;//Origin of slider button is centre!
+    Texture sliderBarPic;
+    Texture sliderButtonPic;
 	float sliderPercent;
     float length;
     float value;
@@ -21,7 +24,7 @@ public class CustomSlider {
     boolean animateFlag;
 
 	//Length: length of the slider leftPos + length = rightPos
-    public CustomSlider(Vector2 leftmost, float _length, Vector2 _size, String _text, Color _color, float _sliderPercent)
+    public CustomSlider(Vector2 leftmost, float _length, Vector2 _size, String _text, Color _color, float _sliderPercent, Texture _sliderBarPic, Texture _sliderButtonPic)
     {
         length = _length;
         pos = new Vector2((leftmost.x + length) / 2, leftmost.y);
@@ -36,6 +39,8 @@ public class CustomSlider {
         min = 0;
         max = 100;
         value = min + (max * sliderPercent / 100f);
+        sliderBarPic = _sliderBarPic;
+        sliderButtonPic = _sliderButtonPic;
     }
 
     public CustomSlider(Vector2 leftmost, float _length, Vector2 _size, String _text, Color _color, float _sliderPercent, float _min, float _max)

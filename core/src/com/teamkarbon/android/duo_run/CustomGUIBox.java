@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class CustomGUIBox {
     /*
         Note: Size of DialogBoxTexture200.png is 200x200
+              0, 0 in the Box is the bottom left corner.
      */
 
     SpriteBatch batch;
@@ -40,6 +41,8 @@ public class CustomGUIBox {
     private float buttonsCount;
     private Vector2 tempPos;
     private Vector2 tempSize;
+
+    private float BottomPos = 0;//The pos of the lowest GUI (Not counting back buttons)
 
     public CustomGUIBox(SpriteBatch _batch, String _DialogMessage, Vector2 _pos, Vector2 _size, Texture _DialogPic,
                         String[] _options, Color _color, BoxType _boxType)
@@ -232,9 +235,9 @@ public class CustomGUIBox {
         }
     }
 	
-	public void addSlider(String sliderText)
+	public void addSlider(String sliderText, Texture _sliderBarPic, Texture _sliderButtonPic)
 	{
-		
+		sliders.add(new CustomSlider(percent()))
 	}
 
     public void Translate(Vector2 translation)
