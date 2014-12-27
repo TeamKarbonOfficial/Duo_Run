@@ -17,7 +17,7 @@ Floobit URL: https://floobits.com/TeamKarbon/Duo_Run
 **Ad SDK**
 http://teamkarbon.com/cloud/public.php?service=files&t=9075431d4857542adedfc9410c994a29
 
-**Images for Balls & Icons: (Place images in \android\assets)**
+**Images for Balls, Icons & Sliders: (Place images in \android\assets)**
 http://teamkarbon.com/cloud/public.php?service=files&t=69d7aca788e27f04971fad1bd79a314c
 
 **File of Shared Stuff** includes graphics, pics, etc.. :P
