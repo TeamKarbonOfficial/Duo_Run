@@ -15,7 +15,6 @@ public class CustomSlider {
     Texture sliderBarPic;
     Texture sliderButtonPic;
 	float sliderPercent;
-    float length;
     float value;
     float min;
     float max;
@@ -24,17 +23,16 @@ public class CustomSlider {
     boolean animateFlag;
 
 	//Length: length of the slider leftPos + length = rightPos
-    public CustomSlider(Vector2 leftmost, float _length, Vector2 _size, String _text, Color _color, float _sliderPercent, Texture _sliderBarPic, Texture _sliderButtonPic)
+    public CustomSlider(Vector2 leftmost, Vector2 _size, String _text, Color _color, float _sliderPercent, Texture _sliderBarPic, Texture _sliderButtonPic)
     {
-        length = _length;
-        pos = new Vector2((leftmost.x + length) / 2, leftmost.y);
-		leftPos = leftmost;
-		rightPos = leftmost.add(length, 0);
+        leftPos = leftmost;
         size = _size;
+        pos = new Vector2((leftmost.x + size.x) / 2, leftmost.y);
+		rightPos = leftmost.add(size.x, 0);
         text = _text;
         color = _color;
 		sliderPercent = _sliderPercent;
-		sliderPos = new Vector2(leftPos.x + (sliderPercent / 100f * length), leftPos.y);
+		sliderPos = new Vector2(leftPos.x + (sliderPercent / 100f * size.x), leftPos.y);
         animateFlag = false;
         min = 0;
         max = 100;
@@ -43,21 +41,22 @@ public class CustomSlider {
         sliderButtonPic = _sliderButtonPic;
     }
 
-    public CustomSlider(Vector2 leftmost, float _length, Vector2 _size, String _text, Color _color, float _sliderPercent, float _min, float _max)
+    public CustomSlider(Vector2 leftmost, Vector2 _size, String _text, Color _color, float _sliderPercent, float _min, float _max, Texture _sliderBarPic, Texture _sliderButtonPic)
     {
-        length = _length;
-        pos = new Vector2((leftmost.x + length) / 2, leftmost.y);
         leftPos = leftmost;
-        rightPos = leftmost.add(length, 0);
         size = _size;
+        pos = new Vector2((leftmost.x + size.x) / 2, leftmost.y);
+        rightPos = leftmost.add(size.x, 0);
         text = _text;
         color = _color;
         sliderPercent = _sliderPercent;
-        sliderPos = new Vector2(leftPos.x + (sliderPercent / 100f * length), leftPos.y);
+        sliderPos = new Vector2(leftPos.x + (sliderPercent / 100f * size.x), leftPos.y);
         animateFlag = false;
         min = _min;
         max = _max;
         value = min + (max * sliderPercent / 100f);
+        sliderBarPic = _sliderBarPic;
+        sliderButtonPic = _sliderButtonPic;
     }
 
     public boolean isSliderClicked(TouchData touchData, Vector2 hostPos)
@@ -75,13 +74,13 @@ public class CustomSlider {
 	public void moveSlider(Vector2 _sliderPos)
 	{
 		sliderPos = _sliderPos;
-		sliderPercent = ((sliderPos.x - leftPos.x) / length * 100f);
+		sliderPercent = ((sliderPos.x - leftPos.x) / size.x * 100f);
 	}
 	
 	public void moveSlider(float _sliderPercent)
 	{
 		sliderPercent = _sliderPercent;
-		sliderPos.x = leftPos.x + (sliderPercent / 100f * length);
+		sliderPos.x = leftPos.x + (sliderPercent / 100f * size.x);
 	}
 
     public float getPercent()

@@ -42,8 +42,6 @@ public class CustomGUIBox {
     private Vector2 tempPos;
     private Vector2 tempSize;
 
-    private float BottomPos = 0;//The pos of the lowest GUI (Not counting back buttons)
-
     public CustomGUIBox(SpriteBatch _batch, String _DialogMessage, Vector2 _pos, Vector2 _size, Texture _DialogPic,
                         String[] _options, Color _color, BoxType _boxType)
     {
@@ -235,9 +233,9 @@ public class CustomGUIBox {
         }
     }
 	
-	public void addSlider(String sliderText, Texture _sliderBarPic, Texture _sliderButtonPic)
+	public void addSlider(String sliderText, Texture _sliderBarPic, Texture _sliderButtonPic, float yPos)
 	{
-		sliders.add(new CustomSlider(percent()))
+		sliders.add(new CustomSlider(percent(10, yPos), pwidth(80), percent()));
 	}
 
     public void Translate(Vector2 translation)
