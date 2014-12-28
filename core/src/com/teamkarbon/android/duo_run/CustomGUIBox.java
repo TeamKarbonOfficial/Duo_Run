@@ -211,6 +211,12 @@ public class CustomGUIBox {
 			for(CustomSlider s : sliders)
 			{
 				font.draw(batch, s.text, s.leftPos.x - pwidth(4), s.leftPos.y - pheight(10));
+                float tempX = s.getGlobalSliderPos(this.pos).x;
+                float tempY = s.getGlobalSliderPos(this.pos).y;
+                batch.draw(s.sliderBarPic, tempX, tempY, s.size.x, s.size.y);
+                tempX = s.getGlobalSliderPos(this.pos).x;
+                tempY = s.getGlobalSliderPos(this.pos).y;
+                batch.draw(s.sliderButtonPic, tempX, tempY);
 			}
 
             return tempButton;
@@ -235,7 +241,8 @@ public class CustomGUIBox {
 	
 	public void addSlider(String sliderText, Texture _sliderBarPic, Texture _sliderButtonPic, float yPos)
 	{
-		sliders.add(new CustomSlider(percent(10, yPos), pwidth(80), percent()));
+        //TODO: Make sure this works
+		sliders.add(new CustomSlider(percent(10, yPos), percent(80, 10), sliderText, Color.WHITE, 50, _sliderBarPic, _sliderButtonPic));
 	}
 
     public void Translate(Vector2 translation)

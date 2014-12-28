@@ -99,6 +99,11 @@ public class CustomSlider {
     {
         return new Vector2(pos.x + hostPos.x, pos.y + hostPos.y);
     }
+
+    public Vector2 getGlobalBottomLeftPos(Vector2 hostPos)
+    {
+        return new Vector2(leftPos.x + hostPos.x, leftPos.y + hostPos.y);
+    }
 	
 	public Vector2 getGlobalSliderPos(Vector2 hostPos)
 	{
