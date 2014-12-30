@@ -173,6 +173,8 @@ public class derptest extends ApplicationAdapter {
 
     CustomGUIBox customGUIBox;
     Texture dialogBoxTexture;
+    Texture sliderBarTexure;
+    Texture sliderButtonTexture;
     TouchData touchData;
     boolean backFlag = false;//A flag where set true within gameMode.GAME_INIT when the back button is clicked...
     boolean gameFlag = false;//A flag where set true within gameMode.GAME_INIT when the selected game mode is clicked...
@@ -213,6 +215,8 @@ public class derptest extends ApplicationAdapter {
         //ball2texture = new Texture(Gdx.files.internal(ball2file));
         helpbuttontexture = new Texture(Gdx.files.internal("helpbutton.png"));
         dialogBoxTexture = new Texture(Gdx.files.internal("DialogBoxTexture200.png"));
+        sliderBarTexure = new Texture(Gdx.files.internal("slider_bar.png"));
+        sliderButtonTexture = new Texture(Gdx.files.internal("slider_button.png"));
 
         //Setting up the camera
         camera = new OrthographicCamera(pwidth(100), pheight(100));//Sets its rendering area to fill the whole screen.
@@ -931,10 +935,12 @@ public class derptest extends ApplicationAdapter {
                             }
                         }
 
-                        String[] tempOptions = new String[]{"Vibrate", "Music Volume", "FX Volume"};
                         customGUIBox = new CustomGUIBox(batch, "Options", descalepercent(150, 30), descalepercent(80, 60),
-                                dialogBoxTexture, tempOptions, new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.CHECKBOX);
+                                dialogBoxTexture, new String[]{"Vibrate"}, new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.CHECKBOX);
                         customGUIBox.addButton("Back");
+                        //TODO: Make sure these positions are workable :P Those numbers down here |||||| are percentages of the customGUIBox dims
+                        customGUIBox.addSlider("Music Volume", sliderBarTexure, sliderButtonTexture, 40);
+                        customGUIBox.addSlider("FX Volume", sliderBarTexure, sliderButtonTexture, 60);
                     }
                 } else if (o.id == "stats") {
 
