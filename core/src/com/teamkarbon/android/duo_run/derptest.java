@@ -1204,6 +1204,7 @@ public class derptest extends ApplicationAdapter {
 
             tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);
             ArrayList<CheckBox> checkBoxes = customGUIBox.getCheckBoxes();
+            ArrayList<CustomSlider> sliders = customGUIBox.sliders;
 
             if(tempButton != null && !backFlag)
             {
@@ -1215,11 +1216,18 @@ public class derptest extends ApplicationAdapter {
 					for(CheckBox c : checkBoxes) {
 						if(c.text.equals("Vibration"))
 							androidMethods.prefputBoolean(PREF_VIBRATION_ON, c.isChecked);
-						else if(c.text.equals("Music Volume"))
-							;
-						else if(c.text.equals("FX Volume"))
-							;
 					}
+                    for(CustomSlider s : sliders)
+                    {
+                        if(s.text.equals("Music Volume"))
+                        {
+                            androidMethods.prefputFloat(PREF_MUSIC_VOLUME, s.getPercent());
+                        }
+                        else if(s.text.equals("FX Volume"))
+                        {
+                            androidMethods.prefputFloat(PREF_FX_VOLUME, s.getPercent());
+                        }
+                    }
                 }
             }
         }
