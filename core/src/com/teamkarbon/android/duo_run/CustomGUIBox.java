@@ -245,6 +245,16 @@ public class CustomGUIBox {
 		sliders.add(new CustomSlider(percent(10, yPos), percent(80, 10), sliderText, Color.WHITE, 50, _sliderBarPic, _sliderButtonPic));
 	}
 
+    public CustomSlider getSlider(String sliderText)
+    {
+        for(CustomSlider s : sliders)
+        {
+            if(s.text.equals(sliderText))
+                return s;
+        }
+        return null;
+    }
+
     public void Translate(Vector2 translation)
     {
         pos.x += translation.x;

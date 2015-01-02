@@ -941,6 +941,11 @@ public class derptest extends ApplicationAdapter {
                         //TODO: Make sure these positions are workable :P Those numbers down here |||||| are percentages of the customGUIBox dims
                         customGUIBox.addSlider("Music Volume", sliderBarTexure, sliderButtonTexture, 40);
                         customGUIBox.addSlider("FX Volume", sliderBarTexure, sliderButtonTexture, 60);
+
+                        CustomSlider temp = customGUIBox.getSlider("Music Volume");
+                        temp.moveSlider(androidMethods.prefgetFloat(PREF_MUSIC_VOLUME, 50f));//Beware NullPointerExceptions!!
+                        temp = customGUIBox.getSlider("FX Volume");
+                        temp.moveSlider(androidMethods.prefgetFloat(PREF_FX_VOLUME, 50f));
                     }
                 } else if (o.id == "stats") {
 
