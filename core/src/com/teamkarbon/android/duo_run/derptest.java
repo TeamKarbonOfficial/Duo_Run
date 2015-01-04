@@ -325,6 +325,14 @@ public class derptest extends ApplicationAdapter {
                 touchData.deactivate();
                 return true;
             }
+
+            @Override
+            public boolean touchDragged (int x, int y, int pointer) {
+                touchData.set(x, Gdx.graphics.getHeight() - y);
+                touchData.isDragging = true;
+                touchData.deactivate();
+                return true;
+            }
         });
 
         lerp = 0;
@@ -935,12 +943,12 @@ public class derptest extends ApplicationAdapter {
                             }
                         }
 
-                        customGUIBox = new CustomGUIBox(batch, "Options", descalepercent(150, 30), descalepercent(80, 60),
+                        customGUIBox = new CustomGUIBox(batch, "Options", descalepercent(150, 20), descalepercent(70, 80),
                                 dialogBoxTexture, new String[]{"Vibrate"}, new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.CHECKBOX);
                         customGUIBox.addButton("Back");
                         //TODO: Make sure these positions are workable :P Those numbers down here |||||| are percentages of the customGUIBox dims
-                        customGUIBox.addSlider("Music Volume", sliderBarTexure, sliderButtonTexture, 40);
-                        customGUIBox.addSlider("FX Volume", sliderBarTexure, sliderButtonTexture, 60);
+                        customGUIBox.addSlider("Music Volume", sliderBarTexure, sliderButtonTexture, 56);
+                        customGUIBox.addSlider("FX Volume", sliderBarTexure, sliderButtonTexture, 34);
 
                         CustomSlider temp = customGUIBox.getSlider("Music Volume");
                         temp.moveSlider(androidMethods.prefgetFloat(PREF_MUSIC_VOLUME, 50f));//Beware NullPointerExceptions!!
@@ -1143,7 +1151,7 @@ public class derptest extends ApplicationAdapter {
             if(lerpFlag) {
                 lerp += 10f * Gdx.graphics.getDeltaTime();
 
-                if(lerp > 30f) {
+                if(lerp > 42f) {
                     lerpFlag = false;
                 }
             }
@@ -1172,6 +1180,8 @@ public class derptest extends ApplicationAdapter {
             DrawFloorsAndCeiling();
 
             ArrayList<RenderTriangle> triangles = new ArrayList<RenderTriangle>();
+
+            customGUIBox.Translate(descalepercent(-(lerp) * Gdx.graphics.getDeltaTime(), 0));
 
             for (int x = 0; x < obstacles.size(); x++) {
 
@@ -1213,7 +1223,12 @@ public class derptest extends ApplicationAdapter {
                 }
             }
 
+            DrawAndUpdateRenderTriangles(triangles);
+
+            batch.begin();
             tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);
+            batch.end();
+
             ArrayList<CheckBox> checkBoxes = customGUIBox.getCheckBoxes();
             ArrayList<CustomSlider> sliders = customGUIBox.sliders;
 

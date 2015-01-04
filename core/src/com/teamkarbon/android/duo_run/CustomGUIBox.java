@@ -59,9 +59,11 @@ public class CustomGUIBox {
         tempPos = new Vector2();
         tempSize = new Vector2();
 
+        buttons = new ArrayList<CustomButton>();
+        sliders = new ArrayList<CustomSlider>();
+
         if(boxType == BoxType.MODESELECT)
         {
-            buttons = new ArrayList<CustomButton>();
             count = 0;
             if(options.length <= 3) {//Single line for all buttons
                 for (String s : options) {
@@ -103,13 +105,14 @@ public class CustomGUIBox {
         {
             checkBoxes = new ArrayList<CheckBox>();
             count = 0;
+            buttonsCount = 0;
             for(String s : options)
             {
                 tempPos.x = pwidth(10f);
-                tempPos.y = pheight(85f - (count * 15f));
+                tempPos.y = pheight(90f - (count * 15f));
                 tempSize.set(pwidth(10f), pheight(10f));
 
-                checkBoxes.add(new CheckBox(tempPos, tempSize, s, new Color(0.2f + (count * 0.1f), 0.2f + (count * 0.1f), 0.2f, 0.4f)));
+                checkBoxes.add(new CheckBox(tempPos, tempSize, s, new Color(0.2f + (count * 0.1f), 0.2f + (count * 0.1f), 0.2f, 0.6f)));
             }
         }
     }
@@ -162,25 +165,27 @@ public class CustomGUIBox {
         }
         else if (boxType == BoxType.CHECKBOX) {
 
-            if (604f / font.getBounds(DialogMessage.trim()).width < 10f)
-                font.setScale(604f / font.getBounds(DialogMessage.trim()).width);
+            if (400f / font.getBounds(DialogMessage.trim()).width < 8f)
+                font.setScale(400f / font.getBounds(DialogMessage.trim()).width);
             else
-                font.setScale(10f);
+                font.setScale(8f);
 
             //Check if the message ends with a colon, then offset the drawn header to the left so it looks more aesthetically pleasing :P
             if (String.valueOf(DialogMessage.trim().charAt(DialogMessage.trim().length() - 1)).equals(":")) {
                 font.setColor(new Color(1f, 1f, 1f, 0.6f));//Just set it to white first :P
                 font.draw(batch, DialogMessage, pos.x + pwidth(10f),
-                        pos.y + size.y - pheight(10f));
+                        pos.y + size.y - pheight(5f));
             } else {
                 font.setColor(new Color(1f, 1f, 1f, 0.6f));//Just set it to white first :P
                 font.draw(batch, DialogMessage, pos.x + pwidth(50f) - (font.getBounds(DialogMessage).width / 2f),
-                        pos.y + size.y - pheight(10f));
+                        pos.y + size.y - pheight(5f));
             }
 
             for (CheckBox c : checkBoxes) {
                 //Draw the check box
                 batch.setColor(c.color);
+
+                font.setScale(1.4f);
                 batch.draw(DialogPic, c.getGlobalBoxPos(this, font).x, c.getGlobalBoxPos(this, font).y,
                         c.size.x, c.size.y);
 
@@ -199,24 +204,44 @@ public class CustomGUIBox {
             {
                 batch.setColor(b.color);
                 batch.draw(DialogPic, b.getGlobalPos(this.pos).x, b.getGlobalPos(this.pos).y, b.size.x, b.size.y);
+
                 //draws the text at the centre
                 font.setScale(1.4f);
                 font.draw(batch, b.text, b.getGlobalPos(this.pos).x + (b.size.x / 2f) - (font.getBounds(b.text).width / 2f),
-                        b.getGlobalPos(this.pos).y + (b.size.y / 2f) - (font.getBounds(b.text).height / 2f));
+                        b.getGlobalPos(this.pos).y + (b.size.y / 2f) + (font.getBounds(b.text).height / 2f));
+
                 //Single touch capabilities for now...
                 if(b.isClicked(touchData, this.pos)) tempButton = b;
-                Gdx.app.debug("BPOS", b.getGlobalPos(this.pos).x + ", " + b.getGlobalPos(this.pos).y + "::" + b.text);
             }
 			
 			for(CustomSlider s : sliders)
 			{
-				font.draw(batch, s.text, s.leftPos.x - pwidth(4), s.leftPos.y - pheight(10));
-                float tempX = s.getGlobalSliderPos(this.pos).x;
-                float tempY = s.getGlobalSliderPos(this.pos).y;
-                batch.draw(s.sliderBarPic, tempX, tempY, s.size.x, s.size.y);
-                tempX = s.getGlobalSliderPos(this.pos).x;
-                tempY = s.getGlobalSliderPos(this.pos).y;
-                batch.draw(s.sliderButtonPic, tempX, tempY);
+                font.setScale(1.4f);
+
+                //Draw slider bar
+                Vector2 temp = s.getGlobalBottomLeftPos(this.pos);
+				font.draw(batch, s.text, temp.x - pwidth(4), temp.y + pheight(20));
+                batch.draw(s.sliderBarPic, temp.x, temp.y, s.size.x, s.size.y);
+
+                //Draw slider button
+                temp = s.getGlobalSliderPos(this.pos);
+                Vector2 temp2 = s.getSliderButtonSize();
+                batch.draw(s.sliderButtonPic, temp.x, temp.y, temp2.x, temp2.y);
+
+                //Draw slider percentage
+                temp = s.getGlobalBottomRightPos(this.pos);
+                font.draw(batch, String.valueOf(s.getPercent()).concat("%"), temp.x, temp.y + pheight(10));
+
+                //Debug
+                temp = sliders.get(0).getGlobalSliderPos(this.pos);
+                font.draw(batch, "tpos: " + touchData.x + ", " + touchData.y + "; sp1: " + temp.x + ", " + temp.y +
+                        ", drag: " + touchData.isDragging + ", act: " + touchData.active, 100, 100);
+
+                //Check if slider clicked
+                if(s.isSliderClicked(touchData, this.pos))
+                {
+                    s.moveSlider(touchData.asVector2(), this.pos);//No need for percent; these are raw values...
+                }
 			}
 
             return tempButton;
@@ -235,14 +260,14 @@ public class CustomGUIBox {
     {
         buttonsCount ++;
         if(boxType == BoxType.CHECKBOX) {
-            buttons.add(new CustomButton(percent(10f + (buttonsCount - 1f) * 40f, 60f), percent(30f, 30f), buttonText, invert(this.color)));
+            buttons.add(new CustomButton(percent(10f + (buttonsCount - 1f) * 40f, 10f), percent(20f, 20f), buttonText, invert(this.color)));
         }
     }
 	
 	public void addSlider(String sliderText, Texture _sliderBarPic, Texture _sliderButtonPic, float yPos)
 	{
         //TODO: Make sure this works
-		sliders.add(new CustomSlider(percent(10, yPos), percent(80, 10), sliderText, Color.WHITE, 50, _sliderBarPic, _sliderButtonPic));
+		sliders.add(new CustomSlider(percent(10, yPos), percent(70, 12), sliderText, Color.WHITE, 50,_sliderBarPic, _sliderButtonPic));
 	}
 
     public CustomSlider getSlider(String sliderText)
@@ -269,17 +294,17 @@ public class CustomGUIBox {
     //This set of pwidth and pheight is regarding the local size.x and size.y values
     public float pwidth(float percent)
     {
-        return ((percent / 100f) * size.x);
+        return ((percent / 100f) * this.size.x);
     }
 
     public float pheight(float percent)
     {
-        return ((percent / 100f) * size.y);
+        return ((percent / 100f) * this.size.y);
     }
 
     public Vector2 percent(float x, float y)
     {
-        return new Vector2(pwidth(x), pwidth(y));
+        return new Vector2(pwidth(x), pheight(y));
     }
 
     private Color invert(Color c){

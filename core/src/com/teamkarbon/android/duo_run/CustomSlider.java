@@ -11,7 +11,7 @@ public class CustomSlider {
 	//Left/right pos is the range of the center of the slidable
 	//NOTE: All values are in pixels...
     Vector2 pos, size, leftPos, rightPos;//Note: pos value is pos of relative to the host CustomGUIBox.
-	Vector2 sliderPos;//Origin of slider button is centre!
+	Vector2 sliderPos;//Origin of slider button is bottom left
     Texture sliderBarPic;
     Texture sliderButtonPic;
 	float sliderPercent;
@@ -28,7 +28,7 @@ public class CustomSlider {
         leftPos = leftmost;
         size = _size;
         pos = new Vector2((leftmost.x + size.x) / 2, leftmost.y);
-		rightPos = leftmost.add(size.x, 0);
+		rightPos = new Vector2(leftmost.x, leftmost.y).add(size.x, 0);
         text = _text;
         color = _color;
 		sliderPercent = _sliderPercent;
@@ -46,7 +46,7 @@ public class CustomSlider {
         leftPos = leftmost;
         size = _size;
         pos = new Vector2((leftmost.x + size.x) / 2, leftmost.y);
-        rightPos = leftmost.add(size.x, 0);
+        rightPos = new Vector2(leftmost).add(size.x, 0);
         text = _text;
         color = _color;
         sliderPercent = _sliderPercent;
@@ -63,7 +63,7 @@ public class CustomSlider {
     {
 		float tempX = getGlobalSliderPos(hostPos).x;
 		float tempY = getGlobalSliderPos(hostPos).y;
-        if(touchData.active && touchData.x >= tempX && touchData.x <= tempX + size.x
+        if((touchData.active || touchData.isDragging) && touchData.x >= tempX && touchData.x <= tempX + (size.x / 10f)
 		   && touchData.y >= tempY && touchData.y <= tempY + size.y)
         {
             return true;
@@ -71,16 +71,24 @@ public class CustomSlider {
         return false;
     }
 	
-	public void moveSlider(Vector2 _sliderPos)
+	public void moveSlider(Vector2 rawPos, Vector2 hostPos)
 	{
-		sliderPos = _sliderPos;
-		sliderPercent = ((sliderPos.x - leftPos.x) / size.x * 100f);
+		sliderPos.x = rawPos.x - hostPos.x;
+		sliderPercent = ((sliderPos.x - leftPos.x) / (size.x - getSliderButtonSize().x) * 100f);
+
+        //Do some clamping
+        if(sliderPercent > 100f) moveSlider(100f);
+        if(sliderPercent < 0f) moveSlider(0f);
 	}
 	
 	public void moveSlider(float _sliderPercent)
 	{
+        //Do some clamping
+        if(_sliderPercent > 100f) _sliderPercent = 100f;
+        if(_sliderPercent < 0f) _sliderPercent = 0f;
+
 		sliderPercent = _sliderPercent;
-		sliderPos.x = leftPos.x + (sliderPercent / 100f * size.x);
+		sliderPos.x = leftPos.x + (sliderPercent / 100f * (size.x - getSliderButtonSize().x));
 	}
 
     public float getPercent()
@@ -93,6 +101,11 @@ public class CustomSlider {
         return value;
     }
 
+    public Vector2 getSliderButtonSize()
+    {
+        return new Vector2(size.x / 10f, size.y);
+    }
+
     public void setColor(Color c) { color = c; }
 
     public Vector2 getGlobalPos(Vector2 hostPos)
@@ -103,6 +116,11 @@ public class CustomSlider {
     public Vector2 getGlobalBottomLeftPos(Vector2 hostPos)
     {
         return new Vector2(leftPos.x + hostPos.x, leftPos.y + hostPos.y);
+    }
+
+    public Vector2 getGlobalBottomRightPos(Vector2 hostPos)
+    {
+        return new Vector2(rightPos.x + hostPos.x, rightPos.y + hostPos.y);
     }
 	
 	public Vector2 getGlobalSliderPos(Vector2 hostPos)
