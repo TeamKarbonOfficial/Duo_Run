@@ -146,6 +146,11 @@ public class derptest extends ApplicationAdapter {
     BitmapFont bigfont;
     Texture smallfonttexture;//These textures allow alpha filtering, which will then make the text look smoother :P
     Texture bigfonttexture;
+    Texture bg_circle;
+    Texture bg_rectangle;
+    Texture bg_hex;
+    Texture bg_square;
+    Texture bg_triangle;
     Skin skin;
     Stage stage;
     Label labelScore;
@@ -217,6 +222,11 @@ public class derptest extends ApplicationAdapter {
         dialogBoxTexture = new Texture(Gdx.files.internal("DialogBoxTexture200.png"));
         sliderBarTexure = new Texture(Gdx.files.internal("slider_bar.png"));
         sliderButtonTexture = new Texture(Gdx.files.internal("slider_button.png"));
+        bg_circle = new Texture(Gdx.files.internal("bg_circle.png"));
+        bg_rectangle = new Texture(Gdx.files.internal("bg_rectangle.png"));
+        bg_hex = new Texture(Gdx.files.internal("bg_hex.png"));
+        bg_square = new Texture(Gdx.files.internal("bg_square.png"));
+        bg_triangle = new Texture(Gdx.files.internal("bg_triangle.png"));
 
         //Setting up the camera
         camera = new OrthographicCamera(pwidth(100), pheight(100));//Sets its rendering area to fill the whole screen.
@@ -475,8 +485,12 @@ public class derptest extends ApplicationAdapter {
             bigfont.draw(batch, String.valueOf(score), descalepercent(40, 90).x, descalepercent(40, 90).y);
             batch.end();
 
-            //Make dem obstacles
+            //TODO: Background
+            if (!gameOver && Math.random() >= 0.3) {
 
+            }
+
+            //Make dem obstacles
             //#make obstacles
             if (!gameOver && obstaclesTimer > 3.5f - (level / 2f) && Math.random() >= 0.5) {
                 PolygonShape temp = new PolygonShape();
