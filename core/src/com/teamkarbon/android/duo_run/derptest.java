@@ -670,16 +670,16 @@ public class derptest extends ApplicationAdapter {
 
                 //Achievements
                 if (androidMethods.isSignedIn()) {
-                    //Check if the user was offline, then update the play services stuff using stored values, then reset the stored vals
+                    //Check if the user was offline, then update the play services stuff using stored values, then reset the stored values
                     if (androidMethods.prefgetBoolean(PREF_WAS_OFFLINE, true)) {
                         //Unlock Getting Started
                         if (androidMethods.prefgetBoolean(PREF_GETTING_STARTED, false))
                             androidMethods.submitNorAchievements(ACHIEVEMENT_GETTING_STARTED);
-                        //Add PREF_ADDICTED to the achievements counter
-                        androidMethods.submitInAchievements(ACHIEVEMENT_ADDICTED, androidMethods.prefgetInt(PREF_ADDICTED, 0));
+                        //FIXME: Add PREF_ADDICTED to the achievements counter
+                        //androidMethods.submitInAchievements(ACHIEVEMENT_ADDICTED, androidMethods.prefgetInt(PREF_ADDICTED, 0));
                         androidMethods.prefputInt(PREF_ADDICTED, 0);
                         //FIXME: Unlock Cat
-                        androidMethods.submitInAchievements(ACHIEVEMENT_OH_YOURE_A_CAT, androidMethods.prefgetInt(PREF_OH_YOURE_A_CAT, 0));
+                        //androidMethods.submitInAchievements(ACHIEVEMENT_OH_YOURE_A_CAT, androidMethods.prefgetInt(PREF_OH_YOURE_A_CAT, 0));
                         androidMethods.prefputInt(PREF_OH_YOURE_A_CAT, 0);
                         //Unlock Not Afraid of Death!
                         if (androidMethods.prefgetBoolean(PREF_NOT_AFRAID_OF_DEATH, false))
