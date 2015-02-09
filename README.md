@@ -15,16 +15,10 @@ Floobit URL: https://floobits.com/TeamKarbon/Duo_Run
 [![Floobits Status](https://floobits.com/TeamKarbon/Duo_Run.png)](https://floobits.com/TeamKarbon/Duo_Run/redirect)
 
 **Ad SDK**
-http://teamkarbon.com/cloud/public.php?service=files&t=9075431d4857542adedfc9410c994a29
+https://publishers.adbuddiz.com/resources/sdk/AdBuddiz-Java-2.4.2.zip
 
-**Images for Balls, Icons, Sliders & background shapes: (Place images in \android\assets)**
-http://teamkarbon.com/cloud/public.php?service=files&t=69d7aca788e27f04971fad1bd79a314c
-
-**File of Shared Stuff** includes graphics, pics, etc.. :P
-http://teamkarbon.com/cloud/public.php?service=files&t=739066b6a6d5000a7b929fb72e55a859
-
-**default.png file**
-https://github.com/libgdx/libgdx/blob/master/tests/gdx-tests-android/assets/data/default.png
+**Android Assets:**
+http://teamkarbon.com/cloud/public.php?service=files&t=38fbd1c305dfc7920e413a0f74d15bd6
 
 **Music (still in progress) (Look around for those tracks entitled Duo Run)**
 https://soundcloud.com/euwbah/
