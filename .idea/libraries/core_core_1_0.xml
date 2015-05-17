@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="2_AdBuddiz-2.3.4">
+  <library name="core.core-1.0">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/android/libraries/AdBuddiz-2.3.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/core/build/libs/core-1.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
