@@ -240,7 +240,8 @@ public class CustomGUIBox {
                 //Check if slider clicked
                 if(s.isSliderClicked(touchData, this.pos))
                 {
-                    s.moveSlider(touchData.asVector2(), this.pos);//No need for percent; these are raw values...
+                    //TODO: Some serious debugging here
+                    s.moveSlider(0f);//No need for percent; these are raw values...
                 }
 			}
 

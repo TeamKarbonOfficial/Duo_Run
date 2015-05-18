@@ -222,11 +222,12 @@ public class derptest extends ApplicationAdapter {
         dialogBoxTexture = new Texture(Gdx.files.internal("DialogBoxTexture200.png"));
         sliderBarTexure = new Texture(Gdx.files.internal("slider_bar.png"));
         sliderButtonTexture = new Texture(Gdx.files.internal("slider_button.png"));
-        bg_circle = new Texture(Gdx.files.internal("bg_circle.png"));
+        /*bg_circle = new Texture(Gdx.files.internal("bg_circle.png"));
         bg_rectangle = new Texture(Gdx.files.internal("bg_rectangle.png"));
         bg_hex = new Texture(Gdx.files.internal("bg_hex.png"));
         bg_square = new Texture(Gdx.files.internal("bg_square.png"));
         bg_triangle = new Texture(Gdx.files.internal("bg_triangle.png"));
+        */
 
         //Setting up the camera
         camera = new OrthographicCamera(pwidth(100), pheight(100));//Sets its rendering area to fill the whole screen.

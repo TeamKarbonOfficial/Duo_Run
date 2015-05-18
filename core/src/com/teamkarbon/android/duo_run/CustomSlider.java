@@ -88,7 +88,7 @@ public class CustomSlider {
         if(_sliderPercent < 0f) _sliderPercent = 0f;
 
 		sliderPercent = _sliderPercent;
-		sliderPos.x = leftPos.x + (sliderPercent / 100f * (size.x - getSliderButtonSize().x));
+		sliderPos.x = (sliderPercent / 100f * (size.x - getSliderButtonSize().x));
 	}
 
     public float getPercent()
