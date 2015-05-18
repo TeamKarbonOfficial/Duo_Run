@@ -180,7 +180,6 @@ public class derptest extends ApplicationAdapter {
     Texture dialogBoxTexture;
     Texture sliderBarTexure;
     Texture sliderButtonTexture;
-    TouchData touchData;
     ArrayList<TouchData> touchList;
     boolean backFlag = false;//A flag where set true within gameMode.GAME_INIT when the back button is clicked...
     boolean gameFlag = false;//A flag where set true within gameMode.GAME_INIT when the selected game mode is clicked...
@@ -318,18 +317,15 @@ public class derptest extends ApplicationAdapter {
 
         debugRenderer = new Box2DDebugRenderer();
 
-        touchData = new TouchData();
         touchList = new ArrayList<TouchData>();
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             //IMPORTANT: The Y - axis is 0 at the TOP by default.
             public boolean touchDown(int x, int y, int pointer, int button) {
-                //OLD
-                if (x < descalepercent(50, 0).x) Force = true;
-                if (x >= descalepercent(50, 0).x) Force2 = true;
-
 
                 //New
+                TouchData touchData = new TouchData();
+
                 touchData.set(x, Gdx.graphics.getHeight() - y);
                 touchData.pointerID = pointer;
                 touchList.add(touchData);
@@ -338,12 +334,6 @@ public class derptest extends ApplicationAdapter {
             }
 
             public boolean touchUp(int x, int y, int pointer, int button) {
-                /* This might not be the best way though...*/
-                //OLD
-                if (x < descalepercent(50, 0).x) Force = false;
-                if (x >= descalepercent(50, 0).x) Force2 = false;
-
-                touchData.deactivate();
 
                 //NEW
                 TouchData t = getTouchDataWithID(pointer);
@@ -357,10 +347,6 @@ public class derptest extends ApplicationAdapter {
 
             @Override
             public boolean touchDragged (int x, int y, int pointer) {
-                //OLD
-                touchData.set(x, Gdx.graphics.getHeight() - y);
-                touchData.isDragging = true;
-                touchData.deactivate();
 
                 //New
                 TouchData t = getTouchDataWithID(pointer);
@@ -798,7 +784,7 @@ public class derptest extends ApplicationAdapter {
                 if (tempButton != null && lerp > 56 && tempButton.text.equals("Play Again") && tempButton.animateFlag) {
                     tempButton = null;//Clear this.
                     adShownForThisSession = false;//And this
-                    touchData.deactivate();//And this
+                    touchList.clear();//And this
                     lerpFlag = false;//And this
                     gsCount = 0;//And this.
 
@@ -812,7 +798,7 @@ public class derptest extends ApplicationAdapter {
                 } else if (tempButton != null && lerp > 49 && tempButton.text.equals("Main Menu") && tempButton.animateFlag) {
                     tempButton = null;//Clear this.
                     adShownForThisSession = false;//And this
-                    touchData.deactivate();//And this
+                    touchList.clear();//And this
                     lerpFlag = false;//And this
                     gsCount = 0;//And this.
 
@@ -835,19 +821,20 @@ public class derptest extends ApplicationAdapter {
             }
 
             batch.begin();
-            if (tempButton == null) tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);
-            else customGUIBox.DrawAndUpdate(bigfont, touchData);
+            if (tempButton == null) tempButton = customGUIBox.DrawAndUpdate(bigfont, getMostRecent(touchList));
+            else customGUIBox.DrawAndUpdate(bigfont, getMostRecent(touchList));
 
-            bigfont.draw(batch, "touchpos: " + touchData.x + ", " + touchData.y + ", " + touchData.active, 190, 190);
+            bigfont.draw(batch, "touchpos: " + getMostRecent(touchList).x + ", " + getMostRecent(touchList).y +
+                    ", " + getMostRecent(touchList).active, 190, 190);
             batch.end();
 
             //Once a CustomButton has been clicked, it will be stored as tempButton so that color
             //lerping can take place upon the clicked button
             if (tempButton != null) {
                 if (tempButton.text.equals("Achievements")) {
-                    touchData.deactivate();
+                    touchList.clear();
                     androidMethods.showAchievements();
-                    touchData.deactivate();
+                    touchList.clear();
 
                     //Reset Work Around
                     tempButton = null;
@@ -855,13 +842,13 @@ public class derptest extends ApplicationAdapter {
                     allowGameServices = false;
                     gsCount = 0;
                 } else if (tempButton.text.equals("Leaderboard")) {
-                    touchData.deactivate();
+                    touchList.clear();
                     if (instaDeathMode) {
                         androidMethods.showScores(LEADERBOARD_INSTADEATH);
                     } else {
                         androidMethods.showScores(LEADERBOARD_NORMAL);
                     }
-                    touchData.deactivate();
+                    touchList.clear();
 
                     //Reset Work Around
                     tempButton = null;
@@ -1131,7 +1118,7 @@ public class derptest extends ApplicationAdapter {
 
             batch.begin();
 
-            tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);//This function returns button clicked
+            tempButton = customGUIBox.DrawAndUpdate(bigfont, getMostRecent(touchList));//This function returns button clicked
             bigfont.draw(batch, "GUI pos: " + customGUIBox.pos.x + ", " + customGUIBox.pos.y, 60, 200);
 
             batch.end();
@@ -1271,7 +1258,7 @@ public class derptest extends ApplicationAdapter {
             DrawAndUpdateRenderTriangles(triangles);
 
             batch.begin();
-            tempButton = customGUIBox.DrawAndUpdate(bigfont, touchData);
+            tempButton = customGUIBox.DrawAndUpdate(bigfont, getMostRecent(touchList));
             batch.end();
 
             ArrayList<CheckBox> checkBoxes = customGUIBox.getCheckBoxes();
@@ -1526,6 +1513,18 @@ public class derptest extends ApplicationAdapter {
                 return t;
         }
         return null;
+    }
+
+    public TouchData getMostRecent(ArrayList<TouchData> touchList)
+    {
+        for(int pointer = 0; pointer < 10; pointer ++)
+        {
+            TouchData temp = touchList.get(pointer);
+
+            if(temp == null)//The previous element of the list is the most recent valid touch point :P
+                return touchList.get(pointer - 1);
+        }
+        return touchList.get(9);//The max possible touches registered in InputProcessor..
     }
 
     //#draw ball
