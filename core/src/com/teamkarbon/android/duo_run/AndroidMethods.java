@@ -27,22 +27,22 @@ public class AndroidMethods implements derptest.AndroidMethods {
     }
 
     @Override
-    public void submitScore(String id, long score) {
+    public void submitScore(String pointerID, long score) {
 
     }
 
     @Override
-    public void showScores(String id) {
+    public void showScores(String pointerID) {
 
     }
 
     @Override
-    public void submitNorAchievements(String id) {
+    public void submitNorAchievements(String pointerID) {
 
     }
 
     @Override
-    public void submitInAchievements(String id, int number) {
+    public void submitInAchievements(String pointerID, int number) {
 
     }
 

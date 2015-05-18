@@ -181,6 +181,7 @@ public class derptest extends ApplicationAdapter {
     Texture sliderBarTexure;
     Texture sliderButtonTexture;
     TouchData touchData;
+    ArrayList<TouchData> touchList;
     boolean backFlag = false;//A flag where set true within gameMode.GAME_INIT when the back button is clicked...
     boolean gameFlag = false;//A flag where set true within gameMode.GAME_INIT when the selected game mode is clicked...
     CustomButton tempButton;
@@ -207,6 +208,7 @@ public class derptest extends ApplicationAdapter {
 
     }
 
+    //#create start
     @Override
     public void create() {
 
@@ -317,31 +319,55 @@ public class derptest extends ApplicationAdapter {
         debugRenderer = new Box2DDebugRenderer();
 
         touchData = new TouchData();
+        touchList = new ArrayList<TouchData>();
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             //IMPORTANT: The Y - axis is 0 at the TOP by default.
             public boolean touchDown(int x, int y, int pointer, int button) {
+                //OLD
                 if (x < descalepercent(50, 0).x) Force = true;
                 if (x >= descalepercent(50, 0).x) Force2 = true;
 
+
+                //New
                 touchData.set(x, Gdx.graphics.getHeight() - y);
+                touchData.pointerID = pointer;
+                touchList.add(touchData);
+
                 return true;
             }
 
             public boolean touchUp(int x, int y, int pointer, int button) {
-                /* This might note be the best way though...*/
+                /* This might not be the best way though...*/
+                //OLD
                 if (x < descalepercent(50, 0).x) Force = false;
                 if (x >= descalepercent(50, 0).x) Force2 = false;
 
                 touchData.deactivate();
+
+                //NEW
+                TouchData t = getTouchDataWithID(pointer);
+                t.isDragging = false;
+                t.deactivate();
+
+                //NOTE: TouchData t from touchList will be removed from the list in the manageTouchDataList function...
+
                 return true;
             }
 
             @Override
             public boolean touchDragged (int x, int y, int pointer) {
+                //OLD
                 touchData.set(x, Gdx.graphics.getHeight() - y);
                 touchData.isDragging = true;
                 touchData.deactivate();
+
+                //New
+                TouchData t = getTouchDataWithID(pointer);
+                t.set(x, Gdx.graphics.getHeight() - y);
+                t.isDragging = true;
+                t.deactivate();
+
                 return true;
             }
         });
@@ -407,7 +433,7 @@ public class derptest extends ApplicationAdapter {
 
             obstacles.clear();//Makin' sure
 
-            //Create a new obstacle with id "play"
+            //Create a new obstacle with pointerID "play"
             obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(80f), pheight(33f), false, "play"));//Play the game
             obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(100f), pheight(39f), true, "options"));//Go to options
             obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(150f), pheight(30f), true, "stats"));//See all game service - related stuff
@@ -1327,6 +1353,10 @@ public class derptest extends ApplicationAdapter {
         return temp;
     }
 
+    public float descaleX(float x) { return descalepercent(x, 0).x; }
+
+    public float descaleY(float y) { return descalepercent(0, y).y; }
+
     //The percentage of screen width represented in meters.
     public float pwidth(float widthpercent) {
         return scale((widthpercent / 100f) * Gdx.graphics.getWidth());
@@ -1462,6 +1492,40 @@ public class derptest extends ApplicationAdapter {
             ball.body.applyForceToCenter(-10, 0, true);
         if (ball2.body.getPosition().x > 0 && !overrideBall2AutoPos)
             ball2.body.applyForceToCenter(-10, 0, true);
+    }
+
+    public void manageTouchDataList(ArrayList<TouchData> touchList)
+    {
+        for(int i = 0; i < touchList.size(); i++)
+        {
+            TouchData t = touchList.get(i);
+            if(t.active)
+            {
+                if(t.x < descaleX(50f)) Force = true;
+                else if(t.x >= descaleX(50f)) Force2 = true;
+            }
+            else
+            {
+                if(!t.isDragging)
+                {
+                    //Delete from list
+                    if(t.initialX < descaleX(50f)) Force = false;
+                    else if(t.x >= descaleX(50f)) Force2 = false;
+                    touchList.remove(t);
+                    break;
+                }
+            }
+        }
+    }
+
+    public TouchData getTouchDataWithID(int id)
+    {
+        for(TouchData t : touchList)
+        {
+            if(t.pointerID == id)
+                return t;
+        }
+        return null;
     }
 
     //#draw ball
