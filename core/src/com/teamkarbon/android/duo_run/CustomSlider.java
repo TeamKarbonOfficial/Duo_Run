@@ -11,7 +11,7 @@ public class CustomSlider {
 	//Left/right pos is the range of the center of the slidable
 	//NOTE: All values are in pixels...
     Vector2 pos, size, leftPos, rightPos;//Note: pos value is pos of relative to the host CustomGUIBox.
-	Vector2 sliderPos;//Origin of slider button is bottom left
+	Vector2 sliderPos;//Origin of slider button is bottom left. Slider pos is relative to the slider BAR, not the GUI BOX
     Texture sliderBarPic;
     Texture sliderButtonPic;
 	float sliderPercent;
@@ -61,9 +61,10 @@ public class CustomSlider {
 
     public boolean isSliderClicked(TouchData touchData, Vector2 hostPos)
     {
-		float tempX = getGlobalSliderPos(hostPos).x;
+		float tempXmin = getGlobalBottomLeftPos(hostPos).x;
+        float tempXmax = getGlobalBottomRightPos(hostPos).x;
 		float tempY = getGlobalSliderPos(hostPos).y;
-        if((touchData.active || touchData.isDragging) && touchData.x >= tempX && touchData.x <= tempX + (size.x / 10f)
+        if((touchData.active || touchData.isDragging) && touchData.x >= tempXmin && touchData.x <= tempXmax
 		   && touchData.y >= tempY && touchData.y <= tempY + size.y)
         {
             return true;
@@ -73,8 +74,8 @@ public class CustomSlider {
 	
 	public void moveSlider(Vector2 rawPos, Vector2 hostPos)
 	{
-		sliderPos.x = rawPos.x - hostPos.x;
-		sliderPercent = ((sliderPos.x - leftPos.x) / (size.x - getSliderButtonSize().x) * 100f);
+		sliderPos.x = rawPos.x - (getSliderButtonSize().x / 2f) - leftPos.x - hostPos.x;
+		sliderPercent = sliderPos.x * 100f / (size.x - getSliderButtonSize().x);
 
         //Do some clamping
         if(sliderPercent > 100f) moveSlider(100f);
