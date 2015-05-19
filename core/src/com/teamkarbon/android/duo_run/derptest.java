@@ -1052,7 +1052,8 @@ public class derptest extends ApplicationAdapter {
             } else {
                 lerpFlag = false;
 
-                if (backFlag && lerp < -1f)//Reaches same speed as obs moving in main menu, 7 pwidth / s leftwards
+                //Reaches same speed as obs moving in main menu, 7 pwidth / s leftwards
+                if (backFlag && lerp < -1f && !overrideBallAutoPos && !overrideBall2AutoPos)
                 {
                     backFlag = false;//Reset dem flags.
                     lerpFlag = false;
@@ -1060,7 +1061,8 @@ public class derptest extends ApplicationAdapter {
                     overrideBall2AutoPos = false;
                     mode = gameMode.MAIN_MENU_INIT;//Transit to main menu INIT!
                 }
-                if (gameFlag && lerp < -2f)//Same speed as obs moving in game, 6 pwidth / s
+                //Same speed as obs moving in game, 6 pwidth / s
+                if (gameFlag && lerp < -2f && !overrideBallAutoPos && !overrideBall2AutoPos)
                 {
                     gameFlag = false;
                     lerpFlag = false;
@@ -1068,6 +1070,13 @@ public class derptest extends ApplicationAdapter {
                     overrideBall2AutoPos = false;
                     mode = gameMode.GAME;//Go to game!
                 }
+
+                if (!inRange(ball2.getPos().x, pwidth(-1), pwidth(1), rangeMode.WITHIN_OR_EQUIVALENT)) {
+                    ball2.body.applyForceToCenter(2 * (0 - ball.getPos().x) / ball.body.getMass() - (1 / 2 * ball.body.getMass() *
+                            ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
+
+                    overrideBall2AutoPos = true;
+                } else overrideBall2AutoPos = false;
 
                 if (lerp > -8) lerp -= Gdx.graphics.getDeltaTime() * 14f;//Decelerate until
                 else lerp = -8;//Stop...
