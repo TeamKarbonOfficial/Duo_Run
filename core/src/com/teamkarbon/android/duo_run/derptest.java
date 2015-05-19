@@ -120,15 +120,15 @@ public class derptest extends ApplicationAdapter {
 
     private int A_Addicted;
     private int A_Oh_Youre_A_Cat;
+    public static boolean allowGameServices;
 
     gameMode mode; //A custom enum to manage multiple screens. (Game, main menu etc)
 
-    static boolean allowGameServices = true;//A boolean to make sure the gameServices thingy won't spam too much...
-    static boolean adShownForThisSession = false;//A boolean to make sure that the ads are only shown once per game over...
-    int gsCount = 0;
+
 
     private final String BACK_BUTTON = "onBackPressed";
 
+    //Game base
     ShapeRenderer shapeRenderer;
     SpriteBatch batch;
     Box2DDebugRenderer debugRenderer;
@@ -138,7 +138,9 @@ public class derptest extends ApplicationAdapter {
     Body theCeiling;
     Ball ball;
     Ball ball2;
-    boolean overrideBallAutoPos, overrideBall2AutoPos;
+
+    //Graphics
+
     //Texture balltexture;
     //Texture ball2texture;
     Texture helpbuttontexture;
@@ -151,43 +153,51 @@ public class derptest extends ApplicationAdapter {
     Texture bg_hex;
     Texture bg_square;
     Texture bg_triangle;
+    Texture dialogBoxTexture;
+    Texture sliderBarTexure;
+    Texture sliderButtonTexture;
     Skin skin;
     Stage stage;
     Label labelScore;
 
-    Boolean Force = false;
-    Boolean Force2 = false;
+    //Game flow
     int level;
     int score = 0;
     int pad;
     float lerp;//Linear interpolation (Cool animation when shifting between main menu -> game init -> game ;)
-    boolean lerpFlag;
     float rawscore = 0;
     boolean instaDeathMode;
     boolean gameOver = false;
     //final String ballfile;
     //final String ball2file;
 
+    //Obstacles
     ArrayList<Obstacle> obstacles;
     float obstaclesTimer;//in Seconds...
     float obstaclesRemovalTimer;
-    boolean obstaclesRemoveFlag;
 
     public final float PixelsPerMeter = 50f;
     public float OUT_OF_BOUNDS_THRESHOLD;
 
     CustomGUIBox customGUIBox;
-    Texture dialogBoxTexture;
-    Texture sliderBarTexure;
-    Texture sliderButtonTexture;
     ArrayList<TouchData> touchList;
-    boolean backFlag = false;//A flag where set true within gameMode.GAME_INIT when the back button is clicked...
-    boolean gameFlag = false;//A flag where set true within gameMode.GAME_INIT when the selected game mode is clicked...
     CustomButton tempButton;
 
+    //Settings
     boolean VibrationOn;
     int volumePercent;
     int fxPercent;
+
+    //Flags
+    Boolean Force = false;
+    Boolean Force2 = false;
+    boolean overrideBallAutoPos, overrideBall2AutoPos;//For ball position correction in game_initstatic boolean allowGameServices = true;
+    boolean obstaclesRemoveFlag;
+    boolean backFlag = false;//A flag where set true within gameMode.GAME_INIT when the back button is clicked...
+    boolean gameFlag = false;//A flag where set true within gameMode.GAME_INIT when the selected game mode is clicked...
+    boolean lerpFlag;
+    static boolean adShownForThisSession = false;//A boolean to make sure that the ads are only shown once per game over...
+    int gsCount = 0;
 
     Texture splashScreen;//TODO: Make a logo/splash screen to display on init and perhaps other places when needed...
 
@@ -1147,7 +1157,7 @@ public class derptest extends ApplicationAdapter {
 
                     lerp += 10;
                 } else if (tempButton.text.equals("Insta-Death")) {
-                    //Reset score :D
+                    //Reset score :D (~Lol thx :P)
                     score = 0;
 
                     gameFlag = true;
