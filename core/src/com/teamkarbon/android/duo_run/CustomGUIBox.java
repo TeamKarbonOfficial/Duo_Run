@@ -117,7 +117,7 @@ public class CustomGUIBox {
         }
     }
 
-    public CustomButton DrawAndUpdate(BitmapFont font, TouchData touchData)
+    public CustomButton DrawAndUpdate(BitmapFont font, TouchData touchData, ArrayList<TouchData> touchList)
     {
         tempButton = null;//Set null to default.
         Gdx.gl.glEnable(GL20.GL_BLEND);
@@ -193,7 +193,7 @@ public class CustomGUIBox {
                 font.draw(batch, c.text, c.getGlobalPos(this.pos).x, c.getGlobalPos(this.pos).y);
 
                 //Check if clicked
-                if(c.isClicked(touchData, this, font))
+                if(c.isClicked(touchList, touchData, this, font))
                 {
                     c.flip();
                 }
@@ -290,6 +290,30 @@ public class CustomGUIBox {
     public enum BoxType
     {
         NORMAL, CHECKBOX, MODESELECT
+    }
+
+    public void resetTouchListForGUI(ArrayList<TouchData> touchList)
+    {
+        if(checkBoxes != null) {//NPEs, NPEs, NPEEESSS!!!!
+            for (CheckBox c : checkBoxes) {
+                c.setFingerOff();
+            }
+        }
+        if(touchList != null) {
+            for (int i = 0; i < touchList.size(); i++) {
+                TouchData t = touchList.get(i);
+                t.deactivate();
+            }
+        }
+    }
+
+    public void resetTouchListForGUINullTouchList()
+    {
+        if(checkBoxes != null) {//NPEs, NPEs, NPEEESSS!!!!
+            for (CheckBox c : checkBoxes) {
+                c.setFingerOff();
+            }
+        }
     }
 
     //This set of pwidth and pheight is regarding the local size.x and size.y values

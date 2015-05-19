@@ -181,6 +181,7 @@ public class derptest extends ApplicationAdapter {
 
     CustomGUIBox customGUIBox;
     ArrayList<TouchData> touchList;
+    TouchData previousTouchData;//To prevent the need for major code review... Just make sure sth can be sent in place of a null....
     CustomButton tempButton;
 
     //Settings
@@ -328,17 +329,20 @@ public class derptest extends ApplicationAdapter {
         debugRenderer = new Box2DDebugRenderer();
 
         touchList = new ArrayList<TouchData>();
+        previousTouchData = new TouchData();//Just to prevent NPEs...
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             //IMPORTANT: The Y - axis is 0 at the TOP by default.
             public boolean touchDown(int x, int y, int pointer, int button) {
 
                 //New
-                TouchData touchData = new TouchData();
+                TouchData touchData = new TouchData(x, Gdx.graphics.getHeight() - y);
 
-                touchData.set(x, Gdx.graphics.getHeight() - y);
                 touchData.pointerID = pointer;
+
                 touchList.add(touchData);
+
+                previousTouchData = new TouchData(touchData);//To make a new pointer for the prev Touch Data...
 
                 return true;
             }
@@ -346,9 +350,26 @@ public class derptest extends ApplicationAdapter {
             public boolean touchUp(int x, int y, int pointer, int button) {
 
                 //NEW
-                TouchData t = getTouchDataWithID(pointer);
-                t.isDragging = false;
-                t.deactivate();
+                TouchData t = getTouchDataWithID(pointer);//Note this function may return null...
+
+                // To make sure stuff like CheckBoxes are clickable once the finger leaves the screen...
+                //Make sure this function is called before any deletions...
+
+                if(customGUIBox != null) {//OTHER NPE SOLVER
+                    if (touchList != null && touchList.size() > 0)
+                        customGUIBox.resetTouchListForGUI(touchList);
+                    else customGUIBox.resetTouchListForGUINullTouchList();//NPE SOLVER :P
+                }
+
+                if(t != null) {
+                    t.isDragging = false;
+                    t.deactivate();
+                }
+
+
+
+                previousTouchData.deactivate();
+                previousTouchData.isDragging = false;
 
                 //NOTE: TouchData t from touchList will be removed from the list in the manageTouchDataList function...
 
@@ -359,11 +380,14 @@ public class derptest extends ApplicationAdapter {
             public boolean touchDragged (int x, int y, int pointer) {
 
                 //New
-                TouchData t = getTouchDataWithID(pointer);
-                t.set(x, Gdx.graphics.getHeight() - y);
-                t.isDragging = true;
-                t.deactivate();
+                TouchData t = getTouchDataWithID(pointer);//Note: this funtion may return null...
 
+                if(t != null) {
+                    t.set(x, Gdx.graphics.getHeight() - y);
+                    t.isDragging = true;
+                    previousTouchData.isDragging = true;
+                    t.deactivate();
+                }
                 return true;
             }
         });
@@ -831,8 +855,8 @@ public class derptest extends ApplicationAdapter {
             }
 
             batch.begin();
-            if (tempButton == null) tempButton = customGUIBox.DrawAndUpdate(bigfont, getMostRecent(touchList));
-            else customGUIBox.DrawAndUpdate(bigfont, getMostRecent(touchList));
+            if (tempButton == null) tempButton = customGUIBox.DrawAndUpdate(bigfont, getMostRecent(touchList), touchList);
+            else customGUIBox.DrawAndUpdate(bigfont, getMostRecent(touchList), touchList);
 
             bigfont.draw(batch, "touchpos: " + getMostRecent(touchList).x + ", " + getMostRecent(touchList).y +
                     ", " + getMostRecent(touchList).active, 190, 190);
@@ -929,8 +953,12 @@ public class derptest extends ApplicationAdapter {
 
                     /*smallfont.setScale(1.5f);
                     smallfont.setColor(new Color(1, 1, 1, 1));//TODO: Remove this debug in the near future :P
-                    smallfont.draw(batch, obs.getVertices()[0] + ", " + obs.getVertices()[1], 100, 400);
-                    smallfont.draw(batch, playerLeft.getVertices()[0] + ", " + playerLeft.getVertices()[1], 100, 300);*/
+                    String tempstr = touchList.get(0).asVector2().toString();
+                    if(tempstr == null) tempstr = "...";
+                    String tempstr2 = touchList.get(1).asVector2().toString();
+                    if(tempstr2 == null) tempstr2 = "...";
+                    smallfont.draw(batch, tempstr, 100, 400);
+                    smallfont.draw(batch, tempstr2, 100, 300);*/
 
                     if ((Intersector.overlapConvexPolygons(obs, playerLeft) && !o.type) ||
                             (Intersector.overlapConvexPolygons(obs, playerRight) && o.type)) {
@@ -1137,7 +1165,7 @@ public class derptest extends ApplicationAdapter {
 
             batch.begin();
 
-            tempButton = customGUIBox.DrawAndUpdate(bigfont, getMostRecent(touchList));//This function returns button clicked
+            tempButton = customGUIBox.DrawAndUpdate(bigfont, getMostRecent(touchList), touchList);//This function returns button clicked
             bigfont.draw(batch, "GUI pos: " + customGUIBox.pos.x + ", " + customGUIBox.pos.y, 60, 200);
 
             batch.end();
@@ -1279,7 +1307,7 @@ public class derptest extends ApplicationAdapter {
             DrawAndUpdateRenderTriangles(triangles);
 
             batch.begin();
-            tempButton = customGUIBox.DrawAndUpdate(bigfont, getMostRecent(touchList));
+            tempButton = customGUIBox.DrawAndUpdate(bigfont, getMostRecent(touchList), touchList);
             batch.end();
 
             ArrayList<CheckBox> checkBoxes = customGUIBox.getCheckBoxes();
@@ -1485,6 +1513,9 @@ public class derptest extends ApplicationAdapter {
 
     //#process input
     public void ProcessInput() {
+
+        manageTouchDataList(touchList);
+
         if (Force)
             ball.body.applyForceToCenter(0, 50, true);
         if (Force2)
@@ -1504,29 +1535,27 @@ public class derptest extends ApplicationAdapter {
 
     public void manageTouchDataList(ArrayList<TouchData> touchList)
     {
-        for(int i = 0; i < touchList.size(); i++)
-        {
-            TouchData t = touchList.get(i);
-            if(t.active)
-            {
-                if(t.x < descaleX(50f)) Force = true;
-                else if(t.x >= descaleX(50f)) Force2 = true;
-            }
-            else
-            {
-                if(!t.isDragging)
-                {
-                    //Delete from list
-                    if(t.initialX < descaleX(50f)) Force = false;
-                    else if(t.x >= descaleX(50f)) Force2 = false;
-                    touchList.remove(t);
-                    break;
+        if(touchList != null) {
+            for (int i = 0; i < touchList.size(); i++) {
+                TouchData t = touchList.get(i);
+                //t.markHandled();
+                if (t.active) {
+                    if (t.x < descaleX(50f)) Force = true;
+                    else if (t.x >= descaleX(50f)) Force2 = true;
+                } else {
+                    if (!t.isDragging) {
+                        //Delete from list
+                        if (t.initialX < descaleX(50f)) Force = false;
+                        if (t.initialX >= descaleX(50f)) Force2 = false;
+                        touchList.remove(t);
+                        break;
+                    }
                 }
             }
         }
     }
 
-    public TouchData getTouchDataWithID(int id)
+    public TouchData getTouchDataWithID(int id)//NOTE: MAY RETURN NULL!!!!!!
     {
         for(TouchData t : touchList)
         {
@@ -1538,14 +1567,8 @@ public class derptest extends ApplicationAdapter {
 
     public TouchData getMostRecent(ArrayList<TouchData> touchList)
     {
-        for(int pointer = 0; pointer < 10; pointer ++)
-        {
-            TouchData temp = touchList.get(pointer);
-
-            if(temp == null)//The previous element of the list is the most recent valid touch point :P
-                return touchList.get(pointer - 1);
-        }
-        return touchList.get(9);//The max possible touches registered in InputProcessor..
+        if(touchList.size() > 0) return touchList.get(touchList.size() - 1);
+        return previousTouchData;
     }
 
     //#draw ball

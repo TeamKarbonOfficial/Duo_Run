@@ -67,6 +67,9 @@ public class CustomSlider {
         if((touchData.active || touchData.isDragging) && touchData.x >= tempXmin && touchData.x <= tempXmax
 		   && touchData.y >= tempY && touchData.y <= tempY + size.y)
         {
+            touchData.markHandled();
+            touchData.deactivate();
+            touchData.isDragging = true;//It's obviously dragging... *slider* bar...
             return true;
         }
         return false;

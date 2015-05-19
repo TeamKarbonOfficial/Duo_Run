@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
+
 /**
  * Created by Matthew on 7/12/2014.
  */
@@ -12,7 +14,7 @@ public class CheckBox {
     Vector2 pos, size;//Note: pos value is relative to the host CustomGUIBox, and is the pos of the bottom left of the text.
     String text;
     Color color;//Color when depressed.
-    boolean fingerOff;//Make sure that the CheckBox returns true on isClicked only once per touchDown, and not while touchDown.
+    boolean fingerOff;//Only reset in CustomGUIBox.resetTouchListForGUI()
     boolean isChecked;
 
     public CheckBox(Vector2 _pos, Vector2 _size, String _text, Color _color, boolean _isChecked)
@@ -38,17 +40,20 @@ public class CheckBox {
     
     //host: the host CustomGUIBox
     //font: the font used by the host
-    public boolean isClicked(TouchData touchData, CustomGUIBox host, BitmapFont font)
+    public boolean isClicked(ArrayList<TouchData> touchList, TouchData touchData, CustomGUIBox host, BitmapFont font)
     {
         if(touchData.active && touchData.x >= getGlobalBoxPos(host, font).x && touchData.x <= getGlobalBoxPos(host, font).x + size.x
                             && touchData.y >= getGlobalBoxPos(host, font).y && touchData.y <= getGlobalBoxPos(host, font).y + size.y
                             && fingerOff)
         {
+            touchData.markHandled();
+            touchData.deactivate();
+            touchData.isDragging = false;
+
             fingerOff = false;
+
             return true;
         }
-        if(!touchData.active)
-            fingerOff = true;
         return false;
     }
 
@@ -66,6 +71,11 @@ public class CheckBox {
     public Vector2 getGlobalPos(Vector2 hostPos)
     {
         return new Vector2(pos.x + hostPos.x, pos.y + hostPos.y);
+    }
+
+    public void setFingerOff()
+    {
+        fingerOff = true;
     }
 
     //This Vector2 value is the place to draw the clickable check box.

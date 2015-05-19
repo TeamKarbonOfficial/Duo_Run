@@ -12,6 +12,8 @@ public class TouchData
                        // Used to make sure the correct Force is set to false in the event
                        // of a drag from one end to the other of the screen.
                        // Use initialX and initialY to check origin of the TouchData.
+
+    boolean handled;//To make sure that this touchData has been handled before it's called inactive in a concurrent unsynchronized lousy thread :P
     int pointerID;//Used to find out order of multi touches or just for tracking multiple touchDatas
 
     public TouchData()
@@ -20,24 +22,40 @@ public class TouchData
         isDragging = false;
         x = initialX = 0;
         y = initialY = 0;
+        handled = false;
     }
     public TouchData(float _x, float _y)
     {
+        active = true;
         isDragging = false;
         x = initialX = _x;
         y = initialY = _y;
-        active = true;
+        handled = false;
     }
+    public TouchData(TouchData touchData)
+    {
+        active = touchData.active;
+        isDragging = touchData.isDragging;
+        x = initialX = touchData.x;
+        y = initialY = touchData.y;
+        handled = touchData.handled;
+    }
+
     public void set(float _x, float _y)
     {
         //NOTE: Initial values can't be set!!!
         x = _x;
         y = _y;
         active = true;
+        handled = false;
     }
     public void deactivate()
     {
-        active = false;
+        /*if(handled)*/ active = false;
+    }
+    public void markHandled()
+    {
+        handled = true;
     }
 
     public Vector2 asVector2()

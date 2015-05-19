@@ -26,6 +26,8 @@ public class CustomButton {
         if(touchData.active && touchData.x >= getGlobalPos(hostPos).x && touchData.x <= getGlobalPos(hostPos).x + size.x
                 && touchData.y >= getGlobalPos(hostPos).y && touchData.y <= getGlobalPos(hostPos).y + size.y)
         {
+            touchData.markHandled();
+            touchData.deactivate();
             return true;
         }
         return false;
