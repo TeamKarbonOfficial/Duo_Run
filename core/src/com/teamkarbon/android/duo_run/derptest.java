@@ -493,7 +493,7 @@ public class derptest extends ApplicationAdapter {
             if(score < (int) rawscore) score += (int) ((rawscore - score) / 15f);
             if(score > (int) rawscore) score -= (int) ((rawscore - score) / 15f);
 
-            level = (int) (score / 200f);
+            level = (int) (score / 200f) + 1;
 
             DrawAndUpdateRenderTriangles(triangles);
 
@@ -1147,6 +1147,7 @@ public class derptest extends ApplicationAdapter {
                 if (tempButton.text.equals("Normal")) {
                     //Reset score :D
                     score = 0;
+                    level = 1;
 
                     gameFlag = true;
                     instaDeathMode = false;
@@ -1159,6 +1160,7 @@ public class derptest extends ApplicationAdapter {
                 } else if (tempButton.text.equals("Insta-Death")) {
                     //Reset score :D (~Lol thx :P)
                     score = 0;
+                    level = 1;
 
                     gameFlag = true;
                     instaDeathMode = true;
