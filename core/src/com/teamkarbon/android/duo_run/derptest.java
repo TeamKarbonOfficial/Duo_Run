@@ -1074,7 +1074,8 @@ public class derptest extends ApplicationAdapter {
                         } else overrideBall2AutoPos = false;
                     }
 
-                    if(customGUIBox.pos.x + customGUIBox.size.x < descale(pwidth(3)) && gameFlag)
+                    if(customGUIBox.pos.x + customGUIBox.size.x < descale(pwidth(3)) && gameFlag && !overrideBallAutoPos
+                            && !overrideBall2AutoPos)
                     {
                         lerpFlag = false;
                     }
