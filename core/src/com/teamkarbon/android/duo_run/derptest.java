@@ -454,9 +454,9 @@ public class derptest extends ApplicationAdapter {
             obstacles.clear();//Makin' sure
 
             //Create a new obstacle with pointerID "play"
-            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(80f), pheight(33f), false, "play"));//Play the game
-            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(100f), pheight(39f), true, "options"));//Go to options
-            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(150f), pheight(30f), true, "stats"));//See all game service - related stuff
+            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(80f), pheight(33f), Obstacle.ObstacleColorType.YELLOW, "play"));//Play the game
+            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(100f), pheight(39f), Obstacle.ObstacleColorType.BLUE, "options"));//Go to options
+            obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(150f), pheight(30f), Obstacle.ObstacleColorType.BLUE, "stats"));//See all game service - related stuff
             //obstacles.add(new Obstacle(asBox(percent(15, 15)), world, pwidth(136f), pheight(23f), false, "customize"));//Just an idea...
             mode = gameMode.MAIN_MENU;
         }
@@ -499,8 +499,8 @@ public class derptest extends ApplicationAdapter {
                     continue;
                 }
 
-                if (((!o.type && !o.passed && o.getPos().x < ball.getPos().x) ||
-                        (o.type && !o.passed && o.getPos().x < ball2.getPos().x)) && !gameOver) {
+                if (((o.type == Obstacle.ObstacleColorType.YELLOW && !o.passed && o.getPos().x < ball.getPos().x) ||
+                        (o.type == Obstacle.ObstacleColorType.BLUE && !o.passed && o.getPos().x < ball2.getPos().x)) && !gameOver) {
                     o.passed = true;
                     Polygon temp = new Polygon();
                     temp.setVertices(o.getVerticesAsFloatArray());
@@ -539,12 +539,13 @@ public class derptest extends ApplicationAdapter {
 
             //Make dem obstacles
             //#make obstacles
-            if (!gameOver && obstaclesTimer > 3.5f - (level / 2f) && Math.random() >= 0.5) {
+            if (!gameOver && obstaclesTimer > 3.5 / (level * 0.5) && Math.random() >= 0.7) {
                 PolygonShape temp = new PolygonShape();
 
                 float tempfloat = (float) Math.random();
-                boolean derp = (Math.random() < 0.5f);
-                if (tempfloat < (1f / 4f)) {
+                boolean derpX = (Math.random() < 0.5f);
+                Obstacle.ObstacleColorType derp = derpX ? Obstacle.ObstacleColorType.BLUE : Obstacle.ObstacleColorType.YELLOW;
+                if (tempfloat < (1f / 6f)) {
 
                     if (Math.random() < 0.5) {
                         temp.set(new Vector2[]{
@@ -567,7 +568,7 @@ public class derptest extends ApplicationAdapter {
                                 :
                                 new Obstacle(temp, world, pwidth(70), pheight(-48f + 34f), derp));
                     }
-                } else if (tempfloat < (2f / 4f)) {
+                } else if (tempfloat < (2f / 6f)) {
                     //This makes a simple rectangle..(on the ceiling or the ground)
                     float x = pwidth(10 + (float) Math.random() * 18);//10% - 28% width
                     float y = pheight(8 + (float) Math.random() * 24);//8% - 32% height
@@ -581,7 +582,7 @@ public class derptest extends ApplicationAdapter {
                     obstacles.add(Math.random() < 0.5 ? new Obstacle(temp, world, pwidth(70), pheight(-48f), derp)
                             :
                             new Obstacle(temp, world, pwidth(70), pheight(+49f) - y, derp));
-                } else if (tempfloat < (3f / 4f)) {
+                } else if (tempfloat < (3f / 6f)) {
                     //This makes a trapezium. The base is always bigger than the cap
                     float val1 = pwidth(18 + (float) Math.random() * 10);//From 18% - 28% width
                     float val2 = val1 + pwidth(5 + (float) Math.random() * 16);//From 23% - 49% width
@@ -960,8 +961,8 @@ public class derptest extends ApplicationAdapter {
                     smallfont.draw(batch, tempstr, 100, 400);
                     smallfont.draw(batch, tempstr2, 100, 300);*/
 
-                    if ((Intersector.overlapConvexPolygons(obs, playerLeft) && !o.type) ||
-                            (Intersector.overlapConvexPolygons(obs, playerRight) && o.type)) {
+                    if ((Intersector.overlapConvexPolygons(obs, playerLeft) && o.type == Obstacle.ObstacleColorType.YELLOW) ||
+                            (Intersector.overlapConvexPolygons(obs, playerRight) && o.type == Obstacle.ObstacleColorType.BLUE)) {
                         mode = gameMode.GAME_INIT;
                         o.setColor(new Color(0.8f, 0.8f, 0.8f, 0.9f));
                         o.isClicked = true;
@@ -991,8 +992,8 @@ public class derptest extends ApplicationAdapter {
                     bigfont.draw(batch, "Options", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - (bigfont.getBounds("Options ").width / 2f),
                             descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) + (bigfont.getBounds("Options").height / 2f));
 
-                    if ((Intersector.overlapConvexPolygons(obs, playerLeft) && !o.type) ||
-                            (Intersector.overlapConvexPolygons(obs, playerRight) && o.type)) {
+                    if ((Intersector.overlapConvexPolygons(obs, playerLeft) && o.type == Obstacle.ObstacleColorType.YELLOW) ||
+                            (Intersector.overlapConvexPolygons(obs, playerRight) && o.type == Obstacle.ObstacleColorType.BLUE)) {
                         mode = gameMode.OPTIONS;
                         Color c = new Color();
                         c.set(0.8f, 0.8f, 0.8f, 0.9f);
@@ -1045,7 +1046,7 @@ public class derptest extends ApplicationAdapter {
                 if (gameFlag) {//Make sure balls go back to the original spot
                     if(instaDeathMode) {
                         if (!(inRange(ball.getPos().x, pwidth(-1), pwidth(1), rangeMode.WITHIN_OR_EQUIVALENT) &&
-                            inRange(ball.body.getLinearVelocity().x, -5, 5, rangeMode.WITHIN_OR_EQUIVALENT))) {
+                            inRange(ball.body.getLinearVelocity().x, -0.15f, 0.15f, rangeMode.WITHIN_OR_EQUIVALENT))) {
                         /*F = ma
                         * F = 1/2mv^2
                         * D = 1/2at^2
@@ -1066,7 +1067,7 @@ public class derptest extends ApplicationAdapter {
                         } else overrideBallAutoPos = false;
 
                         if (!(inRange(ball2.getPos().x, pwidth(-1), pwidth(1), rangeMode.WITHIN_OR_EQUIVALENT) &&
-                            inRange(ball2.body.getLinearVelocity().x, -5, 5, rangeMode.WITHIN_OR_EQUIVALENT))) {
+                            inRange(ball2.body.getLinearVelocity().x, -0.15f, 0.15f, rangeMode.WITHIN_OR_EQUIVALENT))) {
                             ball2.body.applyForceToCenter(2 * (0 - ball.getPos().x) / ball.body.getMass() - (1 / 2 * ball.body.getMass() *
                                     ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
 
