@@ -23,7 +23,8 @@ public class Obstacle {
     Fixture fixture;
     float [] localvertices;
 
-    ObstacleColorType type;
+    ObstacleColorType colorCollisionType;
+    ObstacleType type;
     float radius;
     String id;
     float sides;//The number of sides the circleshape, if non-null, has.
@@ -34,7 +35,7 @@ public class Obstacle {
 
     boolean passed = false;//When the score for this obs has been counted, this value will be true.
 
-    public Obstacle(PolygonShape _shape, World world, float x, float y, ObstacleColorType _type)
+    public Obstacle(PolygonShape _shape, World world, float x, float y, ObstacleColorType _colorCollisionType)
     {
         //How to set shape: shape.set(new Vector2[]{new Vector2(3,4), new Vector2(0, 1)});
         //It is assumed that along the axis, 0 is the centre and the lateral
@@ -42,7 +43,7 @@ public class Obstacle {
         bodyDef = new BodyDef();
         fixtureDef = new FixtureDef();
         shape = _shape;
-        type = _type;
+        colorCollisionType = _colorCollisionType;
 
         bodyDef.type = BodyDef.BodyType.StaticBody;
         bodyDef.position.set(x, y);
@@ -55,19 +56,19 @@ public class Obstacle {
         //To make sure the obstacles collide with the right objects
         Filter tempFilter = new Filter();
 
-        if(type == ObstacleColorType.YELLOW)//collides with ball Yellow
+        if(colorCollisionType == ObstacleColorType.YELLOW)//collides with ball Yellow
         {
             tempFilter.maskBits = 1;
             tempFilter.categoryBits = 1;
             this.fixture.setFilterData(tempFilter);
         }
-        else if(type == ObstacleColorType.BLUE)//collides with ball2 Blue
+        else if(colorCollisionType == ObstacleColorType.BLUE)//collides with ball2 Blue
         {
             tempFilter.maskBits = 1;
             tempFilter.categoryBits = 2;
             this.fixture.setFilterData(tempFilter);
         }
-        else if(type == ObstacleColorType.BOTH)
+        else if(colorCollisionType == ObstacleColorType.BOTH)
         {
             //TODO: ADD THIS COLLISION CLASS (Use White Colour)
         }
@@ -77,15 +78,15 @@ public class Obstacle {
 
         //Set color auto:
         //The one in render triangle is deprecated
-        if (type == ObstacleColorType.YELLOW) this.color = new Color(0.4f, 0.4f, 0.2f, 0.45f);
-        else if (type == ObstacleColorType.BLUE)  this.color = new Color(0, 0.3f, 1f, 0.45f);
+        if (colorCollisionType == ObstacleColorType.YELLOW) this.color = new Color(0.4f, 0.4f, 0.2f, 0.45f);
+        else if (colorCollisionType == ObstacleColorType.BLUE)  this.color = new Color(0, 0.3f, 1f, 0.45f);
         else this.color = new Color(1f, 1f, 1f, 0.45f);
 
         //Set local (size-only) vertices so that polygonize function doens't need to be called so many times...
         localvertices = this.getLocalVerticesAsFloatArray();
         sides = localvertices.length / 2f;//MUST SET!!!
     }
-    public Obstacle(PolygonShape _shape, World world, float x, float y, ObstacleColorType _type, String _id)
+    public Obstacle(PolygonShape _shape, World world, float x, float y, ObstacleColorType _colorCollisionType, String _id)
     {
         //How to set shape: shape.set(new Vector2[]{new Vector2(3,4), new Vector2(0, 1)});
         //It is assumed that along the axis, 0 is the centre and the lateral
@@ -93,7 +94,7 @@ public class Obstacle {
         bodyDef = new BodyDef();
         fixtureDef = new FixtureDef();
         shape = _shape;
-        type = _type;
+        colorCollisionType = _colorCollisionType;
         id = _id;
 
         bodyDef.type = BodyDef.BodyType.StaticBody;
@@ -107,19 +108,19 @@ public class Obstacle {
         //To make sure the obstacles collide with the right objects
         Filter tempFilter = new Filter();
 
-        if(type == ObstacleColorType.YELLOW)//collides with ball
+        if(colorCollisionType == ObstacleColorType.YELLOW)//collides with ball
         {
             tempFilter.maskBits = 1;
             tempFilter.categoryBits = 1;
             this.fixture.setFilterData(tempFilter);
         }
-        else if(type == ObstacleColorType.BLUE)//collides with ball2
+        else if(colorCollisionType == ObstacleColorType.BLUE)//collides with ball2
         {
             tempFilter.maskBits = 1;
             tempFilter.categoryBits = 2;
             this.fixture.setFilterData(tempFilter);
         }
-        else if(type == ObstacleColorType.BOTH)
+        else if(colorCollisionType == ObstacleColorType.BOTH)
         {
             //TODO:
         }
@@ -129,15 +130,15 @@ public class Obstacle {
 
         //Set color auto:
         //The one in render triangle is deprecated
-        if (type == ObstacleColorType.YELLOW) this.color = new Color(0.4f, 0.4f, 0.2f, 0.45f);
-        else if (type == ObstacleColorType.BLUE) this.color = new Color(0, 0.3f, 1f, 0.45f);
+        if (colorCollisionType == ObstacleColorType.YELLOW) this.color = new Color(0.4f, 0.4f, 0.2f, 0.45f);
+        else if (colorCollisionType == ObstacleColorType.BLUE) this.color = new Color(0, 0.3f, 1f, 0.45f);
         else this.color = new Color(1f, 1f, 1f, 0.45f);
 
         //Set local (size-only) vertices so that polygonize function doens't need to be called so many times...
         localvertices = this.getLocalVerticesAsFloatArray();
         sides = localvertices.length / 2f;
     }
-    public Obstacle(CircleShape _shape, World world, float x, float y, ObstacleColorType _type, float _radius, int _sides)
+    public Obstacle(CircleShape _shape, World world, float x, float y, ObstacleColorType _colorCollisionType, float _radius, int _sides)
     {
         //How to set shape: shape.set(new Vector2[]{new Vector2(3,4), new Vector2(0, 1)});
         //It is assumed that along the axis, 0 is the centre and the lateral
@@ -146,7 +147,7 @@ public class Obstacle {
         fixtureDef = new FixtureDef();
 
         cshape = _shape;
-        type = _type;
+        colorCollisionType = _colorCollisionType;
         radius = _radius;
         sides = _sides;
 
@@ -161,12 +162,12 @@ public class Obstacle {
         //To make sure the obstacles collide with the right objects
         Filter tempFilter = new Filter();
 
-        if(type == ObstacleColorType.YELLOW)//collides with ball
+        if(colorCollisionType == ObstacleColorType.YELLOW)//collides with ball
         {
             tempFilter.maskBits = 1;
             tempFilter.categoryBits = 1;
         }
-        else if(type == ObstacleColorType.BLUE)//collides with ball2
+        else if(colorCollisionType == ObstacleColorType.BLUE)//collides with ball2
         {
             tempFilter.maskBits = 1;
             tempFilter.categoryBits = 2;
@@ -183,8 +184,8 @@ public class Obstacle {
 
         //Set color auto:
         //The one in render triangle is deprecated
-        if (type == ObstacleColorType.YELLOW) this.color = new Color(0.4f, 0.4f, 0.2f, 0.45f);
-        else if (type == ObstacleColorType.BLUE) this.color = new Color(0, 0.3f, 1f, 0.45f);
+        if (colorCollisionType == ObstacleColorType.YELLOW) this.color = new Color(0.4f, 0.4f, 0.2f, 0.45f);
+        else if (colorCollisionType == ObstacleColorType.BLUE) this.color = new Color(0, 0.3f, 1f, 0.45f);
         else this.color = new Color(1f, 1f, 1f, 0.45f);
 
         //Set local (size-only) vertices so that polygonize function doens't need to be called so many times...
@@ -310,6 +311,6 @@ public class Obstacle {
 
     public enum ObstacleType
     {
-        STATIC, DYNAMIC
+        NORMAL, BOUNCY, MOVING, BOOST, INSTA_DEATH
     }
 }

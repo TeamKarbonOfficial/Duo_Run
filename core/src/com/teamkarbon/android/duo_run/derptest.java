@@ -37,7 +37,7 @@ import static com.badlogic.gdx.graphics.Texture.TextureFilter;
     #readme
 
     IMPORTANT: USE scale(float f) FUNCTION FOR ALL POSITIONS OF BODIES, AND SIZES
-    NOTE: All shapes and virtual object fixtures have its x and y coordinates based on its origin.
+    NOTE: All shapes and virtual object fixtures have its x and y coordinates basesd on its origin.
         For example, if the shape's coordinates are (15, 30), its relative origin (0, 0), is at (15, 30),
         not necessarily (15, 30) being the corner of the shape.
         Origin for circles and boxes are at the centre, and origin for polygonshapes are always (0, 0) in the
@@ -248,7 +248,7 @@ public class derptest extends ApplicationAdapter {
         camera.update();//Make sure everything's ok :P
 
         //Create world
-        world = new World(new Vector2(0, -11f), true);//Set gravity to 11 m/s^2 downwards
+        world = new World(new Vector2(0, -17f), true);//Set gravity to 17 m/s^2 downwards
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
 
@@ -270,13 +270,13 @@ public class derptest extends ApplicationAdapter {
         //      Exists in world
         //      radius: 10% height
         //Custom function "setFixture":
-        //Density: 1kg/m^3
-        //Restitution: 55% of Joules retained per collision
         //Friction: 30%
+        //Density: 1kg/m^3
+        //Restitution: 45% of Joules retained per collision
         ball = new Ball(pwidth(0), pheight(30), world, pheight(10));
-        ball.setFixture(1f, 0.55f, 0.3f);
+        ball.setFixture(0.3f, 1f, 0.45f);
         ball2 = new Ball(scale(0), pheight(20), world, pheight(10));
-        ball2.setFixture(1f, 0.55f, 0.3f);
+        ball2.setFixture(0.3f, 1f, 0.45f);
 
         //Set collision filtering (so the two balls don't collide with each other
         //It's a complex thing, read up here: http://www.box2d.org/manual.html under
@@ -499,8 +499,8 @@ public class derptest extends ApplicationAdapter {
                     continue;
                 }
 
-                if (((o.type == Obstacle.ObstacleColorType.YELLOW && !o.passed && o.getPos().x < ball.getPos().x) ||
-                        (o.type == Obstacle.ObstacleColorType.BLUE && !o.passed && o.getPos().x < ball2.getPos().x)) && !gameOver) {
+                if (((o.colorCollisionType == Obstacle.ObstacleColorType.YELLOW && !o.passed && o.getPos().x < ball.getPos().x) ||
+                        (o.colorCollisionType == Obstacle.ObstacleColorType.BLUE && !o.passed && o.getPos().x < ball2.getPos().x)) && !gameOver) {
                     o.passed = true;
                     Polygon temp = new Polygon();
                     temp.setVertices(o.getVerticesAsFloatArray());
@@ -696,6 +696,8 @@ public class derptest extends ApplicationAdapter {
                 obstaclesRemovalTimer = 0f;
                 obstaclesRemoveFlag = false;
                 obstaclesTimer = 0f;
+                score = 0;
+                level = 0;
                 mode = gameMode.SCORE_DISPLAY;//??
 
                 customGUIBox = new CustomGUIBox(batch, String.valueOf(score), descalepercent(120f, 10f), descalepercent(70f, 70f), dialogBoxTexture, new String[]{
@@ -710,7 +712,7 @@ public class derptest extends ApplicationAdapter {
                 }
 
 
-                mode = gameMode.SCORE_DISPLAY;//??
+                mode = gameMode.SCORE_DISPLAY;
 
                 gsCount = 0;
 
@@ -961,8 +963,8 @@ public class derptest extends ApplicationAdapter {
                     smallfont.draw(batch, tempstr, 100, 400);
                     smallfont.draw(batch, tempstr2, 100, 300);*/
 
-                    if ((Intersector.overlapConvexPolygons(obs, playerLeft) && o.type == Obstacle.ObstacleColorType.YELLOW) ||
-                            (Intersector.overlapConvexPolygons(obs, playerRight) && o.type == Obstacle.ObstacleColorType.BLUE)) {
+                    if ((Intersector.overlapConvexPolygons(obs, playerLeft) && o.colorCollisionType == Obstacle.ObstacleColorType.YELLOW) ||
+                            (Intersector.overlapConvexPolygons(obs, playerRight) && o.colorCollisionType == Obstacle.ObstacleColorType.BLUE)) {
                         mode = gameMode.GAME_INIT;
                         o.setColor(new Color(0.8f, 0.8f, 0.8f, 0.9f));
                         o.isClicked = true;
@@ -992,8 +994,8 @@ public class derptest extends ApplicationAdapter {
                     bigfont.draw(batch, "Options", descale(o.getPos().x) + (Gdx.graphics.getWidth() / 2f) - (bigfont.getBounds("Options ").width / 2f),
                             descale(o.getPos().y) + (Gdx.graphics.getHeight() / 2f) + (bigfont.getBounds("Options").height / 2f));
 
-                    if ((Intersector.overlapConvexPolygons(obs, playerLeft) && o.type == Obstacle.ObstacleColorType.YELLOW) ||
-                            (Intersector.overlapConvexPolygons(obs, playerRight) && o.type == Obstacle.ObstacleColorType.BLUE)) {
+                    if ((Intersector.overlapConvexPolygons(obs, playerLeft) && o.colorCollisionType == Obstacle.ObstacleColorType.YELLOW) ||
+                            (Intersector.overlapConvexPolygons(obs, playerRight) && o.colorCollisionType == Obstacle.ObstacleColorType.BLUE)) {
                         mode = gameMode.OPTIONS;
                         Color c = new Color();
                         c.set(0.8f, 0.8f, 0.8f, 0.9f);
@@ -1001,7 +1003,6 @@ public class derptest extends ApplicationAdapter {
                         o.isClicked = true;
                         lerp = 0f;
                         lerpFlag = true;
-                        //TODO: Make a proper options GUIBox
 
                         //Make sure all obstacles that are to the right of the screen are cleared
                         for(int y = 0; y < obstacles.size(); y++)
@@ -1068,14 +1069,14 @@ public class derptest extends ApplicationAdapter {
 
                         if (!(inRange(ball2.getPos().x, pwidth(-1), pwidth(1), rangeMode.WITHIN_OR_EQUIVALENT) &&
                             inRange(ball2.body.getLinearVelocity().x, -0.15f, 0.15f, rangeMode.WITHIN_OR_EQUIVALENT))) {
-                            ball2.body.applyForceToCenter(2 * (0 - ball.getPos().x) / ball.body.getMass() - (1 / 2 * ball.body.getMass() *
-                                    ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
+                            ball2.body.applyForceToCenter(2 * (0 - ball2.getPos().x) / ball2.body.getMass() - (1 / 2 * ball2.body.getMass() *
+                                    ((float) Math.pow(ball2.body.getLinearVelocity().x, 2))), 0, true);
 
                             overrideBall2AutoPos = true;
                         } else overrideBall2AutoPos = false;
                     }
 
-                    if(customGUIBox.pos.x + customGUIBox.size.x < descale(pwidth(3)) && gameFlag && !overrideBallAutoPos
+                    if(customGUIBox.pos.x + customGUIBox.size.x < descale(pwidth(-3)) && gameFlag && !overrideBallAutoPos
                             && !overrideBall2AutoPos)
                     {
                         lerpFlag = false;
@@ -1085,7 +1086,7 @@ public class derptest extends ApplicationAdapter {
                 lerpFlag = false;
 
                 //Reaches same speed as obs moving in main menu, 7 pwidth / s leftwards
-                if (backFlag && lerp < -1f && !overrideBallAutoPos && !overrideBall2AutoPos)
+                if (backFlag && lerp < -1f && !overrideBallAutoPos && !overrideBall2AutoPos && customGUIBox.pos.x < -customGUIBox.size.x)
                 {
                     backFlag = false;//Reset dem flags.
                     lerpFlag = false;
@@ -1094,18 +1095,28 @@ public class derptest extends ApplicationAdapter {
                     mode = gameMode.MAIN_MENU_INIT;//Transit to main menu INIT!
                 }
                 //Same speed as obs moving in game, 6 pwidth / s
-                if (gameFlag && lerp < -2f && !overrideBallAutoPos && !overrideBall2AutoPos)
+                if (gameFlag && lerp < -2f && !overrideBallAutoPos && !overrideBall2AutoPos && customGUIBox.pos.x < -customGUIBox.size.x)
                 {
                     gameFlag = false;
                     lerpFlag = false;
                     overrideBallAutoPos = false;
                     overrideBall2AutoPos = false;
+                    score = 0;
+                    level = 0;
                     mode = gameMode.GAME;//Go to game!
                 }
 
-                if (!inRange(ball2.getPos().x, pwidth(-1), pwidth(1), rangeMode.WITHIN_OR_EQUIVALENT)) {
-                    ball2.body.applyForceToCenter(2 * (0 - ball.getPos().x) / ball.body.getMass() - (1 / 2 * ball.body.getMass() *
+                if (!(inRange(ball.getPos().x, pwidth(-1), pwidth(1), rangeMode.WITHIN_OR_EQUIVALENT) &&
+                        inRange(ball.body.getLinearVelocity().x, -0.15f, 0.15f, rangeMode.WITHIN_OR_EQUIVALENT))) {
+                    ball.body.applyForceToCenter(2 * (0 - ball.getPos().x) / ball.body.getMass() - (1 / 2 * ball.body.getMass() *
                             ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
+
+                    overrideBallAutoPos = true;
+                } else overrideBallAutoPos = false;
+
+                if (!inRange(ball2.getPos().x, pwidth(-1), pwidth(1), rangeMode.WITHIN_OR_EQUIVALENT)) {
+                    ball2.body.applyForceToCenter(2 * (0 - ball2.getPos().x) / ball2.body.getMass() - (1 / 2 * ball2.body.getMass() *
+                            ((float) Math.pow(ball2.body.getLinearVelocity().x, 2))), 0, true);
 
                     overrideBall2AutoPos = true;
                 } else overrideBall2AutoPos = false;
@@ -1243,7 +1254,7 @@ public class derptest extends ApplicationAdapter {
             else if(backFlag)
             {
                 lerp += 10f * Gdx.graphics.getDeltaTime();
-                if(lerp > 30f){
+                if(customGUIBox.pos.x < - customGUIBox.size.x){
                     //Reset everythin
                     lerpFlag = false;
                     backFlag = false;
@@ -1521,9 +1532,9 @@ public class derptest extends ApplicationAdapter {
         manageTouchDataList(touchList);
 
         if (Force)
-            ball.body.applyForceToCenter(0, 50, true);
+            ball.body.applyForceToCenter(0, 100, true);
         if (Force2)
-            ball2.body.applyForceToCenter(0, 50, true);
+            ball2.body.applyForceToCenter(0, 100, true);
 
         //Constantly increase the balls' speed until a certain velocity
         if (ball.body.getPosition().x < 0 && !overrideBallAutoPos)

@@ -20,7 +20,7 @@ public class CustomGUIBox {
      */
 
     SpriteBatch batch;
-    Vector2 pos;
+    Vector2 pos;//In pixels
     Vector2 size;
     Texture DialogPic;
     String[] options;

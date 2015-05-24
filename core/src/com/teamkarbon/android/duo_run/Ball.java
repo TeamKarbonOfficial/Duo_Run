@@ -47,7 +47,7 @@ public class Ball {
         localvertices = this.getLocalVerticesAsFloatArray();
     }
 
-    public void setFixture(float _d, float _r, float _f)//density, restitution, friction
+    public void setFixture(float _f, float _d, float _r)//friction, density, restitution
     {
         fixture.setDensity(_d);
         fixture.setRestitution(_r);
