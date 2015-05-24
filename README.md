@@ -42,20 +42,24 @@ TODO
     - Make them spawn properly **done**
     - Make them less laggy...  **done**
     - Make a proper scoring system based on area of obstacles covered **done**
+- More types of obstacles **TODO**
+    - Dynamic obstacles
+    - Bouncy obstacles
+    - Effect obstacles (affecting the ball when collided)
+    - Real Insta-Death obstacles (A collision with any obstacle of such will result in a game over, unlike insta-death mode..)
 - Find out a way to check for collisions **DONE**
 - Actually check for collisions **done**
 - Make an endgame situation function
     - Extend the CustomGUIBox to fit 4 buttons in a 2 x 2 button matrix. **DONE**
     - Display a proper integer score in a rather convincing font. **DONE**
-        - Make some cool animation when the score changes **Done, gotta make it slower tho**
+        - Make some cool animation when the score changes **DONE**
     - Display a 2 x 2 button matrix consisting of "Leaderboard", "Main Menu", "Play Again" and "Achievements" **DONE**
         - Fix lotsa bugs with Leaderboard and Achievements button **DONE**
         - Make sure the Main Menu button and Achievements button actually work. **DONE**
-- Create levels **TODO**
-    - Gradually increase difficulty as game time passes.
-        - Increase speed
-        - Increase Spawn rate
-        - Spawn obstacles that move (Might be a little complex tho XD)
+- Create levels **DONE**
+    - Gradually increase difficulty as game time passes. **DONE**
+        - Increase speed **DONE**
+        - Increase Spawn rate **DONE**
 - Create a level select screen **DONE**
     - Make proper GUI **DONE**
 - Create a main menu screen
@@ -63,13 +67,13 @@ TODO
         - The user collides with the buttons using the respectively coloured balls to "click" the buttons. **DONE**
         - Make the interface work **DONE**
     - GO! button **DONE**
-    - Options button
+    - Options button **DONE**
     - About button
     - Exit button *?*
     - Gamer Services button
     - Help button
         - Note: This button is a... button... Use helpbutton.png for this one.
-- Have some options/whatever
+- Have some options/whatever  **DONE**
 - Add Game Service **In progress**
     - Get necessary libraries **Done**
     - Log in to Game Services **Done**
