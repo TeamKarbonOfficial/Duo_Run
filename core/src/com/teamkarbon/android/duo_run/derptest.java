@@ -429,6 +429,7 @@ public class derptest extends ApplicationAdapter {
 
     @Override
     public void render() {
+
         //#prerender
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -440,6 +441,8 @@ public class derptest extends ApplicationAdapter {
         camera.update();//Duh
 
         ProcessInput();
+
+        EnsureBallsAreOnScreen();
 
         debugRenderer.render(world, camera.combined);//View all colliders and stuff
 
@@ -1546,6 +1549,33 @@ public class derptest extends ApplicationAdapter {
             ball.body.applyForceToCenter(-10, 0, true);
         if (ball2.body.getPosition().x > 0 && !overrideBall2AutoPos)
             ball2.body.applyForceToCenter(-10, 0, true);
+    }
+    
+    public void EnsureBallsAreOnScreen()
+    {
+        if(mode != gameMode.GAME)
+        {
+            if(!inRange(ball.getPos().x, pwidth(-60), pwidth(60), rangeMode.WITHIN_OR_EQUIVALENT)){
+                if(!inRange(ball.getPos().y, pheight(-45), pheight(45), rangeMode.WITHIN_OR_EQUIVALENT))
+                {
+                    ball.setPos(pwidth(-55), pheight(0));
+                }
+                else
+                {
+                    ball.setPos(pwidth(-55), ball.getPos().y);
+                }
+            }
+            if(!inRange(ball2.getPos().x, pwidth(-60), pwidth(60), rangeMode.WITHIN_OR_EQUIVALENT)){
+                if(!inRange(ball2.getPos().y, pheight(-45), pheight(45), rangeMode.WITHIN_OR_EQUIVALENT))
+                {
+                    ball2.setPos(pwidth(-55), pheight(0));
+                }
+                else
+                {
+                    ball2.setPos(pwidth(-55), ball2.getPos().y);
+                }
+            }
+        }
     }
 
     public void manageTouchDataList(ArrayList<TouchData> touchList)
