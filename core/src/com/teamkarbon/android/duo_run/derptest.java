@@ -792,14 +792,16 @@ public class derptest extends ApplicationAdapter {
 
         //#score display
         //IMPORTANT:
-        //Flags used: gsCount -> To prevent derping of UIThread, and to time to ads
-        //            adShownForThisSession -> Make sure ads show once only per game over... well, maybe less idk
+        //Flags used:    gsCount -> To prevent derping of UIThread, and to time to ads
+        // adShownForThisSession -> Make sure ads show once only per game over... well, maybe less idk
         //            tempButton -> When this is not null, means that a tempButton has been permanently selected,
         //                          and a mode change is in progress
-        //            lerpFlag -> To manage lerping of the CustomGUIBox. When true and lerp > 31, decelerate and show the score submit thingy
+        //tempButton.animateFlag -> When true, the tempButton is clicked.
+        //              lerpFlag -> To manage lerping of the CustomGUIBox. When true and lerp > 31, decelerate and show the score submit thingy
         //                                                               When false, just decelerate
         //                                                               When true, just accelerate
-        //            touchData -> Make sure to deactivate after a click has been processed to prevent infinite clicking!
+        //             touchData -> Make sure to deactivate after a click has been processed to prevent infinite clicking!
+        //
         //Remember to RESET them all!!!
         else if (mode == gameMode.SCORE_DISPLAY) {
 
@@ -821,7 +823,7 @@ public class derptest extends ApplicationAdapter {
                 lerp += Gdx.graphics.getDeltaTime() * 14f;
 
                 //CHANGE MODE! switch to game init or main menu init
-                if (tempButton != null && lerp > 56 && tempButton.text.equals("Play Again") && tempButton.animateFlag) {
+                if (tempButton != null && customGUIBox.pos.x < - customGUIBox.size.x && tempButton.text.equals("Play Again") && tempButton.animateFlag) {
                     tempButton = null;//Clear this.
                     adShownForThisSession = false;//And this
                     touchList.clear();//And this
@@ -835,9 +837,10 @@ public class derptest extends ApplicationAdapter {
                             dialogBoxTexture, new String[]{"Normal", "Insta-Death", "Back"},
                             new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.MODESELECT);
 
-                    //Switch~!
+                    //Switch~! #Score Display -> Game Init
                     mode = gameMode.GAME_INIT;
-                } else if (tempButton != null && lerp > 49 && tempButton.text.equals("Main Menu") && tempButton.animateFlag) {
+
+                } else if (tempButton != null && customGUIBox.pos.x < - customGUIBox.size.x && tempButton.text.equals("Main Menu") && tempButton.animateFlag) {
                     tempButton = null;//Clear this.
                     adShownForThisSession = false;//And this
                     touchList.clear();//And this
@@ -845,7 +848,7 @@ public class derptest extends ApplicationAdapter {
                     gsCount = 0;//And this.
                     ResetScoreAndLevel();
 
-                    //Switch~!
+                    //Switch~! #Score Display -> Main Menu Init
                     mode = gameMode.MAIN_MENU_INIT;
                 }
             }
@@ -902,14 +905,14 @@ public class derptest extends ApplicationAdapter {
                     if(!lerpFlag) {//Make sure these lines only happens once! :O
                         lerp = 0f;
                         tempButton.setColor(new Color(0.8f, 0.8f, 0.8f, 0.9f));
-                        tempButton.animateFlag = true;
+                        tempButton.animateFlag = true;//Set button to show that it's clicked
                         lerpFlag = true;
                     }
                 } else if (tempButton.text.equals("Play Again")) {
                     if(!lerpFlag) {//Make sure these lines only happens once! :O
                         lerp = 0f;
                         tempButton.setColor(new Color(0.8f, 0.8f, 0.8f, 0.9f));
-                        tempButton.animateFlag = true;
+                        tempButton.animateFlag = true;//Set button to show that it's clicked
                         lerpFlag = true;
                     }
                 }
@@ -1088,9 +1091,12 @@ public class derptest extends ApplicationAdapter {
                         lerpFlag = false;
                     }
                 }
-            } else {
+            }
+            else //If not (lerp > 40.5 && lerp flag)
+            {
                 lerpFlag = false;
 
+                //#Game Init -> Main Menu Init
                 //Reaches same speed as obs moving in main menu, 7 pwidth / s leftwards
                 if (backFlag && !overrideBallAutoPos && !overrideBall2AutoPos && customGUIBox.pos.x < -customGUIBox.size.x)
                 {
@@ -1101,6 +1107,8 @@ public class derptest extends ApplicationAdapter {
                     ResetScoreAndLevel();
                     mode = gameMode.MAIN_MENU_INIT;//Transit to main menu INIT!
                 }
+
+                //#Game Init -> Game
                 //Same speed as obs moving in game, 6 pwidth / s
                 if (gameFlag && !overrideBallAutoPos && !overrideBall2AutoPos && customGUIBox.pos.x < -customGUIBox.size.x)
                 {
