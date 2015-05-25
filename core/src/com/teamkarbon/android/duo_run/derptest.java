@@ -634,32 +634,32 @@ public class derptest extends ApplicationAdapter {
             //NOTE: This is not the last block of code in this gameMode. This is a flag setter to
             //      cue in the lerping of the obstacles out of the screen, and for the obstacles to
             //      stop spawning.
-            if (!gameOver) {
-                if (instaDeathMode) {
-                    if (!inRange(ball.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN) ||
-                            !inRange(ball2.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN)) {
-                        Gdx.app.debug("instaDeathMode", "Game Over!");
-                        gameOver = true;
-                        lerp = 0;
-                        lerpFlag = true;
+            if (!gameOver) {//if not YET gameOver
+                if (instaDeathMode && (!inRange(ball.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN) ||
+                        !inRange(ball2.body.getPosition().x, pwidth(-1), pwidth(1), rangeMode.WITHIN))) {
+                    Gdx.app.debug("instaDeathMode", "Game Over!");
+                    gameOver = true;
+                    lerp = 0;
+                    lerpFlag = true;
 
-                        //Make sure all obstacles given passed flag as no score should be added for passed obstacles after game over :P
-                        for(Obstacle _o : obstacles)
-                            _o.passed = true;
+                    //Make sure all obstacles given passed flag as no score should be added for passed obstacles after game over :P
+                    for (Obstacle _o : obstacles)
+                        _o.passed = true;
 
-                        if (androidMethods.isSignedIn()) {
-                            if(androidMethods.prefgetBoolean(PREF_WAS_OFFLINE, false)) {
-                                //Do not reset flag, or achievements will screw up
-                                androidMethods.submitScore(LEADERBOARD_INSTADEATH, Long.valueOf(androidMethods.prefgetInt(PREF_INSTADEATH, 0)));
-                                //Just in case, the user switch accounts
-                                androidMethods.prefputInt(PREF_INSTADEATH, 0);
-                            }
-                            androidMethods.submitScore(LEADERBOARD_INSTADEATH, Long.valueOf(score));
-                        } else {
-                            //No need to set flag
-                            if (score > androidMethods.prefgetInt(PREF_INSTADEATH, 0))
-                            androidMethods.prefputInt(PREF_INSTADEATH, score);
+                    score = (int) rawscore;//Make sure that the score submitted is the actual score... animation of numbers may not be complete.
+
+                    if (androidMethods.isSignedIn()) {
+                        if (androidMethods.prefgetBoolean(PREF_WAS_OFFLINE, false)) {
+                            //Do not reset flag, or achievements will screw up
+                            androidMethods.submitScore(LEADERBOARD_INSTADEATH, Long.valueOf(androidMethods.prefgetInt(PREF_INSTADEATH, 0)));
+                            //Just in case, the user switch accounts
+                            androidMethods.prefputInt(PREF_INSTADEATH, 0);
                         }
+                        androidMethods.submitScore(LEADERBOARD_INSTADEATH, Long.valueOf(score));
+                    } else {
+                        //No need to set flag
+                        if (score > androidMethods.prefgetInt(PREF_INSTADEATH, 0))
+                            androidMethods.prefputInt(PREF_INSTADEATH, score);
                     }
                 } else if (!inRange(ball.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN) ||
                         !inRange(ball2.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN)) {
@@ -669,11 +669,13 @@ public class derptest extends ApplicationAdapter {
                     lerp = 0;
 
                     //Make sure all obstacles given passed flag as no score should be added for passed obstacles after game over :P
-                    for(Obstacle _o : obstacles)
+                    for (Obstacle _o : obstacles)
                         _o.passed = true;
 
+                    score = (int) rawscore;//Make sure that the score submitted is the actual score... animation of numbers may not be complete.
+
                     if (androidMethods.isSignedIn()) {
-                        if(androidMethods.prefgetBoolean(PREF_WAS_OFFLINE, false)) {
+                        if (androidMethods.prefgetBoolean(PREF_WAS_OFFLINE, false)) {
                             //Do not reset flag, or achievements will screw up
                             androidMethods.submitScore(LEADERBOARD_NORMAL, Long.valueOf(androidMethods.prefgetInt(PREF_NORMAL, 0)));
                             //Just in case, the user switch accounts
@@ -699,9 +701,7 @@ public class derptest extends ApplicationAdapter {
                 obstaclesRemovalTimer = 0f;
                 obstaclesRemoveFlag = false;
                 obstaclesTimer = 0f;
-                score = 0;
-                level = 0;
-                mode = gameMode.SCORE_DISPLAY;//??
+                ResetScoreAndLevel();
 
                 customGUIBox = new CustomGUIBox(batch, String.valueOf(score), descalepercent(120f, 10f), descalepercent(70f, 70f), dialogBoxTexture, new String[]{
                         "Achievements", "Leaderboard", "Main Menu", "Play Again"
@@ -827,6 +827,8 @@ public class derptest extends ApplicationAdapter {
                     touchList.clear();//And this
                     lerpFlag = false;//And this
                     gsCount = 0;//And this.
+                    ResetScoreAndLevel();
+
 
                     //Prep the Game Mode Select box.
                     customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(150, 30), descalepercent(80, 60),
@@ -841,6 +843,7 @@ public class derptest extends ApplicationAdapter {
                     touchList.clear();//And this
                     lerpFlag = false;//And this
                     gsCount = 0;//And this.
+                    ResetScoreAndLevel();
 
                     //Switch~!
                     mode = gameMode.MAIN_MENU_INIT;
@@ -1089,23 +1092,23 @@ public class derptest extends ApplicationAdapter {
                 lerpFlag = false;
 
                 //Reaches same speed as obs moving in main menu, 7 pwidth / s leftwards
-                if (backFlag && lerp < -1f && !overrideBallAutoPos && !overrideBall2AutoPos && customGUIBox.pos.x < -customGUIBox.size.x)
+                if (backFlag && !overrideBallAutoPos && !overrideBall2AutoPos && customGUIBox.pos.x < -customGUIBox.size.x)
                 {
                     backFlag = false;//Reset dem flags.
                     lerpFlag = false;
                     overrideBallAutoPos = false;
                     overrideBall2AutoPos = false;
+                    ResetScoreAndLevel();
                     mode = gameMode.MAIN_MENU_INIT;//Transit to main menu INIT!
                 }
                 //Same speed as obs moving in game, 6 pwidth / s
-                if (gameFlag && lerp < -2f && !overrideBallAutoPos && !overrideBall2AutoPos && customGUIBox.pos.x < -customGUIBox.size.x)
+                if (gameFlag && !overrideBallAutoPos && !overrideBall2AutoPos && customGUIBox.pos.x < -customGUIBox.size.x)
                 {
                     gameFlag = false;
                     lerpFlag = false;
                     overrideBallAutoPos = false;
                     overrideBall2AutoPos = false;
-                    score = 0;
-                    level = 0;
+                    ResetScoreAndLevel();
                     mode = gameMode.GAME;//Go to game!
                 }
 
@@ -1201,8 +1204,7 @@ public class derptest extends ApplicationAdapter {
                 Gdx.app.debug("gameModeSelect", tempButton.text);
                 if (tempButton.text.equals("Normal")) {
                     //Reset score :D
-                    score = 0;
-                    level = 1;
+                    ResetScoreAndLevel();
 
                     gameFlag = true;
                     instaDeathMode = false;
@@ -1214,8 +1216,7 @@ public class derptest extends ApplicationAdapter {
                     lerp += 10;
                 } else if (tempButton.text.equals("Insta-Death")) {
                     //Reset score :D (~Lol thx :P)
-                    score = 0;
-                    level = 1;
+                    ResetScoreAndLevel();
 
                     gameFlag = true;
                     instaDeathMode = true;
@@ -1704,6 +1705,13 @@ public class derptest extends ApplicationAdapter {
             o.dispose(world);
         }
         obs.clear();
+    }
+
+    public void ResetScoreAndLevel ()
+    {
+        score = 0;
+        rawscore = 0;
+        level = 1;
     }
 
     //For debug purposes.
