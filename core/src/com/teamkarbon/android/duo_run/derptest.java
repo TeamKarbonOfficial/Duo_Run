@@ -1565,7 +1565,7 @@ public class derptest extends ApplicationAdapter {
         if(mode != gameMode.GAME)
         {
             if(!inRange(ball.getPos().x, pwidth(-60), pwidth(60), rangeMode.WITHIN_OR_EQUIVALENT)){
-                if(!inRange(ball.getPos().y, pheight(-45), pheight(45), rangeMode.WITHIN_OR_EQUIVALENT))
+                if(!inRange(ball.getPos().y, pheight(-35), pheight(45), rangeMode.WITHIN_OR_EQUIVALENT))
                 {
                     ball.setPos(pwidth(-55), pheight(0));
                 }
@@ -1575,7 +1575,7 @@ public class derptest extends ApplicationAdapter {
                 }
             }
             if(!inRange(ball2.getPos().x, pwidth(-60), pwidth(60), rangeMode.WITHIN_OR_EQUIVALENT)){
-                if(!inRange(ball2.getPos().y, pheight(-45), pheight(45), rangeMode.WITHIN_OR_EQUIVALENT))
+                if(!inRange(ball2.getPos().y, pheight(-35), pheight(45), rangeMode.WITHIN_OR_EQUIVALENT))
                 {
                     ball2.setPos(pwidth(-55), pheight(0));
                 }
