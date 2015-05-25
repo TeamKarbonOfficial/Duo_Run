@@ -248,7 +248,7 @@ public class derptest extends ApplicationAdapter {
         camera.update();//Make sure everything's ok :P
 
         //Create world
-        world = new World(new Vector2(0, -17f), true);//Set gravity to 17 m/s^2 downwards
+        world = new World(new Vector2(0, -20f), true);//Set gravity to 20 m/s^2 downwards
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(camera.combined);
 
@@ -274,9 +274,9 @@ public class derptest extends ApplicationAdapter {
         //Density: 1kg/m^3
         //Restitution: 45% of Joules retained per collision
         ball = new Ball(pwidth(0), pheight(30), world, pheight(10));
-        ball.setFixture(0.3f, 1f, 0.45f);
+        ball.setFixture(0.2f, 1f, 0.45f);
         ball2 = new Ball(scale(0), pheight(20), world, pheight(10));
-        ball2.setFixture(0.3f, 1f, 0.45f);
+        ball2.setFixture(0.2f, 1f, 0.45f);
 
         //Set collision filtering (so the two balls don't collide with each other
         //It's a complex thing, read up here: http://www.box2d.org/manual.html under

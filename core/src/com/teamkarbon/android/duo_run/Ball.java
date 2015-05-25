@@ -33,6 +33,7 @@ public class Ball {
         //Init bodyDef
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(_x, _y);
+        bodyDef.fixedRotation = false;
 
         //Create the ball
         body = world.createBody(bodyDef);
