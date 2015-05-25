@@ -1073,16 +1073,32 @@ public class derptest extends ApplicationAdapter {
                                     //                         v                ^      2
                                     ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
 
-                            overrideBallAutoPos = true;
-                        } else overrideBallAutoPos = false;
+                            if(!overrideBallAutoPos) {
+                                ball.setFixture(0f, ball.fixture.getDensity(), ball.fixture.getRestitution());
+                                overrideBallAutoPos = true;
+                            }
+                        } else {
+                            if(overrideBallAutoPos) {//Improve performance
+                                ball.setFixture(0.2f, ball.fixture.getDensity(), ball.fixture.getRestitution());
+                                overrideBallAutoPos = false;
+                            }
+                        }
 
                         if (!(inRange(ball2.getPos().x, pwidth(-1), pwidth(1), rangeMode.WITHIN_OR_EQUIVALENT) &&
                             inRange(ball2.body.getLinearVelocity().x, -0.15f, 0.15f, rangeMode.WITHIN_OR_EQUIVALENT))) {
                             ball2.body.applyForceToCenter(2 * (0 - ball2.getPos().x) / ball2.body.getMass() - (1 / 2 * ball2.body.getMass() *
                                     ((float) Math.pow(ball2.body.getLinearVelocity().x, 2))), 0, true);
 
-                            overrideBall2AutoPos = true;
-                        } else overrideBall2AutoPos = false;
+                            if(!overrideBall2AutoPos) {
+                                overrideBall2AutoPos = true;
+                                ball2.setFixture(0f, ball2.fixture.getDensity(), ball2.fixture.getRestitution());
+                            }
+                        } else {
+                            if(overrideBall2AutoPos) {
+                                overrideBall2AutoPos = false;
+                                ball2.setFixture(0.2f, ball2.fixture.getDensity(), ball2.fixture.getRestitution());
+                            }
+                        }
                     }
 
                     if(customGUIBox.pos.x + customGUIBox.size.x < descale(pwidth(-3)) && gameFlag && !overrideBallAutoPos
