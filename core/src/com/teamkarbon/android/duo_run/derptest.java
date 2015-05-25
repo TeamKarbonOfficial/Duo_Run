@@ -690,10 +690,11 @@ public class derptest extends ApplicationAdapter {
                 }
             }
 
+            //#game over -> score display
             //Check if all obs are out of screen alr, then move to score display
             //NOTE: This is the final block of code before switching to score display.
             //      as this is when there are no more obstacles on screen and all have been disposed.
-
+            //Also, do NOT reset score and level here... it has to be shown in the next screen, score display (duh)....
             if (gameOver && obstacles.size() == 0) {
                 lerp = 0;
                 lerpFlag = true;
@@ -701,7 +702,6 @@ public class derptest extends ApplicationAdapter {
                 obstaclesRemovalTimer = 0f;
                 obstaclesRemoveFlag = false;
                 obstaclesTimer = 0f;
-                ResetScoreAndLevel();
 
                 customGUIBox = new CustomGUIBox(batch, String.valueOf(score), descalepercent(120f, 10f), descalepercent(70f, 70f), dialogBoxTexture, new String[]{
                         "Achievements", "Leaderboard", "Main Menu", "Play Again"
