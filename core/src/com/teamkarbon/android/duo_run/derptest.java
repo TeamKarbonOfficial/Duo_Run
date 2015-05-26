@@ -828,21 +828,10 @@ public class derptest extends ApplicationAdapter {
 
                 //CHANGE MODE! switch to game init or main menu init
                 if (tempButton != null && customGUIBox.pos.x < - customGUIBox.size.x && tempButton.text.equals("Play Again") && tempButton.animateFlag) {
-                    tempButton = null;//Clear this.
-                    adShownForThisSession = false;//And this
-                    touchList.clear();//And this
-                    lerpFlag = false;//And this
-                    gsCount = 0;//And this.
-                    ResetScoreAndLevel();
-
-
-                    //Prep the Game Mode Select box.
-                    customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(150, 30), descalepercent(80, 60),
-                            dialogBoxTexture, new String[]{"Normal", "Insta-Death", "Back"},
-                            new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.MODESELECT);
 
                     //Switch~! #Score Display -> Game Init
-                    mode = gameMode.GAME_INIT;
+
+                    MoveToGameInit();
 
                 } else if (tempButton != null && customGUIBox.pos.x < - customGUIBox.size.x && tempButton.text.equals("Main Menu") && tempButton.animateFlag) {
 
@@ -1558,12 +1547,21 @@ public class derptest extends ApplicationAdapter {
         adShownForThisSession = false;
 
         ResetScoreAndLevel();
+
+        mode = gameMode.MAIN_MENU_INIT;
     }
 
     public void MoveToGameInit()//aka normal/instadeath mode select
     {
-        lerp = 0f;
-        lerpFlag = true;
+        //NOTE: (lerp > 20) && !lerpFlag also works. lerpFlag = true will cause the customGUIBox to be accelerated first...
+        if (mode == gameMode.MAIN_MENU) {
+            lerp = 0f;
+            lerpFlag = true;//aka accelerate = true;
+        }
+        else if (mode == gameMode.SCORE_DISPLAY) {
+            //Use previous lerp value...
+            lerpFlag = false;
+        }
 
         tempButton = null;
         touchList.clear();
@@ -1577,6 +1575,8 @@ public class derptest extends ApplicationAdapter {
         customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(150, 30), descalepercent(80, 60),
                 dialogBoxTexture, new String[]{"Normal", "Insta-Death", "Back"},
                 new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.MODESELECT);
+
+        mode = gameMode.GAME_INIT;
     }
 
     @Override
