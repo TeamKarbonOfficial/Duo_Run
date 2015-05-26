@@ -162,12 +162,14 @@ public class derptest extends ApplicationAdapter {
 
     //Game flow
     int level;
-    int score = 0;
-    int pad;
-    float lerp;//Linear interpolation (Cool animation when shifting between main menu -> game init -> game ;)
     float rawscore = 0;
+    int score = 0;
+    float lerp;//Linear interpolation (Cool animation when shifting between main menu -> game init -> game ;)
     boolean instaDeathMode;
     boolean gameOver = false;
+    float scrollSpeed;
+
+    //int pad;
     //final String ballfile;
     //final String ball2file;
 
@@ -393,6 +395,8 @@ public class derptest extends ApplicationAdapter {
 
         lerp = 0;
         lerpFlag = false;
+
+        scrollSpeed = 10;
 
         //Init the obstacles ArrayList
         obstacles = new ArrayList<Obstacle>();
@@ -815,6 +819,7 @@ public class derptest extends ApplicationAdapter {
 
             DrawFloorsAndCeiling();
 
+            //Bring in the customGUIBox.
             if (lerpFlag) {
                 customGUIBox.Translate(descalepercent(-(10 + lerp) * Gdx.graphics.getDeltaTime(), 0));//Animate while lerping
                 if (tempButton != null && tempButton.animateFlag)//If that button has been clicked.
@@ -840,18 +845,14 @@ public class derptest extends ApplicationAdapter {
                     mode = gameMode.GAME_INIT;
 
                 } else if (tempButton != null && customGUIBox.pos.x < - customGUIBox.size.x && tempButton.text.equals("Main Menu") && tempButton.animateFlag) {
-                    tempButton = null;//Clear this.
-                    adShownForThisSession = false;//And this
-                    touchList.clear();//And this
-                    lerpFlag = false;//And this
-                    gsCount = 0;//And this.
-                    ResetScoreAndLevel();
 
-                    //Switch~! #Score Display -> Main Menu Init
-                    mode = gameMode.MAIN_MENU_INIT;
+                    //Switch~! #Score Display -> Main Menu (init)
+
+                    MoveToMainMenu();
                 }
             }
-            if ((lerp > 31f || !lerpFlag) && tempButton == null)//Stop lerping
+            //The customGUIBox has been brought in, decelerate.
+            if ((lerp > 31f || !lerpFlag) && tempButton == null)
             {
                 if (lerpFlag) {
                     androidMethods.showToastMessage("Score submitted!");//Show the score submitted notif here.
@@ -905,14 +906,14 @@ public class derptest extends ApplicationAdapter {
                         lerp = 0f;
                         tempButton.setColor(new Color(0.8f, 0.8f, 0.8f, 0.9f));
                         tempButton.animateFlag = true;//Set button to show that it's clicked
-                        lerpFlag = true;
+                        lerpFlag = true;//Set to lerp this customGUIBox out to the left
                     }
                 } else if (tempButton.text.equals("Play Again")) {
                     if(!lerpFlag) {//Make sure these lines only happens once! :O
                         lerp = 0f;
                         tempButton.setColor(new Color(0.8f, 0.8f, 0.8f, 0.9f));
                         tempButton.animateFlag = true;//Set button to show that it's clicked
-                        lerpFlag = true;
+                        lerpFlag = true;//Set to lerp this customGUIBox out to the left
                     }
                 }
             }
@@ -935,7 +936,7 @@ public class derptest extends ApplicationAdapter {
 
                 Obstacle o = obstacles.get(x);
 
-                o.translate(percent(-(10) * Gdx.graphics.getDeltaTime(), 0f));
+                o.translate(percent(-scrollSpeed * Gdx.graphics.getDeltaTime(), 0f));
 
                 if (o.getPos().x < pwidth(-50f - 24f)) {
                     o.setPos(pwidth(50f + 18f), o.getPos().y);
@@ -973,11 +974,9 @@ public class derptest extends ApplicationAdapter {
 
                     if ((Intersector.overlapConvexPolygons(obs, playerLeft) && o.colorCollisionType == Obstacle.ObstacleColorType.YELLOW) ||
                             (Intersector.overlapConvexPolygons(obs, playerRight) && o.colorCollisionType == Obstacle.ObstacleColorType.BLUE)) {
-                        mode = gameMode.GAME_INIT;
+
                         o.setColor(new Color(0.8f, 0.8f, 0.8f, 0.9f));
                         o.isClicked = true;
-                        lerp = 0f;
-                        lerpFlag = true;
 
                         //Make sure all obstacles that are to the right of the screen are cleared
                         for(int y = 0; y < obstacles.size(); y++)
@@ -990,9 +989,7 @@ public class derptest extends ApplicationAdapter {
                             }
                         }
 
-                        customGUIBox = new CustomGUIBox(batch, "Select Mode:", descalepercent(260, 30), descalepercent(80, 60),
-                                dialogBoxTexture, new String[]{"Normal", "Insta-Death", "Back"},
-                                new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.MODESELECT);
+                        MoveToGameInit();
 
                     }
                 } else if (o.id == "options") {
@@ -1085,6 +1082,7 @@ public class derptest extends ApplicationAdapter {
 
                         if (!(inRange(ball2.getPos().x, pwidth(-1), pwidth(1), rangeMode.WITHIN_OR_EQUIVALENT) &&
                             inRange(ball2.body.getLinearVelocity().x, -0.15f, 0.15f, rangeMode.WITHIN_OR_EQUIVALENT))) {
+
                             ball2.body.applyForceToCenter(2 * (0 - ball2.getPos().x) / ball2.body.getMass() - (1 / 2 * ball2.body.getMass() *
                                     ((float) Math.pow(ball2.body.getLinearVelocity().x, 2))), 0, true);
 
@@ -1111,16 +1109,11 @@ public class derptest extends ApplicationAdapter {
             {
                 lerpFlag = false;
 
-                //#Game Init -> Main Menu Init
-                //Reaches same speed as obs moving in main menu, 7 pwidth / s leftwards
+                //#Game Init -> Main Menu
+                //Reaches same speed as obs moving in main menu, 10 pwidth / s leftwards
                 if (backFlag && !ball.inOverride && !ball2.inOverride && customGUIBox.pos.x < -customGUIBox.size.x)
                 {
-                    backFlag = false;//Reset dem flags.
-                    lerpFlag = false;
-                    ball.inOverride = false;
-                    ball2.inOverride = false;
-                    ResetScoreAndLevel();
-                    mode = gameMode.MAIN_MENU_INIT;//Transit to main menu INIT!
+                    MoveToMainMenu();//Transit to main menu!
                 }
 
                 //#Game Init -> Game
@@ -1135,20 +1128,41 @@ public class derptest extends ApplicationAdapter {
                     mode = gameMode.GAME;//Go to game!
                 }
 
-                if (!(inRange(ball.getPos().x, pwidth(-1), pwidth(1), rangeMode.WITHIN_OR_EQUIVALENT) &&
-                        inRange(ball.body.getLinearVelocity().x, -0.15f, 0.15f, rangeMode.WITHIN_OR_EQUIVALENT))) {
-                    ball.body.applyForceToCenter(2 * (0 - ball.getPos().x) / ball.body.getMass() - (1 / 2 * ball.body.getMass() *
-                            ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
+                if(instaDeathMode) {
+                    if (!(inRange(ball.getPos().x, pwidth(-1), pwidth(1), rangeMode.WITHIN_OR_EQUIVALENT) &&
+                            inRange(ball.body.getLinearVelocity().x, -0.15f, 0.15f, rangeMode.WITHIN_OR_EQUIVALENT))) {
 
-                    ball.inOverride = true;
-                } else ball.inOverride = false;
+                        ball.body.applyForceToCenter(2 * (0 - ball.getPos().x) / ball.body.getMass() - (1 / 2 * ball.body.getMass() *
+                                ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
 
-                if (!inRange(ball2.getPos().x, pwidth(-1), pwidth(1), rangeMode.WITHIN_OR_EQUIVALENT)) {
-                    ball2.body.applyForceToCenter(2 * (0 - ball2.getPos().x) / ball2.body.getMass() - (1 / 2 * ball2.body.getMass() *
-                            ((float) Math.pow(ball2.body.getLinearVelocity().x, 2))), 0, true);
+                        if (!ball.inOverride) {
+                            ball.setFixture(0f, ball.fixture.getDensity(), ball.fixture.getRestitution());
+                            ball.inOverride = true;
+                        }
+                    } else {
+                        if (ball.inOverride) {//Improve performance
+                            ball.setFixture(0.2f, ball.fixture.getDensity(), ball.fixture.getRestitution());
+                            ball.inOverride = false;
+                        }
+                    }
 
-                    ball2.inOverride = true;
-                } else ball2.inOverride = false;
+                    if (!(inRange(ball2.getPos().x, pwidth(-1), pwidth(1), rangeMode.WITHIN_OR_EQUIVALENT) &&
+                            inRange(ball2.body.getLinearVelocity().x, -0.15f, 0.15f, rangeMode.WITHIN_OR_EQUIVALENT))) {
+
+                        ball2.body.applyForceToCenter(2 * (0 - ball2.getPos().x) / ball2.body.getMass() - (1 / 2 * ball2.body.getMass() *
+                                ((float) Math.pow(ball2.body.getLinearVelocity().x, 2))), 0, true);
+
+                        if (!ball2.inOverride) {
+                            ball2.inOverride = true;
+                            ball2.setFixture(0f, ball2.fixture.getDensity(), ball2.fixture.getRestitution());
+                        }
+                    } else {
+                        if (ball2.inOverride) {
+                            ball2.inOverride = false;
+                            ball2.setFixture(0.2f, ball2.fixture.getDensity(), ball2.fixture.getRestitution());
+                        }
+                    }
+                }
 
                 if (lerp > -8) lerp -= Gdx.graphics.getDeltaTime() * 14f;//Decelerate until
                 else lerp = -8;//Stop...
@@ -1282,13 +1296,7 @@ public class derptest extends ApplicationAdapter {
             {
                 lerp += 10f * Gdx.graphics.getDeltaTime();
                 if(customGUIBox.pos.x < - customGUIBox.size.x){
-                    //Reset everythin
-                    lerpFlag = false;
-                    backFlag = false;
-                    tempButton = null;
-
-                    //And gooo
-                    mode = gameMode.MAIN_MENU_INIT;
+                    MoveToMainMenu();
                 }
             }
             else {
@@ -1533,6 +1541,43 @@ public class derptest extends ApplicationAdapter {
         }
     }
 
+    //#Move
+    public void MoveToMainMenu()
+    {
+        backFlag = false;//Reset dem flags.
+        lerpFlag = false;
+        scrollSpeed = 10f;
+
+        ball.inOverride = false;
+        ball2.inOverride = false;
+
+        tempButton = null;
+        touchList.clear();
+
+        gsCount = 0;
+        adShownForThisSession = false;
+
+        ResetScoreAndLevel();
+    }
+
+    public void MoveToGameInit()//aka normal/instadeath mode select
+    {
+        lerp = 0f;
+        lerpFlag = true;
+
+        tempButton = null;
+        touchList.clear();
+
+        gsCount = 0;
+        adShownForThisSession = false;
+        lerpFlag = false;
+        ResetScoreAndLevel();
+
+        //Prep the Game Mode Select box.
+        customGUIBox = new CustomGUIBox(batch, "Game Mode", descalepercent(150, 30), descalepercent(80, 60),
+                dialogBoxTexture, new String[]{"Normal", "Insta-Death", "Back"},
+                new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.MODESELECT);
+    }
 
     @Override
     public void dispose() {
