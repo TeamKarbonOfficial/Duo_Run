@@ -21,6 +21,8 @@ public class Ball {
     final float sides = 45;
     float [] localvertices;
 
+    boolean inOverride;
+
     public Ball(float _x, float _y, World _world, float _radius){
         //Initialise classes
         bodyDef = new BodyDef();
@@ -46,6 +48,8 @@ public class Ball {
         fixture = body.createFixture(fixtureDef);
 
         localvertices = this.getLocalVerticesAsFloatArray();
+
+        inOverride = false;
     }
 
     public void setFixture(float _f, float _d, float _r)//friction, density, restitution

@@ -192,7 +192,6 @@ public class derptest extends ApplicationAdapter {
     //Flags
     Boolean Force = false;
     Boolean Force2 = false;
-    boolean overrideBallAutoPos, overrideBall2AutoPos;//For ball position correction in game_initstatic boolean allowGameServices = true;
     boolean obstaclesRemoveFlag;
     boolean backFlag = false;//A flag where set true within gameMode.GAME_INIT when the back button is clicked...
     boolean gameFlag = false;//A flag where set true within gameMode.GAME_INIT when the selected game mode is clicked...
@@ -407,8 +406,8 @@ public class derptest extends ApplicationAdapter {
         playerLeft = new Polygon();
         playerRight = new Polygon();
 
-        overrideBallAutoPos = false;
-        overrideBall2AutoPos = false;
+        ball.inOverride = false;
+        ball2.inOverride = false;
 
         Gdx.gl.glClearColor(0, 0.06f, 0.13f, 0.8f);
 
@@ -1073,14 +1072,14 @@ public class derptest extends ApplicationAdapter {
                                     //                         v                ^      2
                                     ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
 
-                            if(!overrideBallAutoPos) {
+                            if(!ball.inOverride) {
                                 ball.setFixture(0f, ball.fixture.getDensity(), ball.fixture.getRestitution());
-                                overrideBallAutoPos = true;
+                                ball.inOverride = true;
                             }
                         } else {
-                            if(overrideBallAutoPos) {//Improve performance
+                            if(ball.inOverride) {//Improve performance
                                 ball.setFixture(0.2f, ball.fixture.getDensity(), ball.fixture.getRestitution());
-                                overrideBallAutoPos = false;
+                                ball.inOverride = false;
                             }
                         }
 
@@ -1089,20 +1088,20 @@ public class derptest extends ApplicationAdapter {
                             ball2.body.applyForceToCenter(2 * (0 - ball2.getPos().x) / ball2.body.getMass() - (1 / 2 * ball2.body.getMass() *
                                     ((float) Math.pow(ball2.body.getLinearVelocity().x, 2))), 0, true);
 
-                            if(!overrideBall2AutoPos) {
-                                overrideBall2AutoPos = true;
+                            if(!ball2.inOverride) {
+                                ball2.inOverride = true;
                                 ball2.setFixture(0f, ball2.fixture.getDensity(), ball2.fixture.getRestitution());
                             }
                         } else {
-                            if(overrideBall2AutoPos) {
-                                overrideBall2AutoPos = false;
+                            if(ball2.inOverride) {
+                                ball2.inOverride = false;
                                 ball2.setFixture(0.2f, ball2.fixture.getDensity(), ball2.fixture.getRestitution());
                             }
                         }
                     }
 
-                    if(customGUIBox.pos.x + customGUIBox.size.x < descale(pwidth(-3)) && gameFlag && !overrideBallAutoPos
-                            && !overrideBall2AutoPos)
+                    if(customGUIBox.pos.x + customGUIBox.size.x < descale(pwidth(-3)) && gameFlag && !ball.inOverride
+                            && !ball2.inOverride)
                     {
                         lerpFlag = false;
                     }
@@ -1114,24 +1113,24 @@ public class derptest extends ApplicationAdapter {
 
                 //#Game Init -> Main Menu Init
                 //Reaches same speed as obs moving in main menu, 7 pwidth / s leftwards
-                if (backFlag && !overrideBallAutoPos && !overrideBall2AutoPos && customGUIBox.pos.x < -customGUIBox.size.x)
+                if (backFlag && !ball.inOverride && !ball2.inOverride && customGUIBox.pos.x < -customGUIBox.size.x)
                 {
                     backFlag = false;//Reset dem flags.
                     lerpFlag = false;
-                    overrideBallAutoPos = false;
-                    overrideBall2AutoPos = false;
+                    ball.inOverride = false;
+                    ball2.inOverride = false;
                     ResetScoreAndLevel();
                     mode = gameMode.MAIN_MENU_INIT;//Transit to main menu INIT!
                 }
 
                 //#Game Init -> Game
                 //Same speed as obs moving in game, 6 pwidth / s
-                if (gameFlag && !overrideBallAutoPos && !overrideBall2AutoPos && customGUIBox.pos.x < -customGUIBox.size.x)
+                if (gameFlag && !ball.inOverride && !ball2.inOverride && customGUIBox.pos.x < -customGUIBox.size.x)
                 {
                     gameFlag = false;
                     lerpFlag = false;
-                    overrideBallAutoPos = false;
-                    overrideBall2AutoPos = false;
+                    ball.inOverride = false;
+                    ball2.inOverride = false;
                     ResetScoreAndLevel();
                     mode = gameMode.GAME;//Go to game!
                 }
@@ -1141,15 +1140,15 @@ public class derptest extends ApplicationAdapter {
                     ball.body.applyForceToCenter(2 * (0 - ball.getPos().x) / ball.body.getMass() - (1 / 2 * ball.body.getMass() *
                             ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
 
-                    overrideBallAutoPos = true;
-                } else overrideBallAutoPos = false;
+                    ball.inOverride = true;
+                } else ball.inOverride = false;
 
                 if (!inRange(ball2.getPos().x, pwidth(-1), pwidth(1), rangeMode.WITHIN_OR_EQUIVALENT)) {
                     ball2.body.applyForceToCenter(2 * (0 - ball2.getPos().x) / ball2.body.getMass() - (1 / 2 * ball2.body.getMass() *
                             ((float) Math.pow(ball2.body.getLinearVelocity().x, 2))), 0, true);
 
-                    overrideBall2AutoPos = true;
-                } else overrideBall2AutoPos = false;
+                    ball2.inOverride = true;
+                } else ball2.inOverride = false;
 
                 if (lerp > -8) lerp -= Gdx.graphics.getDeltaTime() * 14f;//Decelerate until
                 else lerp = -8;//Stop...
@@ -1565,14 +1564,14 @@ public class derptest extends ApplicationAdapter {
             ball2.body.applyForceToCenter(0, 100, true);
 
         //Constantly increase the balls' speed until a certain velocity
-        if (ball.body.getPosition().x < 0 && !overrideBallAutoPos)
+        if (ball.body.getPosition().x < 0 && !ball.inOverride)
             ball.body.applyForceToCenter(10, 0, true);
-        if (ball2.body.getPosition().x < 0 && !overrideBall2AutoPos)
+        if (ball2.body.getPosition().x < 0 && !ball2.inOverride)
             ball2.body.applyForceToCenter(10, 0, true);
 
-        if (ball.body.getPosition().x > 0 && !overrideBallAutoPos)
+        if (ball.body.getPosition().x > 0 && !ball.inOverride)
             ball.body.applyForceToCenter(-10, 0, true);
-        if (ball2.body.getPosition().x > 0 && !overrideBall2AutoPos)
+        if (ball2.body.getPosition().x > 0 && !ball2.inOverride)
             ball2.body.applyForceToCenter(-10, 0, true);
     }
     
