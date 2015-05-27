@@ -925,9 +925,6 @@ public class derptest extends ApplicationAdapter {
                             }
                         }
 
-                        lerp = 0f;
-                        lerpFlag = true;
-
                         //#Main Menu -> Options
                         MoveToOptions();
                     }
@@ -946,11 +943,13 @@ public class derptest extends ApplicationAdapter {
         //#game init
         else if (mode == gameMode.GAME_INIT) {
 
-            if (lerp < 40.5f && lerpFlag) {
+            if (lerpFlag && (lerp < 40.5f || gameFlag)) {
+
                 lerp += Gdx.graphics.getDeltaTime() * 7f;//Increase speed of obstacles to make a "zooming" effect
-                if (gameFlag) {//Make sure balls go back to the original spot
-                    if(instaDeathMode) {
-                        if (!(inRange(ball.getPos().x, pwidth(-1), pwidth(1), rangeMode.WITHIN_OR_EQUIVALENT) &&
+
+                //Make sure balls go back to the original spot
+                if (instaDeathMode) {
+                    if (!(inRange(ball.getPos().x, pwidth(-1), pwidth(1), rangeMode.WITHIN_OR_EQUIVALENT) &&
                             inRange(ball.body.getLinearVelocity().x, -0.15f, 0.15f, rangeMode.WITHIN_OR_EQUIVALENT))) {
                         /*F = ma
                         * F = 1/2mv^2
@@ -964,60 +963,57 @@ public class derptest extends ApplicationAdapter {
                         * F = 1/2mv^2 ~ (2)
                         * F = 2d / m - 1/2mv^2 (YAY!)
                        *                              2 *       d               *       m            -   1/2    m*/
-                            ball.body.applyForceToCenter(2 * (0 - ball.getPos().x) / ball.body.getMass() - (1 / 2 * ball.body.getMass() *
-                                    //                         v                ^      2
-                                    ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
+                        ball.body.applyForceToCenter(2 * (0 - ball.getPos().x) / ball.body.getMass() - (1 / 2 * ball.body.getMass() *
+                                //                         v                ^      2
+                                ((float) Math.pow(ball.body.getLinearVelocity().x, 2))), 0, true);
 
-                            if(!ball.inOverride) {
-                                ball.setFixture(0f, ball.fixture.getDensity(), ball.fixture.getRestitution());
-                                ball.inOverride = true;
-                            }
-                        } else {
-                            if(ball.inOverride) {//Improve performance
-                                ball.setFixture(0.2f, ball.fixture.getDensity(), ball.fixture.getRestitution());
-                                ball.inOverride = false;
-                            }
+                        if (!ball.inOverride) {
+                            ball.setFixture(0f, ball.fixture.getDensity(), ball.fixture.getRestitution());
+                            ball.inOverride = true;
                         }
+                    } else {
+                        if (ball.inOverride) {//Improve performance
+                            ball.setFixture(0.2f, ball.fixture.getDensity(), ball.fixture.getRestitution());
+                            ball.inOverride = false;
+                        }
+                    }
 
-                        if (!(inRange(ball2.getPos().x, pwidth(-1), pwidth(1), rangeMode.WITHIN_OR_EQUIVALENT) &&
+                    if (!(inRange(ball2.getPos().x, pwidth(-1), pwidth(1), rangeMode.WITHIN_OR_EQUIVALENT) &&
                             inRange(ball2.body.getLinearVelocity().x, -0.15f, 0.15f, rangeMode.WITHIN_OR_EQUIVALENT))) {
 
-                            ball2.body.applyForceToCenter(2 * (0 - ball2.getPos().x) / ball2.body.getMass() - (1 / 2 * ball2.body.getMass() *
-                                    ((float) Math.pow(ball2.body.getLinearVelocity().x, 2))), 0, true);
+                        ball2.body.applyForceToCenter(2 * (0 - ball2.getPos().x) / ball2.body.getMass() - (1 / 2 * ball2.body.getMass() *
+                                ((float) Math.pow(ball2.body.getLinearVelocity().x, 2))), 0, true);
 
-                            if(!ball2.inOverride) {
-                                ball2.inOverride = true;
-                                ball2.setFixture(0f, ball2.fixture.getDensity(), ball2.fixture.getRestitution());
-                            }
-                        } else {
-                            if(ball2.inOverride) {
-                                ball2.inOverride = false;
-                                ball2.setFixture(0.2f, ball2.fixture.getDensity(), ball2.fixture.getRestitution());
-                            }
+                        if (!ball2.inOverride) {
+                            ball2.inOverride = true;
+                            ball2.setFixture(0f, ball2.fixture.getDensity(), ball2.fixture.getRestitution());
+                        }
+                    } else {
+                        if (ball2.inOverride) {
+                            ball2.inOverride = false;
+                            ball2.setFixture(0.2f, ball2.fixture.getDensity(), ball2.fixture.getRestitution());
                         }
                     }
+                }
 
-                    if(customGUIBox.pos.x + customGUIBox.size.x < descale(pwidth(-3)) && gameFlag && !ball.inOverride
-                            && !ball2.inOverride)
-                    {
-                        lerpFlag = false;
-                    }
+                if (customGUIBox.pos.x < -customGUIBox.size.x &&
+                        ((gameFlag && !ball.inOverride && !ball2.inOverride)
+                        || backFlag)) {
+                    lerpFlag = false;
                 }
             }
-            else //If not (lerp > 40.5 && lerp flag)
+            else //If not (lerp < 40.5 && lerp flag)
             {
                 lerpFlag = false;
 
                 //#Game Init -> Main Menu
-                //Reaches same speed as obs moving in main menu, 10 pwidth / s leftwards
-                if (backFlag && !ball.inOverride && !ball2.inOverride && customGUIBox.pos.x < -customGUIBox.size.x)
+                if (backFlag && !ball.inOverride && !ball2.inOverride)
                 {
                     MoveToMainMenu();//Transit to main menu!
                 }
 
                 //#Game Init -> Game
-                //Same speed as obs moving in game, 6 pwidth / s
-                if (gameFlag && !ball.inOverride && !ball2.inOverride && customGUIBox.pos.x < -customGUIBox.size.x)
+                if (gameFlag && !ball.inOverride && !ball2.inOverride)
                 {
                     MoveToGame();
                 }
@@ -1474,7 +1470,6 @@ public class derptest extends ApplicationAdapter {
 
         gsCount = 0;
         adShownForThisSession = false;
-        lerpFlag = false;
         ResetScoreAndLevel();
 
         //Prep the Game Mode Select box.
@@ -1518,6 +1513,9 @@ public class derptest extends ApplicationAdapter {
 
     public void MoveToOptions()
     {
+        lerp = 0f;
+        lerpFlag = true;
+
         customGUIBox = new CustomGUIBox(batch, "Options", descalepercent(150, 20), descalepercent(70, 80),
                 dialogBoxTexture, new String[]{"Vibrate"}, new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.CHECKBOX);
 

@@ -1,0 +1,97 @@
+============================
+Duo Run     :      Game Flow
+============================
+
+Notes:
+Useful intent refers to the subset of actions required to be performed from a arbitrary function.
+Arbitrary function refers the otherwise.
+
+Main Menu:
+    Attributes:
+        ScrollSpeed: 10% width / s
+        No usage of lerp. Constant ScrollSpeed.
+
+    From:
+
+
+    To:
+        -> Game Init
+            Useful Intent:
+                'Accelerate the incoming game mode select customGUIBox to a certain point, then decelerate to halt at centre.'
+                Create: Game Mode Select 'customGUIBox' :: CustomGUIBox
+                Clear: ResetScoreAndLevel()
+
+            Arbitrary Intent:
+                Clear: tempButton, touchList, gsCount, adShownForThisSession
+
+            Attributes:
+                Initial Lerp: 0f
+                    lerpFlag: true
+
+        -> Options
+            Useful Intent:
+                Create: Options 'customGUIBox' :: CustomGUIBox
+
+            Arbitrary Intent: <null>
+
+            Attributes:
+                Initial Lerp: 0f
+                    lerpFlag: true
+
+Game Init:
+    Attributes:
+        Stationary Lerp: -8f
+
+    From:
+        -> Main Menu
+            'Accelerate the incoming game mode select customGUIBox to a certain point, then decelerate to halt at centre.'
+                lerp: 0f @7%width/s -> 40.5f @14%width/s -> -8f
+            lerpFlag: true -> false
+
+    To:
+        -> Game
+            Attributes:
+                'Move game mode select customGUIBox out of screen'
+                ==================================================
+                - Normal
+                              lerpFlag: true
+                              gameFlag: true
+                        instaDeathMode: false
+                - Insta Death
+                              lerpFlag: true
+                              gameFlag: true
+                        instaDeathMode: true
+
+                ScrollSpeed: 8f + lerp
+                       lerp: (-8f + 10f) @7%width/s -> 'customGUIBox exits'
+
+                'Clear all obstacles'
+
+            'MoveToGame();'
+            ==============================================
+            Useful Intent:
+                if (instaDeathMode), Center ball positions.
+                    uses Ball.inOverride :: boolean
+                Clear: gameFlag, lerpFlag, Ball.inOverride, ResetScoreAndLevel
+
+            Arbitrary Intent: <null>
+
+        -> Main Menu
+            Attributes:
+                'Move game mode select customGUIBox out of screen'
+                ==================================================
+                   backFlag: true
+                   lerpFlag: true
+                ScrollSpeed: 8f + lerp
+                       lerp: (-8f + 10f) @7%width/s -> 'customGUIBox exits'
+
+                'Clear all obstacles'
+
+            'MoveToMainMenu();'
+            ============================================
+            Useful Intent:
+                Clear: backFlag, lerpFlag, Ball.inOverride, ResetScoreAndLevel()
+                scrollSpeed: 10f
+
+            Arbitrary Intent:
+                Clear: tempButton, touchList, gsCount, adShownForThisSession
