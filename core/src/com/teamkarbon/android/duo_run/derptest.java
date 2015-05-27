@@ -897,6 +897,7 @@ public class derptest extends ApplicationAdapter {
                             }
                         }
 
+                        //#Main Menu -> Game Init
                         MoveToGameInit();
 
                     }
@@ -909,13 +910,9 @@ public class derptest extends ApplicationAdapter {
 
                     if ((Intersector.overlapConvexPolygons(obs, playerLeft) && o.colorCollisionType == Obstacle.ObstacleColorType.YELLOW) ||
                             (Intersector.overlapConvexPolygons(obs, playerRight) && o.colorCollisionType == Obstacle.ObstacleColorType.BLUE)) {
-                        mode = gameMode.OPTIONS;
-                        Color c = new Color();
-                        c.set(0.8f, 0.8f, 0.8f, 0.9f);
-                        o.setColor(c);
+
+                        o.setColor(new Color(0.8f, 0.8f, 0.8f, 0.9f));
                         o.isClicked = true;
-                        lerp = 0f;
-                        lerpFlag = true;
 
                         //Make sure all obstacles that are to the right of the screen are cleared
                         for(int y = 0; y < obstacles.size(); y++)
@@ -928,17 +925,11 @@ public class derptest extends ApplicationAdapter {
                             }
                         }
 
-                        customGUIBox = new CustomGUIBox(batch, "Options", descalepercent(150, 20), descalepercent(70, 80),
-                                dialogBoxTexture, new String[]{"Vibrate"}, new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.CHECKBOX);
-                        customGUIBox.addButton("Back");
-                        //TODO: Make sure these positions are workable :P Those numbers down here |||||| are percentages of the customGUIBox dims
-                        customGUIBox.addSlider("Music Volume", sliderBarTexure, sliderButtonTexture, 56);
-                        customGUIBox.addSlider("FX Volume", sliderBarTexure, sliderButtonTexture, 34);
+                        lerp = 0f;
+                        lerpFlag = true;
 
-                        CustomSlider temp = customGUIBox.getSlider("Music Volume");
-                        temp.moveSlider(androidMethods.prefgetFloat(PREF_MUSIC_VOLUME, 50f));//Beware NullPointerExceptions!!
-                        temp = customGUIBox.getSlider("FX Volume");
-                        temp.moveSlider(androidMethods.prefgetFloat(PREF_FX_VOLUME, 50f));
+                        //#Main Menu -> Options
+                        MoveToOptions();
                     }
                 } else if (o.id == "stats") {
 
@@ -1197,6 +1188,7 @@ public class derptest extends ApplicationAdapter {
             }
             else if(backFlag)
             {
+                //#options -> main menu
                 lerp += 10f * Gdx.graphics.getDeltaTime();
                 if(customGUIBox.pos.x < - customGUIBox.size.x){
                     MoveToMainMenu();
@@ -1522,6 +1514,24 @@ public class derptest extends ApplicationAdapter {
         mode = gameMode.SCORE_DISPLAY;
         EnsureBallsAreOnScreen();
 
+    }
+
+    public void MoveToOptions()
+    {
+        customGUIBox = new CustomGUIBox(batch, "Options", descalepercent(150, 20), descalepercent(70, 80),
+                dialogBoxTexture, new String[]{"Vibrate"}, new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.CHECKBOX);
+
+        customGUIBox.addButton("Back");
+
+        customGUIBox.addSlider("Music Volume", sliderBarTexure, sliderButtonTexture, 56);
+        customGUIBox.addSlider("FX Volume", sliderBarTexure, sliderButtonTexture, 34);
+
+        CustomSlider temp = customGUIBox.getSlider("Music Volume");
+        temp.moveSlider(androidMethods.prefgetFloat(PREF_MUSIC_VOLUME, 50f));//Beware NullPointerExceptions!!
+        temp = customGUIBox.getSlider("FX Volume");
+        temp.moveSlider(androidMethods.prefgetFloat(PREF_FX_VOLUME, 50f));
+
+        mode = gameMode.OPTIONS;
     }
 
     public void UpdateAchievements()
