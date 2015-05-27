@@ -664,6 +664,7 @@ public class derptest extends ApplicationAdapter {
                         if (score > androidMethods.prefgetInt(PREF_INSTADEATH, 0))
                             androidMethods.prefputInt(PREF_INSTADEATH, score);
                     }
+
                 } else if (!inRange(ball.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN) ||
                         !inRange(ball2.body.getPosition().x, pwidth(-55), pwidth(55), rangeMode.WITHIN)) {
                     Gdx.app.debug("Normal mode", "Game over!");
@@ -693,98 +694,16 @@ public class derptest extends ApplicationAdapter {
                 }
             }
 
-            //#game over -> score display
+            //#game -> score display
             //Check if all obs are out of screen alr, then move to score display
             //NOTE: This is the final block of code before switching to score display.
             //      as this is when there are no more obstacles on screen and all have been disposed.
             //Also, do NOT reset score and level here... it has to be shown in the next screen, score display (duh)....
             if (gameOver && obstacles.size() == 0) {
-                lerp = 0;
-                lerpFlag = true;
-                gameOver = false;
-                obstaclesRemovalTimer = 0f;
-                obstaclesRemoveFlag = false;
-                obstaclesTimer = 0f;
 
-                customGUIBox = new CustomGUIBox(batch, String.valueOf(score), descalepercent(120f, 10f), descalepercent(70f, 70f), dialogBoxTexture, new String[]{
-                        "Achievements", "Leaderboard", "Main Menu", "Play Again"
-                }, new Color(0.1f, 0.4f, 0.1f, 0.5f), CustomGUIBox.BoxType.MODESELECT);
+                MoveToScoreDisplay();
 
-                if (!inRange(ball.getPos().x, pwidth(-60), pwidth(60), rangeMode.WITHIN_OR_EQUIVALENT)) {
-                    ball.setPos(pwidth(-55), pheight(10));
-                }
-                if (!inRange(ball2.getPos().x, pwidth(-60), pwidth(60), rangeMode.WITHIN_OR_EQUIVALENT)) {
-                    ball2.setPos(pwidth(-55), pheight(10));
-                }
-
-
-                mode = gameMode.SCORE_DISPLAY;
-
-                gsCount = 0;
-
-                Gdx.gl.glClearColor(0, 0.06f, 0.13f, 0.8f);//Set back to normal clear color...
-
-                //Achievements
-                if (androidMethods.isSignedIn()) {
-                    //Check if the user was offline, then update the play services stuff using stored values, then reset the stored values
-                    if (androidMethods.prefgetBoolean(PREF_WAS_OFFLINE, true)) {
-                        //Unlock Getting Started
-                        if (androidMethods.prefgetBoolean(PREF_GETTING_STARTED, false))
-                            androidMethods.submitNorAchievements(ACHIEVEMENT_GETTING_STARTED);
-                        //Add PREF_ADDICTED to the achievements counter
-                        if (androidMethods.prefgetInt(PREF_ADDICTED, 0) > 0) {
-                            androidMethods.submitInAchievements(ACHIEVEMENT_ADDICTED, androidMethods.prefgetInt(PREF_ADDICTED, 1));
-                            androidMethods.prefputInt(PREF_ADDICTED, 0);
-                        }
-                        //Unlock Cat
-                        if (androidMethods.prefgetInt(PREF_OH_YOURE_A_CAT, 0) > 0) {
-                            androidMethods.submitInAchievements(ACHIEVEMENT_OH_YOURE_A_CAT, androidMethods.prefgetInt(PREF_OH_YOURE_A_CAT, 1));
-                            androidMethods.prefputInt(PREF_OH_YOURE_A_CAT, 0);
-                        }
-                        //Unlock Not Afraid of Death!
-                        if (androidMethods.prefgetBoolean(PREF_NOT_AFRAID_OF_DEATH, false))
-                            androidMethods.submitNorAchievements(ACHIEVEMENT_NOT_AFRAID_OF_DEATH);
-                        //Unlock Average Joe
-                        if (androidMethods.prefgetBoolean(PREF_AVERAGE_JOE, false))
-                            androidMethods.submitNorAchievements(ACHIEVEMENT_AVERAGE_JOE);
-                        //Reset the flag
-                        androidMethods.prefputBoolean(PREF_WAS_OFFLINE, false);
-                    }
-
-                    //Unlock Getting Started
-                    if (score >= 50)
-                        androidMethods.submitNorAchievements(ACHIEVEMENT_GETTING_STARTED);
-                    //Unlock Addicted!
-                    androidMethods.submitInAchievements(ACHIEVEMENT_ADDICTED, 1);
-                    //FIXME: Unlock Cat
-                    if (instaDeathMode)
-                        androidMethods.submitInAchievements(ACHIEVEMENT_OH_YOURE_A_CAT, 1);
-                    //Unlock Not Afraid of Death!
-                    if (instaDeathMode && score >= 50000)
-                        androidMethods.submitNorAchievements(ACHIEVEMENT_NOT_AFRAID_OF_DEATH);
-                    //Unlock Average Joe
-                    if (!instaDeathMode && score >= 50000)
-                        androidMethods.submitNorAchievements(ACHIEVEMENT_AVERAGE_JOE);
-                } else {
-                    //User not signed in, change flag
-                    androidMethods.prefputBoolean(PREF_WAS_OFFLINE, true);
-                    //Unlock Getting Started
-                    if (score >= 50)
-                        androidMethods.prefputBoolean(PREF_GETTING_STARTED, true);
-                    //Unlock Addicted!
-                    A_Addicted = androidMethods.prefgetInt(PREF_ADDICTED, 0);
-                    androidMethods.prefputInt(PREF_ADDICTED, A_Addicted + 1);
-                    //FIXME: Unlock Cat
-                    if (instaDeathMode)
-                        A_Oh_Youre_A_Cat = androidMethods.prefgetInt(PREF_OH_YOURE_A_CAT, 0);
-                        androidMethods.prefputInt(PREF_OH_YOURE_A_CAT, A_Oh_Youre_A_Cat + 1);
-                    //Unlock Not Afraid of Death!
-                    if (instaDeathMode && score >= 50000)
-                        androidMethods.prefputBoolean(PREF_NOT_AFRAID_OF_DEATH, true);
-                    //Unlock Average Joe
-                    if (!instaDeathMode && score >= 50000)
-                        androidMethods.prefputBoolean(PREF_AVERAGE_JOE, true);
-                }
+                UpdateAchievements();
             }
 
             if (!gameOver) {
@@ -1109,12 +1028,7 @@ public class derptest extends ApplicationAdapter {
                 //Same speed as obs moving in game, 6 pwidth / s
                 if (gameFlag && !ball.inOverride && !ball2.inOverride && customGUIBox.pos.x < -customGUIBox.size.x)
                 {
-                    gameFlag = false;
-                    lerpFlag = false;
-                    ball.inOverride = false;
-                    ball2.inOverride = false;
-                    ResetScoreAndLevel();
-                    mode = gameMode.GAME;//Go to game!
+                    MoveToGame();
                 }
 
                 if(instaDeathMode) {
@@ -1577,6 +1491,102 @@ public class derptest extends ApplicationAdapter {
                 new Color(0.5f, 0.3f, 0.3f, 1), CustomGUIBox.BoxType.MODESELECT);
 
         mode = gameMode.GAME_INIT;
+    }
+
+    public void MoveToGame()
+    {
+        gameFlag = false;
+        lerpFlag = false;
+        ball.inOverride = false;
+        ball2.inOverride = false;
+        ResetScoreAndLevel();
+        mode = gameMode.GAME;//Go to game!
+    }
+
+    public void MoveToScoreDisplay()
+    {
+        lerp = 0;
+        lerpFlag = true;
+        gameOver = false;
+        obstaclesRemovalTimer = 0f;
+        obstaclesRemoveFlag = false;
+        obstaclesTimer = 0f;
+
+        customGUIBox = new CustomGUIBox(batch, String.valueOf(score), descalepercent(120f, 10f), descalepercent(70f, 70f), dialogBoxTexture,
+                new String[]{ "Achievements", "Leaderboard", "Main Menu", "Play Again" },
+                new Color(0.1f, 0.4f, 0.1f, 0.5f), CustomGUIBox.BoxType.MODESELECT);
+        gsCount = 0;
+
+        Gdx.gl.glClearColor(0, 0.06f, 0.13f, 0.8f);//Set back to normal clear color...
+
+        mode = gameMode.SCORE_DISPLAY;
+        EnsureBallsAreOnScreen();
+
+    }
+
+    public void UpdateAchievements()
+    {
+        //Achievements
+        if (androidMethods.isSignedIn()) {
+            //Check if the user was offline, then update the play services stuff using stored values, then reset the stored values
+            if (androidMethods.prefgetBoolean(PREF_WAS_OFFLINE, true)) {
+                //Unlock Getting Started
+                if (androidMethods.prefgetBoolean(PREF_GETTING_STARTED, false))
+                    androidMethods.submitNorAchievements(ACHIEVEMENT_GETTING_STARTED);
+                //Add PREF_ADDICTED to the achievements counter
+                if (androidMethods.prefgetInt(PREF_ADDICTED, 0) > 0) {
+                    androidMethods.submitInAchievements(ACHIEVEMENT_ADDICTED, androidMethods.prefgetInt(PREF_ADDICTED, 1));
+                    androidMethods.prefputInt(PREF_ADDICTED, 0);
+                }
+                //Unlock Cat
+                if (androidMethods.prefgetInt(PREF_OH_YOURE_A_CAT, 0) > 0) {
+                    androidMethods.submitInAchievements(ACHIEVEMENT_OH_YOURE_A_CAT, androidMethods.prefgetInt(PREF_OH_YOURE_A_CAT, 1));
+                    androidMethods.prefputInt(PREF_OH_YOURE_A_CAT, 0);
+                }
+                //Unlock Not Afraid of Death!
+                if (androidMethods.prefgetBoolean(PREF_NOT_AFRAID_OF_DEATH, false))
+                    androidMethods.submitNorAchievements(ACHIEVEMENT_NOT_AFRAID_OF_DEATH);
+                //Unlock Average Joe
+                if (androidMethods.prefgetBoolean(PREF_AVERAGE_JOE, false))
+                    androidMethods.submitNorAchievements(ACHIEVEMENT_AVERAGE_JOE);
+                //Reset the flag
+                androidMethods.prefputBoolean(PREF_WAS_OFFLINE, false);
+            }
+
+            //Unlock Getting Started
+            if (score >= 50)
+                androidMethods.submitNorAchievements(ACHIEVEMENT_GETTING_STARTED);
+            //Unlock Addicted!
+            androidMethods.submitInAchievements(ACHIEVEMENT_ADDICTED, 1);
+            //FIXME: Unlock Cat
+            if (instaDeathMode)
+                androidMethods.submitInAchievements(ACHIEVEMENT_OH_YOURE_A_CAT, 1);
+            //Unlock Not Afraid of Death!
+            if (instaDeathMode && score >= 50000)
+                androidMethods.submitNorAchievements(ACHIEVEMENT_NOT_AFRAID_OF_DEATH);
+            //Unlock Average Joe
+            if (!instaDeathMode && score >= 50000)
+                androidMethods.submitNorAchievements(ACHIEVEMENT_AVERAGE_JOE);
+        } else {
+            //User not signed in, change flag
+            androidMethods.prefputBoolean(PREF_WAS_OFFLINE, true);
+            //Unlock Getting Started
+            if (score >= 50)
+                androidMethods.prefputBoolean(PREF_GETTING_STARTED, true);
+            //Unlock Addicted!
+            A_Addicted = androidMethods.prefgetInt(PREF_ADDICTED, 0);
+            androidMethods.prefputInt(PREF_ADDICTED, A_Addicted + 1);
+            //FIXME: Unlock Cat
+            if (instaDeathMode)
+                A_Oh_Youre_A_Cat = androidMethods.prefgetInt(PREF_OH_YOURE_A_CAT, 0);
+            androidMethods.prefputInt(PREF_OH_YOURE_A_CAT, A_Oh_Youre_A_Cat + 1);
+            //Unlock Not Afraid of Death!
+            if (instaDeathMode && score >= 50000)
+                androidMethods.prefputBoolean(PREF_NOT_AFRAID_OF_DEATH, true);
+            //Unlock Average Joe
+            if (!instaDeathMode && score >= 50000)
+                androidMethods.prefputBoolean(PREF_AVERAGE_JOE, true);
+        }
     }
 
     @Override
